@@ -264,28 +264,4 @@ class AdminUser implements UserInterface, \Serializable
     {
         return $this->name;
     }
-
-    /**
-     * Set roleId
-     *
-     * @param integer $roleId
-     *
-     * @return AdminUser
-     */
-    public function setRoleId($roleId)
-    {
-        $this->roleId = $roleId;
-
-        return $this;
-    }
-
-    /**
-     * Get roleId
-     *
-     * @return integer
-     */
-    public function getRoleId()
-    {
-        return $this->roleId;
-    }
 }
