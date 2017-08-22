@@ -25,7 +25,7 @@ class Version20170821150235 extends AbstractMigration
 
         $roles = $schema->getTable(self::ROLES_TABLE_NAME);
 
-        $sql = "INSERT INTO `%s` (`role_id`, `role_name`) VALUES (NULL, '%s');";
+        $sql = "INSERT INTO %s (role_name) VALUES ('%s');";
         $this->addSql(sprintf($sql,self::ROLES_TABLE_NAME, 'ROLE_ADMIN'));
 
         $users->addForeignKeyConstraint($roles, ['role_id'], ['role_id']);
