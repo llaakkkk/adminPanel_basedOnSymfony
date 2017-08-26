@@ -1,72 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends 'AuthBundle::base.html.twig'  %}
+{% block title %} Login {% endblock %}
+{% block content %}
+<div class="col-md-6">
+    <h2 class="font-bold">Welcome to Control Panel</h2>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <p>
+        Happy Control Panel with best results
+    </p>
 
-    <title>Login</title>
-
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-
-    <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-
-</head>
-<body class="gray-bg">
-
-<div class="loginColumns animated fadeInDown">
-    <div class="row">
-
-        <div class="col-md-6">
-            <h2 class="font-bold">Welcome to Control Panel</h2>
-
-            <p>
-                Happy Control Panel with best results
-            </p>
-
-        </div>
-        <div class="col-md-6">
-            {% if error %}
-                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-            {% endif %}
-
-            <div class="ibox-content">
-                <form class="m-t login_form" role="form" method="post" action="{{ path('login') }}">
-                    <input type="hidden" name="_csrf_token"
-                           value="{{ csrf_token('authenticate') }}"
-                    >
-                    <div class="form-group">
-                        <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Username" required="">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" id="password" name="_password" class="form-control" placeholder="Password" required="">
-                    </div>
-                    <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
-
-                    <a href="#">
-                        <small>Forgot password?</small>
-                    </a>
-                    <p class="text-muted text-center">
-                        <small>Do not have an account?</small>
-                    </p>
-                    <a class="btn btn-sm btn-white btn-block" href="{{ path('register') }}">Create an account</a>
-                </form>
-            </div>
-        </div>
-    </div>
-    <hr/>
-    <div class="row">
-        <div class="col-md-6">
-            Control Panel
-        </div>
-        <div class="col-md-6 text-right">
-            <small>© 2017</small>
-        </div>
-    </div>
 </div>
+<div class="col-md-6">
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+    <div class="ibox-content">
+        {{ form_start(form) }}
+        <div class="form-group">
+            {{ form_row(form._username, { 'attr': {'class': 'form-control'} }) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(form._password, { 'attr': {'class': 'form-control'}}) }}
+        </div>
+            <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
 
-</body>
-</html>
+        {{ form_end(form) }}
 
+        <a href="#">
+            <small>Forgot password?</small>
+        </a>
+        <a class="btn btn-sm btn-white btn-block" href="{{ path('register') }}">Create an account</a>
+
+
+    </div>
+
+</div>
+{% endblock %}

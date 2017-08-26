@@ -28,8 +28,8 @@
                 <li class="nav-header">
                     <div class="dropdown profile-element">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{ admin.email }}</strong>
-                             </span> <span class="text-muted text-xs block"> {{ admin.role }}<b class="caret"></b></span> </span> </a>
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{ app.user ? app.user.email : 'user' }}</strong>
+                             </span> <span class="text-muted text-xs block"> {{  app.user.username }}<b class="caret"></b></span> </span> </a>
                         <ul class="dropdown-menu animated fadeInRight m-t-xs">
                             <li><a href="{{ path('logout') }}">Logout</a></li>
                         </ul>
@@ -62,7 +62,7 @@
                             </div>
                         </form>
                     </div>
-                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    {% if is_granted('ROLE_ADMIN') %}
                     <ul class="nav navbar-top-links navbar-right">
                         <li>
                             <a href="{{ logout_path() }}">

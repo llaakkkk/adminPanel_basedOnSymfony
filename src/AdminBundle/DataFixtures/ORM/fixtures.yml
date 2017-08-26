@@ -1,0 +1,6 @@
+AdminBundle\Entity\AdminUser:
+    user_{1..10}:
+        name: admin
+        email: admin+<current()>@admin.com
+        plainPassword: 123
+        roles: ['ROLE_ADMIN']

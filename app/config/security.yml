@@ -2,9 +2,12 @@
 # https://symfony.com/doc/current/security.html
 security:
     encoders:
-      AdminBundle\Entity\AdminUser:
-        algorithm: bcrypt
-        cost: 12
+        AdminBundle\Entity\AdminUser:
+            algorithm: bcrypt
+            cost: 12
+
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_MANAGE, ROLE_ALLOWED_TO_SWITCH]
 
 #    role_hierarchy:
 #      ROLE_ADMIN:       ROLE_USER
@@ -13,8 +16,10 @@ security:
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
       db_provider:
-        entity: { class: AdminBundle:AdminUser }
+        entity: { class: AdminBundle:AdminUser, property: email }
 
+#    acl:
+#        connection: default
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -25,6 +30,12 @@ security:
         main:
             anonymous: ~
             provider: db_provider
+            guard:
+                authenticators:
+                    - app.security.login_form_authenticator
+
+            switch_user: ~
+#            access_denied_handler: AdminBundle\Security\AccessDeniedHandler
             # activate different ways to authenticate
 
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
@@ -34,7 +45,7 @@ security:
             form_login:
               login_path: login
               check_path: login
-              csrf_token_generator: security.csrf.token_manager
+#              csrf_token_generator: security.csrf.token_manager
               default_target_path: homepage
               use_referer: true
             logout:

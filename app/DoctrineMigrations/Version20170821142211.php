@@ -59,14 +59,6 @@ class Version20170821142211 extends AbstractMigration implements ContainerAwareI
         $rolePermissionsTable->addForeignKeyConstraint($roles, ['role_id'], ['role_id']);
         $rolePermissionsTable->addForeignKeyConstraint($permissions, ['perm_id'], ['perm_id']);
 
-//        $users = $schema->getTable(self::USERS_TABLE_NAME);
-//
-//        $users->setPrimaryKey(array('id'));
-//
-//        $users->addForeignKeyConstraint($roles, ['role_id'], ['role_id']);
-//        $sql = "INSERT INTO `%s` (`role_id`, `role_name`) VALUES (NULL, '%s');";
-//        $this->addSql(sprintf($sql,self::ROLES_TABLE_NAME, 'ROLE_ADMIN'));
-
     }
 
     /**
