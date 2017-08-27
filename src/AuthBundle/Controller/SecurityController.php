@@ -65,10 +65,6 @@ class SecurityController extends Controller
     public function registerAction(Request $request, UserPasswordEncoderInterface $encoder)
     {
 
-
-
-//        $user = new AdminUser();
-
         $form = $this->createForm(RegistrationForm::class);
 
         $form->handleRequest($request);
@@ -77,11 +73,11 @@ class SecurityController extends Controller
             // Create the user
             /** @var AdminUser $user */
             $user = $form->getData();
-//            $user->setPassword($encoder->encodePassword($user, $user->getEmail()));
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
-//
+
             $this->addFlash('success', 'Welcome '.$user->getEmail());
 
             return $this->get('security.authentication.guard_handler')
@@ -95,10 +91,10 @@ class SecurityController extends Controller
 
         }
 
-
         return $this->render('AuthBundle:Register:register.html.twig', array(
             'form' => $form->createView()
         ));
     }
 
 }
+//

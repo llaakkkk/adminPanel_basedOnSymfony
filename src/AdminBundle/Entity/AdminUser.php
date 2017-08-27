@@ -35,9 +35,11 @@ class AdminUser implements UserInterface
 
     /**
      * @var string
-     * @Assert|NotBlank()
      * @Assert\Email()
      * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     *
+     *
      */
     private $email;
 
@@ -48,7 +50,7 @@ class AdminUser implements UserInterface
     private $password;
 
     /**
-     * @Assert|NotBlank(groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"})
      */
     private $plainPassword;
 
@@ -73,7 +75,7 @@ class AdminUser implements UserInterface
     /**
      * Set name
      *
-     * @param string $name
+     * @param string $username
      *
      * @return AdminUser
      */
