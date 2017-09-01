@@ -14,7 +14,7 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 /**
  * Class DefaultController
  * @package AdminBundle\Controller
- * @Security("is_granted('ROLE_ADMIN'")
+ * @Security("is_granted('ROLE_MARKETING')")
  */
 
 class DefaultController extends Controller
@@ -32,5 +32,20 @@ class DefaultController extends Controller
         return $this->render('AdminBundle:Default:index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR
         ]);
+    }
+
+
+    /**
+     * @Route("/administrator", name="administrator")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function administratorAction(Request $request)
+    {
+        // replace this example code with whatever you need
+        return $this->render('AdminBundle:Default:administrator.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR
+        ]);
+
     }
 }
