@@ -59,7 +59,11 @@
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                 <li class="">
-                    <a href="{{ path('administrator') }}"><i class="fa fa-users"></i> <span class="nav-label">Administration</span></a>
+                    <a href="#"><i class="fa fa-angle-double-right"></i> <span class="nav-label">Administration</span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="{{ path('administrator') }}"><i class="fa fa-square-o"></i> Users</a></li>
+                        <li><a href="#"><i class="fa fa-square-o"></i> Roles</a></li>
+                    </ul>
                 </li>
                 {% endif %}
 

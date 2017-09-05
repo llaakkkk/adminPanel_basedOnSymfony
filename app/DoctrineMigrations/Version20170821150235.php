@@ -21,14 +21,14 @@ class Version20170821150235 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $users = $schema->getTable(self::USERS_TABLE_NAME);
 
-        $users->setPrimaryKey(array('id'));
+//        $users->setPrimaryKey(array('id'));
 
         $roles = $schema->getTable(self::ROLES_TABLE_NAME);
 
         $sql = "INSERT INTO %s (role_name) VALUES ('%s');";
         $this->addSql(sprintf($sql,self::ROLES_TABLE_NAME, 'ROLE_ADMIN'));
 
-        $users->addForeignKeyConstraint($roles, ['role_id'], ['role_id']);
+//        $users->addForeignKeyConstraint($roles, ['role_id'], ['role_id']);
 
 
     }

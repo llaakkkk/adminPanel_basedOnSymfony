@@ -1,6 +1,46 @@
-AdminBundle\Entity\AdminUser:
-    user_{1..10}:
-        name: admin
-        email: admin+<current()>@admin.com
-        plainPassword: 123
-        roles: ['ROLE_ADMIN']
+#AdminBundle\Entity\AdminUser:
+#    user_{1..3}:
+#        name: admin
+#        email: admin+<current()>@admin.com
+#        plainPassword: 123
+#        roles: ['ROLE_ADMIN']
+#        created: <(new \DateTime('2017-09-02'))>
+#        updated: <(new \DateTime('2017-09-02'))>
+
+#AdminBundle\Entity\Permissions:
+#    permission_1:
+#        permDesc: create
+#    permission_2:
+#        permDesc: view
+#    permission_3:
+#        permDesc: delete
+#    permission_4:
+#        permDesc: edit
+#AdminBundle\Entity\Roles:
+#    role_1:
+#        roleName: ROLE_ADMIN
+#    role_2:
+#        roleName: ROLE_MARKETING
+#    role_3:
+#        roleName: ROLE_SUPPORT
+AdminBundle\Entity\RolePermissions:
+    rolePermission_1:
+        role: 4
+        perm: 1
+    rolePermission_2:
+        role: 4
+        perm: 2
+    rolePermission_3:
+        role: 4
+        perm: 3
+    rolePermission_4:
+        role: 3
+        perm: 4
+    rolePermission_5:
+        role: 4
+        perm: 1
+
+
+
+
+

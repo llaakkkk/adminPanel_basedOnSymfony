@@ -2,6 +2,8 @@
 
 namespace AdminBundle\Controller;
 
+use AdminBundle\Entity\AdminUser;
+use AdminBundle\Repository\AdminUserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -42,9 +44,14 @@ class DefaultController extends Controller
      */
     public function administratorAction(Request $request)
     {
+        $repository = $this->getDoctrine()->getRepository(AdminUser::class);
+
+        $adminUsers = $repository->findAll();
+//        var_dump($adminUsers);
         // replace this example code with whatever you need
         return $this->render('AdminBundle:Default:administrator.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR
+            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+            'adminUsers' => $adminUsers
         ]);
 
     }

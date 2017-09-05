@@ -7,14 +7,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
 /**
  * AdminUser
  *
  * @ORM\Table(name="admin_user")
  * @ORM\Entity(repositoryClass="AdminBundle\Repository\AdminUserRepository")
- * @UniqueEntity(fields={"email", "username"}, message="This one is already taken")
+ * @UniqueEntity(fields={"email"}, message="This one is already taken")
  */
-class AdminUser implements UserInterface, \Serializable
+class AdminUser implements UserInterface
 {
     /**
      * @var int
@@ -30,29 +31,35 @@ class AdminUser implements UserInterface, \Serializable
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
-    private $name;
+    private $username;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=255, unique=true)
      * @Assert\Email()
+     * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * @Assert\NotBlank()
+     *
+     *
      */
     private $email;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
 
     /**
+     * @Assert\NotBlank(groups={"Registration"})
+     */
+    private $plainPassword;
+
+    /**
      * @var integer
      *
-     * @ORM\Column(name="role_id", type="integer", length=11)
+     * @ORM\Column(name="roles", type="json_array", nullable=true)
      */
-    private $roleId;
+    private $roles = [];
 
 
     /**
@@ -68,13 +75,13 @@ class AdminUser implements UserInterface, \Serializable
     /**
      * Set name
      *
-     * @param string $name
+     * @param string $username
      *
      * @return AdminUser
      */
-    public function setUsername($name)
+    public function setUsername($username)
     {
-        $this->name = $name;
+        $this->username = $username;
 
         return $this;
     }
@@ -86,7 +93,7 @@ class AdminUser implements UserInterface, \Serializable
      */
     public function getUsername() {
 
-        $this->name;
+        $this->username;
     }
 
     /**
@@ -113,6 +120,7 @@ class AdminUser implements UserInterface, \Serializable
         return $this->email;
     }
 
+
     /**
      * Set password
      *
@@ -137,33 +145,9 @@ class AdminUser implements UserInterface, \Serializable
      */
     public function getPassword() {
 
-        return$this->password;
+        return $this->password;
     }
 
-    /**
-     * Set role
-     *
-     * @param integer $roleId
-     *
-     * @return AdminUser
-     */
-    public function setRole($roleId)
-    {
-        $this->roleId = $roleId;
-
-        return $this;
-    }
-    /**
-     * Get role
-     *
-     *
-     * @return string Role
-     */
-    public function getRole()
-    {
-
-        return $this->roleId;
-    }
 
     /**
      * Returns the roles granted to the user.
@@ -181,15 +165,28 @@ class AdminUser implements UserInterface, \Serializable
      *
      * @return (Role|integer)[] The user roles
      */
-    public function getRoles(){
+    public function getRoles()
+    {
 
-        return [
-            'ROLE_ADMIN'
-        ];
+        $roles = $this->roles;
+
+        if (!in_array('ROLE_ADMIN', $roles)) {
+            $roles[] = 'ROLE_ADMIN';
+        }
+
+//        foreach ($this->groups as $group) {
+//            $roles = array_merge($roles, $group->getRoles());
+//        }
+
+        return $roles;
 
     }
 
 
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+    }
 
 
     /**
@@ -199,9 +196,9 @@ class AdminUser implements UserInterface, \Serializable
      *
      * @return string|null The salt
      */
-    public function getSalt() {
+    public function getSalt()
+    {
 
-        return null;
     }
 
 
@@ -212,56 +209,28 @@ class AdminUser implements UserInterface, \Serializable
      * This is important if, at any given point, sensitive information like
      * the plain-text password is stored on this object.
      */
-    public function eraseCredentials() {
-
-    }
-
-    /** @see \Serializable::serialize() */
-    public function serialize()
+    public function eraseCredentials()
     {
-        return serialize(array(
-            $this->id,
-            $this->name,
-            $this->password,
-            // see section on salt below
-            // $this->salt,
-        ));
+        $this->plainPassword = null;
+
     }
 
-    /** @see \Serializable::unserialize() */
-    public function unserialize($serialized)
+    public function getPlainPassword()
     {
-        list (
-            $this->id,
-            $this->name,
-            $this->password,
-            // see section on salt below
-            // $this->salt
-            ) = unserialize($serialized);
+        return $this->plainPassword;
     }
 
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return AdminUser
-     */
-    public function setName($name)
+    public function setPlainPassword($plainPassword)
     {
-        $this->name = $name;
-
-        return $this;
+        $this->plainPassword = $plainPassword;
+        //guarantees that the entity looks "dirty" to Doctrine
+        // when changing the plainPassword
+        $this->password = null;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+
+
+
+
 }
