@@ -30,7 +30,7 @@ class RegistrationForm extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => AdminUser::class,
-            'validation_groups' => ['Default', 'Registration']
+            'validation_groups' => ['Admin', 'Registration']
         ]);
 
     }

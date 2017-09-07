@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * AdminUser
@@ -59,8 +59,39 @@ class AdminUser implements UserInterface
      *
      * @ORM\Column(name="roles", type="json_array", nullable=true)
      */
-    private $roles = [];
+    private $roles = ['ROLE_SUPPORT'];
 
+
+    /**
+     * @var \DateTime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updated;
+
+
+    public function __construct()
+    {
+        $this->created = new \DateTime();
+        $this->updated = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        $this->updated = new \DateTime();
+    }
 
     /**
      * Get id
@@ -163,15 +194,15 @@ class AdminUser implements UserInterface
      * and populated in any number of different ways when the user object
      * is created.
      *
-     * @return (Role|integer)[] The user roles
+     * @return (Role|string)[] The user roles
      */
     public function getRoles()
     {
 
         $roles = $this->roles;
 
-        if (!in_array('ROLE_ADMIN', $roles)) {
-            $roles[] = 'ROLE_ADMIN';
+        if (empty($roles)) {
+            $roles[] = 'ROLE_SUPPORT';
         }
 
 //        foreach ($this->groups as $group) {
@@ -186,6 +217,17 @@ class AdminUser implements UserInterface
     public function setRoles($roles)
     {
         $this->roles = $roles;
+    }
+
+
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    public function getUpdated()
+    {
+        return $this->updated;
     }
 
 

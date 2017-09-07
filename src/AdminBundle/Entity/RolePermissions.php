@@ -10,7 +10,7 @@ use AdminBundle\Entity\Permissions as Permissions;
  * RolePermissions
  *
  * @ORM\Table(name="role_permissions", indexes={@ORM\Index(name="idx_1fba94e6d60322ac", columns={"role_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AdminBundle\Repository\RolePermissionsRepository")
  */
 class RolePermissions
 {
