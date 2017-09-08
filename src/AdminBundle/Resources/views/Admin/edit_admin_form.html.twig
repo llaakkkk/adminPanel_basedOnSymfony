@@ -1,0 +1,21 @@
+
+<div class="ibox-content">
+    {{ form_start(form) }}
+    <div class="form-group">
+        {{ form_row(form.username, { 'attr': {'class': 'form-control'} }) }}
+    </div>
+    <div class="form-group">
+        {{ form_row(form.email, { 'attr': {'class': 'form-control'} }) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_row(form.roles, {
+            'label': 'Role',
+            'attr': {'class': 'form-control'}
+        }) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary block full-width m-b" formnovalidate>Edit</button>
+
+    {{ form_end(form) }}
+</div>

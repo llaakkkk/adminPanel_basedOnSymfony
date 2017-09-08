@@ -29,7 +29,7 @@ class AdminUser implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="username", type="string", length=255)
      */
     private $username;
 
@@ -124,7 +124,7 @@ class AdminUser implements UserInterface
      */
     public function getUsername() {
 
-        $this->username;
+       return $this->username;
     }
 
     /**

@@ -6,7 +6,7 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>FooTable with row toggler, sorting and pagination</h5>
+                        <h5>Administrators</h5>
 
                         <div class="ibox-tools">
                             <a class="collapse-link">
@@ -15,30 +15,33 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-
-                        <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="8">
+                        <table class="table table-stripped toggle-arrow-tiny" data-page-size="8">
                             <thead>
                             <tr>
-
-                                <th data-toggle="true">Name</th>
+                                <th>Name</th>
                                 <th>Email</th>
                                 <th>Roles</th>
                                 <th>Date</th>
-                                <th>Action</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
-
-                            {% for user in adminUsers %}
-                            <tr>
-                                <td>{{ user.username|e }} </td>
-                                <td>{{ user.email}}</td>
-                                <td>{% for role in  user.getRoles()  %}{{ role }}{% endfor %}</td>
-                                <td>{{ user.created.date|date("F jS \\a\\t g:ia") }}</td>
-                                <td><a href="#"><i class="fa fa-check text-navy"></i></a>{{ user.id }}</td>
-                            </tr>
-                            {% endfor %}
-
+                                {% for user in adminUsers %}
+                                <tr>
+                                    <td>{{ user.getUsername|e }}</td>
+                                    <td>{{ user.email}}</td>
+                                    <td>{% for role in  user.getRoles()  %}<a href="{{ path('role_permission') }}">{{ role }}</a>{% endfor %}</td>
+                                    <td>{{ user.created.date|date("F jS \\a\\t g:ia") }}</td>
+                                    <td>
+                                        <button class="btn btn-info dim user-edit" data-id="{{ user.id }}">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        </button>
+                                        <button class="btn btn-danger dim" data-id="{{ user.id }}">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
                             </tbody>
                             <tfoot>
                             <tr>
@@ -53,24 +56,64 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="modal inmodal" id="userEdit" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated fadeIn">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <i class="fa fa-clock-o modal-icon"></i>
+                    <h4 class="modal-title">Modal title</h4>
+                    <small>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</small>
+                </div>
+                <div class="modal-body">
 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-
-    <!-- FooTable -->
-    <script src="{{ asset('js/plugins/footable/footable.all.min.js') }}"></script>
-
-    <!-- Page-Level Scripts -->
-    <script>
-        $(document).ready(function() {
-
-            $('.footable').footable();
-            $('.footable2').footable();
-
+    <script type="text/javascript">
+        $('.user-edit').on('click', function(){
+            var $modal = $('#userEdit');
+            var $userId = $(this).attr('data-id');
+            $.get("administrator_edit/" + $userId, null, function(data) {
+                $modal.find('modal-body').html(data);
+            })
+            // create the modal and bind the button
+            $('#userEdit').dialog({
+                buttons: {
+                    success: {
+                        label: "Save",
+                        className: "btn-success",
+                        callback: function() {
+                            that = this;
+                            var data = {};
+                            // get the data from your form
+                            $(that).find('input, textarea').each(function(){
+                                data[$(this).attr('name')] = $(this).val();
+                            })
+                            // Post the data
+                            $.post( "administrator_edit/" + $userId, function(data , status) {
+                                if ( "201" === status){
+                                    $modal.modal('hide');
+                                }
+                                else {
+                                    $modal.find('modal-body').html(data);
+                                }
+                            });
+                        }
+                    }
+                    }
+                });
         });
-
     </script>
+
 {% endblock %}

@@ -7,9 +7,11 @@ security:
             cost: 12
 
     role_hierarchy:
-        ROLE_SUPPORT: []
-        ROLE_MARKETING: [ROLE_SUPPORT]
         ROLE_ADMIN: [ROLE_MARKETING, ROLE_SUPPORT]
+        ROLE_MARKETING: [ROLE_SUPPORT]
+        ROLE_SUPPORT: []
+
+
 
 
 #    role_hierarchy:
@@ -58,8 +60,8 @@ security:
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: ROLE_ADMIN }
-        - { path: ^/administrator, roles: ROLE_ADMIN }
+        - { path: ^/, roles: ROLE_SUPPORT }
+        - { path: ^/administrator, roles: ROLE_SUPPORT }
 #      - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 ##        - { path: ^/, roles: ROLE_ADMIN }
 #      - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

@@ -6,6 +6,7 @@ use AdminBundle\Entity\AdminUser;
 use AdminBundle\Entity\Permissions;
 use AdminBundle\Entity\RolePermissions;
 use AdminBundle\Entity\Roles;
+use AdminBundle\Form\EditAdminForm;
 use AdminBundle\Repository\AdminUserRepository;
 use AdminBundle\Repository\RolePermissionsRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -20,7 +21,7 @@ use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 /**
  * Class AdminController
  * @package AdminBundle\Controller
- * @Security("is_granted('ROLE_MARKETING')")
+ * @Security("is_granted('ROLE_SUPPORT')")
  */
 
 class AdminController extends Controller
@@ -34,8 +35,7 @@ class AdminController extends Controller
     public function indexAction(Request $request)
     {
 
-        // replace this example code with whatever you need
-        return $this->render('AdminBundle:Default:index.html.twig', [
+        return $this->render('AdminBundle:Admin:index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR
         ]);
     }
@@ -56,6 +56,49 @@ class AdminController extends Controller
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
             'adminUsers' => $adminUsers
         ]);
+
+    }
+
+    /**
+     * @Route("/administrator_edit/{adminUserId}", name="/administrator_edit")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function administratorEditAction(Request $request, $adminUserId)
+    {
+        $adminRepository = $this->getDoctrine()->getRepository(AdminUser::class);
+        $adminUser = $adminRepository->findOneBy(['id', $adminUserId]);
+
+        $form = $this->createForm(EditAdminForm::class);
+
+        $form->handleRequest($adminUser);
+
+        if ( $form->isValid()) {
+            return;
+//            // Create the user
+//            /** @var AdminUser $user */
+//            $user = $form->getData();
+//
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($user);
+//            $em->flush();
+//
+//            $this->addFlash('success', 'Welcome '.$user->getEmail());
+//
+//            return $this->get('security.authentication.guard_handler')
+//                ->authenticateUserAndHandleSuccess(
+//                    $user,
+//                    $request,
+//                    $this->get('app.security.login_form_authenticator'),
+//                    'main'
+//
+//                );
+
+        }
+
+        return $this->render('AdminBundle:Admin:administrator.html.twig', array(
+            'form' => $form->createView()
+        ));
 
     }
 
