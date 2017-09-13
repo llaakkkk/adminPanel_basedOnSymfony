@@ -3,6 +3,10 @@
 namespace AdminBundle\Form;
 
 use AdminBundle\Entity\AdminUser;
+use AdminBundle\Entity\RolePermissions;
+use AdminBundle\Entity\Roles;
+use AdminBundle\Repository\RolesRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,7 +24,10 @@ class EditAdminForm extends AbstractType
         $builder
             ->add('email', EmailType::class)
             ->add('username', TextType::class)
-            ->add('roles', TextType::class);
+            ->add('roles',EntityType ::class, [
+                'class' => Roles::class,
+                'choices' => null,
+            ]);
 
     }
 

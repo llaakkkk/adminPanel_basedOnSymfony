@@ -12,6 +12,7 @@ use AdminBundle\Repository\RolePermissionsRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
@@ -60,43 +61,34 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/administrator_edit/{adminUserId}", name="/administrator_edit")
-     * @param Request $request
+     * @Route("/administrator/{id}/edit", name="administrator_edit")
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function administratorEditAction(Request $request, $adminUserId)
+    public function administratorEditAction(Request $request,AdminUser $adminUser)
     {
-        $adminRepository = $this->getDoctrine()->getRepository(AdminUser::class);
-        $adminUser = $adminRepository->findOneBy(['id', $adminUserId]);
 
-        $form = $this->createForm(EditAdminForm::class);
+        $form = $this->createForm(EditAdminForm::class, $adminUser);
 
-        $form->handleRequest($adminUser);
+        $form->handleRequest($request);
+
 
         if ( $form->isValid()) {
-            return;
-//            // Create the user
-//            /** @var AdminUser $user */
-//            $user = $form->getData();
-//
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($user);
-//            $em->flush();
-//
-//            $this->addFlash('success', 'Welcome '.$user->getEmail());
-//
-//            return $this->get('security.authentication.guard_handler')
-//                ->authenticateUserAndHandleSuccess(
-//                    $user,
-//                    $request,
-//                    $this->get('app.security.login_form_authenticator'),
-//                    'main'
-//
-//                );
+
+            // Create the user
+            /** @var AdminUser $user */
+            $adminUser = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($adminUser);
+            $em->flush();
+
+            $this->addFlash('success', 'Info saved for '.$adminUser->getEmail());
+
+            return $this->redirectToRoute('administrator');
 
         }
 
-        return $this->render('AdminBundle:Admin:administrator.html.twig', array(
+        return $this->render('AdminBundle:Admin:administrator_edit.html.twig', array(
             'form' => $form->createView()
         ));
 

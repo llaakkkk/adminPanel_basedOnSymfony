@@ -2,6 +2,8 @@
 
 namespace AdminBundle\Repository;
 
+use AdminBundle\Entity\AdminUser;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use \Doctrine\ORM\EntityRepository;
@@ -25,6 +27,20 @@ class AdminUserRepository extends EntityRepository implements UserLoaderInterfac
             ->where('u.name = :username OR u.email = :email')
             ->setParameter('username', $username)
             ->setParameter('email', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+    }
+
+    /**
+     * @param integer $userId
+     * @return ArrayCollection
+     */
+    public function loadUserById($userId)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.id = :userId')
+            ->setParameter('userId', $userId)
             ->getQuery()
             ->getOneOrNullResult();
 
