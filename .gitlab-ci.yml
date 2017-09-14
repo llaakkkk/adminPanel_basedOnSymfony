@@ -3,6 +3,7 @@ statges:
 
 deploy to dev server:
   stage: deploy
+  
   script: 
     - cd /home/gitlab-runner/ansible-playbook    
     - git pull origin master     
