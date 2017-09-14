@@ -1,14 +1,14 @@
 statges:
   - deploy
 
-  deploy to dev server:
-    stage: deploy
-      script: 
-       - cd /home/gitlab-runner/ansible-playbook    
-       - git pull origin master     
-       - echo "Deploy to dev admin server"     
-       - ansible-playbook -i production deploy-core-admin-to-dev.yml
-        only:    
-          - dev
-        tags: 
-          - shell
+deploy to dev server:
+  stage: deploy
+  script: 
+    - cd /home/gitlab-runner/ansible-playbook    
+    - git pull origin master     
+    - echo "Deploy to dev admin server"     
+    - ansible-playbook -i production deploy-core-admin-to-dev.yml
+  only:    
+    - dev
+  tags: 
+    - shell
