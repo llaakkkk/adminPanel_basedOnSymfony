@@ -3,7 +3,7 @@ stages:
 
 deploy to dev server:
   stage: deploy
-  
+
   script:
     - cd /home/gitlab-runner/ansible-playbook
     - git pull origin master
@@ -11,7 +11,7 @@ deploy to dev server:
     - ansible-playbook -i production deploy-core-admin-to-dev.yml
 
   only:
-    - dev        
-  
+    - dev
+
   tags:
     - shell
