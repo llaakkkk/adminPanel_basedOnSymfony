@@ -72,7 +72,7 @@ class AuthenticationListener implements ListenerInterface
 
         } catch (AuthenticationException $failed) {
             // authentication failed
-}
+        }
 
 
     }

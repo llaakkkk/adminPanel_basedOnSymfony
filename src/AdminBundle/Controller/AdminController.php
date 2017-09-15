@@ -67,10 +67,16 @@ class AdminController extends Controller
     public function administratorEditAction(Request $request,AdminUser $adminUser)
     {
 
-        $form = $this->createForm(EditAdminForm::class, $adminUser);
+        $em = $this->getDoctrine()->getManager();
+        $roles = $em->getRepository('AdminBundle:Roles')->findAll();
+        $role =  $adminUser->getRoles()[0];
+
+        $form = $this->createForm(EditAdminForm::class, $adminUser, [
+                'roles' => $roles,
+                'role' => $role
+            ]);
 
         $form->handleRequest($request);
-
 
         if ( $form->isValid()) {
 
@@ -78,8 +84,7 @@ class AdminController extends Controller
             /** @var AdminUser $user */
             $adminUser = $form->getData();
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($adminUser);
+            $em->merge($adminUser);
             $em->flush();
 
             $this->addFlash('success', 'Info saved for '.$adminUser->getEmail());
@@ -91,6 +96,17 @@ class AdminController extends Controller
         return $this->render('AdminBundle:Admin:administrator_edit.html.twig', array(
             'form' => $form->createView()
         ));
+
+    }
+
+    /**
+     * @Route("/administrator/{id}/delete", name="administrator_delete")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+
+    public function administratorDeleteAction(Request $request,AdminUser $adminUser)
+    {
+
 
     }
 

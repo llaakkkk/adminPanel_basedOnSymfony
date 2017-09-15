@@ -14,6 +14,4 @@ use \Doctrine\ORM\EntityRepository;
 class RolesRepository  extends EntityRepository
 {
 
-
-    
 }

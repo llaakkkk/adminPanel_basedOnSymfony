@@ -4,6 +4,7 @@ namespace AdminBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -55,9 +56,9 @@ class AdminUser implements UserInterface
     private $plainPassword;
 
     /**
-     * @var integer
+     * @var Roles $roles
      *
-     * @ORM\Column(name="roles", type="json_array", nullable=true)
+     * @ORM\Column(name="roles", type="json_array", nullable=false)
      */
     private $roles = ['ROLE_SUPPORT'];
 
@@ -194,30 +195,26 @@ class AdminUser implements UserInterface
      * and populated in any number of different ways when the user object
      * is created.
      *
-     * @return (Role|string)[] The user roles
+     * @return (Roles|string)[] The user roles
      */
     public function getRoles()
     {
-
         $roles = $this->roles;
-
-        if (empty($roles)) {
-            $roles[] = 'ROLE_SUPPORT';
-        }
-
-//        foreach ($this->groups as $group) {
-//            $roles = array_merge($roles, $group->getRoles());
-//        }
 
         return $roles;
 
     }
 
-
+    /**
+     * @param Roles $roles
+     *
+     */
     public function setRoles($roles)
     {
-        $this->roles = $roles;
+
+        $this->roles = [$roles];
     }
+
 
 
     public function getCreated()

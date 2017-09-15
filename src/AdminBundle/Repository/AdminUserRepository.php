@@ -45,4 +45,18 @@ class AdminUserRepository extends EntityRepository implements UserLoaderInterfac
             ->getOneOrNullResult();
 
     }
+
+    /**
+     * @return ArrayCollection
+     */
+
+    public function getUserRoles()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.roles')
+            ->getQuery()
+            ->getResult();
+
+
+    }
 }
