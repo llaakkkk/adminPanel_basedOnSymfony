@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Class AdminController
@@ -99,16 +100,6 @@ class AdminController extends Controller
 
     }
 
-    /**
-     * @Route("/administrator/{id}/delete", name="administrator_delete")
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-
-    public function administratorDeleteAction(Request $request,AdminUser $adminUser)
-    {
-
-
-    }
 
     /**
      * @Route("/role_permission", name="role_permission")
@@ -134,4 +125,44 @@ class AdminController extends Controller
         ]);
 
     }
+
+    /**
+     * @Route("/role_permission/{roleId}/edit", name="role_permission_edit")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function rolePermissionEditAction(Request $request,Role $role)
+    {
+
+//        $em = $this->getDoctrine()->getManager();
+//        $roles = $em->getRepository('AdminBundle:Roles')->findAll();
+//        $role =  $adminUser->getRoles()[0];
+//
+//        $form = $this->createForm(EditAdminForm::class, $adminUser, [
+//            'roles' => $roles,
+//            'role' => $role
+//        ]);
+//
+//        $form->handleRequest($request);
+//
+//        if ( $form->isValid()) {
+//
+//            // Create the user
+//            /** @var AdminUser $user */
+//            $adminUser = $form->getData();
+//
+//            $em->merge($adminUser);
+//            $em->flush();
+//
+//            $this->addFlash('success', 'Info saved for '.$adminUser->getEmail());
+//
+//            return $this->redirectToRoute('administrator');
+//
+//        }
+//
+//        return $this->render('AdminBundle:Admin:administrator_edit.html.twig', array(
+//            'form' => $form->createView()
+//        ));
+
+    }
+
 }

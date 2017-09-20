@@ -42,10 +42,13 @@
                                                     <td class="text-warning"><i class="fa fa-minus" aria-hidden="true"></i></td>
                                                    {% endif %}
                                             {% endfor %}
+
                                         <td>
-                                            <a href="#"><i class="fa fa-check text-navy"></i></a>
-                                            {{ role.roleId }}
+                                            <a href="{{ path('role_permission_edit', {'roleId': role.roleId}) }}" class="btn btn-info user-edit">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </a>
                                         </td>
+
                                     </tr>
                                 {% endfor %}
                             </tbody>

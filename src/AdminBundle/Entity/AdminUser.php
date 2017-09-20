@@ -62,6 +62,11 @@ class AdminUser implements UserInterface
      */
     private $roles = ['ROLE_SUPPORT'];
 
+    /**
+     * @ORM\Column(type="boolean", name="is_active", options={"default": true})
+     */
+    protected $is_active;
+
 
     /**
      * @var \DateTime $created
@@ -82,6 +87,7 @@ class AdminUser implements UserInterface
 
     public function __construct()
     {
+        $this->is_active = true; // <- This is not an annotation
         $this->created = new \DateTime();
         $this->updated = new \DateTime();
     }
@@ -215,6 +221,17 @@ class AdminUser implements UserInterface
         $this->roles = [$roles];
     }
 
+
+    public function getIsActive()
+    {
+        return $this->is_active;
+    }
+
+
+    public function setIsActive($is_active)
+    {
+        $this->is_active = $is_active;
+    }
 
 
     public function getCreated()

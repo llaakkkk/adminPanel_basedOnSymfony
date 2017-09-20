@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block title %} Admin Edit {% endblock %}
+{% block style %}
+    {{ parent() }}
+    <link href="{{ asset('css/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
+{% endblock %}
 {% block content %}
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
@@ -19,6 +23,13 @@
                             'attr': {'class': 'form-control'}
                         }) }}
                     </div>
+                    <div class="form-group">
+                        {{ form_label(form.isActive, null, {
+                            'label': 'Is active?'
+                        }) }}
+                            {{ form_widget(form.isActive) }}
+
+                    </div>
 
                     <button type="submit" class="btn btn-primary block full-width m-b" formnovalidate>Edit</button>
 
@@ -27,5 +38,19 @@
             </div>
         </div>
     </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <!-- iCheck -->
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+    </script>
 
 {% endblock %}

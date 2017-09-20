@@ -7,8 +7,8 @@
         "psr-4": {
             "AppBundle\\": "src/AppBundle",
             "AuthBundle\\": "src/AuthBundle",
-            "AdminBundle\\": "src/AdminBundle"
-
+            "AdminBundle\\": "src/AdminBundle",
+            "UserBundle\\": "src/UserBundle"
         },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
@@ -17,7 +17,7 @@
         "files": [ "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php" ]
     },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.0",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-migrations-bundle": "^1.0",
         "doctrine/orm": "^2.5",
@@ -62,7 +62,7 @@
     },
     "config": {
         "platform": {
-            "php": "5.5.9"
+            "php": "7.1.9"
         },
         "sort-packages": true
     },
