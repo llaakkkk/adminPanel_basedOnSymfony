@@ -48,7 +48,7 @@
                 </li>
                 {% endif %}
                <li class="">
-                   <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Users</span></a>
+                   <a href="{{ path('user') }}"><i class="fa fa-users"></i> <span class="nav-label">Users</span></a>
                </li>
                 {% if is_granted('ROLE_MARKETING') %}
                 <li>
