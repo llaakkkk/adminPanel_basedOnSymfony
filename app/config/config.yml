@@ -49,7 +49,7 @@ doctrine:
     dbal:
         default_connection: default
         connections:
-            default:
+            admin:
                 driver:   pdo_pgsql
                 host:     '%database_host%'
                 port:     '%database_port%'
@@ -57,7 +57,7 @@ doctrine:
                 user:     '%database_user%'
                 password: '%database_password%'
                 charset:  UTF8
-            customer:
+            default:
                 driver:    pdo_pgsql
                 host:     '%database_host_prod%'
                 port:     '%database_port_prod%'
@@ -73,16 +73,21 @@ doctrine:
         #path: '%database_path%'
 
     orm:
+        default_entity_manager: default
         auto_generate_proxy_classes: '%kernel.debug%'
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
-#        entity_managers:
-#            default:
-#                naming_strategy: doctrine.orm.naming_strategy.underscore
-#                auto_mapping: true
-#                connection: default
-#                mappings:
-#                  AdminBundle: ~
+        entity_managers:
+            default:
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                connection: default
+                mappings:
+                    UserBundle: ~
+            admin:
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                auto_mapping: true
+                connection: admin
+                mappings:
+                    AuthBundle: ~
+                    AdminBundle: ~
 doctrine_migrations:
     dir_name: "%kernel.root_dir%/DoctrineMigrations"
     namespace: App\Migrations

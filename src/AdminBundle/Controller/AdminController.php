@@ -9,6 +9,7 @@ use AdminBundle\Entity\Roles;
 use AdminBundle\Form\EditAdminForm;
 use AdminBundle\Repository\AdminUserRepository;
 use AdminBundle\Repository\RolePermissionsRepository;
+use Doctrine\ORM\Mapping as ORM;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -28,6 +29,8 @@ use Symfony\Component\Security\Core\Role\Role;
 
 class AdminController extends Controller
 {
+
+
 
     /**
      * @Route("/admin_panel", name="admin_panel")
@@ -50,7 +53,7 @@ class AdminController extends Controller
      */
     public function administratorAction(Request $request)
     {
-        $repository = $this->getDoctrine()->getRepository(AdminUser::class);
+        $repository = $this->getDoctrine()->getRepository(AdminUser::class, 'admin');
 
         $adminUsers = $repository->findAll();
 
@@ -68,7 +71,7 @@ class AdminController extends Controller
     public function administratorEditAction(Request $request,AdminUser $adminUser)
     {
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager('admin');
         $roles = $em->getRepository('AdminBundle:Roles')->findAll();
         $role =  $adminUser->getRoles()[0];
 
@@ -108,13 +111,13 @@ class AdminController extends Controller
      */
     public function rolePermissionAction(Request $request)
     {
-        $repositoryRoles = $this->getDoctrine()->getRepository(Roles::class);
+        $repositoryRoles = $this->getDoctrine()->getRepository(Roles::class, 'admin');
         $roles = $repositoryRoles->findAll();
 
-        $repositoryPermissions = $this->getDoctrine()->getRepository(Permissions::class);
+        $repositoryPermissions = $this->getDoctrine()->getRepository(Permissions::class, 'admin');
         $permissions = $repositoryPermissions->findAll();
 
-        $repositoryRolesPermissions = $this->getDoctrine()->getRepository(RolePermissions::class);
+        $repositoryRolesPermissions = $this->getDoctrine()->getRepository(RolePermissions::class,'admin');
 
         // replace this example code with whatever you need
         return $this->render('AdminBundle:Admin:role_permission.html.twig', [

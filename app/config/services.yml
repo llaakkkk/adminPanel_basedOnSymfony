@@ -2,6 +2,7 @@
 # https://symfony.com/doc/current/service_container.html
 parameters:
     #parameter_name: value
+     app.security.login_form_authenticator.entity_manager.name: admin
 
 services:
     # default configuration for services in *this* file
@@ -44,6 +45,7 @@ services:
     AuthBundle\Controller\:
         resource: '../../src/AuthBundle/Controller'
         public: true
+        autowire: true
         tags: ['controller.service_arguments']
 
     AdminBundle\Controller\:
@@ -60,6 +62,8 @@ services:
     app.security.login_form_authenticator:
         class: AuthBundle\Security\LoginFormAuthenticator
         autowire: true
+        arguments:
+            - '@doctrine.orm.admin_entity_manager'
 
     app.doctrine.hash_password_listener:
         class: AuthBundle\Doctrine\HashPasswordListener

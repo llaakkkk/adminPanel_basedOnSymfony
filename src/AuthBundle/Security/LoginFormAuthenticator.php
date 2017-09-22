@@ -10,6 +10,7 @@ namespace AuthBundle\Security;
 
 
 use AuthBundle\Form\LoginForm;
+use AdminBundle\Repository\AdminUserRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,18 +29,18 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
     use TargetPathTrait;
 
-    private $formFactory;
     private $em;
+    private $formFactory;
     private $router;
     /**
      * @var UserPasswordEncoder
      */
     private $passwordEncoder;
 
-    public function __construct(FormFactoryInterface $formFactory, EntityManager $em, RouterInterface $router, UserPasswordEncoder $passwordEncoder)
+    public function __construct( EntityManager $em, FormFactoryInterface $formFactory, RouterInterface $router, UserPasswordEncoder $passwordEncoder)
     {
-        $this->formFactory = $formFactory;
         $this->em = $em;
+        $this->formFactory = $formFactory;
         $this->router = $router;
         $this->passwordEncoder = $passwordEncoder;
     }
@@ -77,7 +78,14 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     {
        $username = $credentials['_username'];
 
-       return $this->em->getRepository('AdminBundle:AdminUser')
+//        $repository =
+//            $this->getDoctrine()
+//                ->getManager('YourManager')
+//                ->getRepository('YourBundle:YourEntity');
+
+
+        var_dump($this->em->getConfiguration()->getDefaultRepositoryClassName());die;
+       return $this->em->getRepository($this->em->getConfiguration())
            ->findOneBy(['email' => $username]);
     }
 

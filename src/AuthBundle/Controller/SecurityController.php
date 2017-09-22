@@ -73,7 +73,7 @@ class SecurityController extends Controller
             /** @var AdminUser $user */
             $user = $form->getData();
 
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager('admin');
             $em->persist($user);
             $em->flush();
 
