@@ -83,7 +83,7 @@ doctrine:
                     UserBundle: ~
             admin:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
-                auto_mapping: true
+#                auto_mapping: true
                 connection: admin
                 mappings:
                     AuthBundle: ~

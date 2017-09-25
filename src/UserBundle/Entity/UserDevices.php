@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use  AppBundle\Entity\SubscriptionStatus;
 /**
  * UserDevices
  *
@@ -135,9 +135,9 @@ class UserDevices
     private $id;
 
     /**
-     * @var \AppBundle\Entity\SubscriptionStatus
+     * @var \UserBundle\Entity\SubscriptionStatus
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\SubscriptionStatus")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\SubscriptionStatus")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="subscription_status_id", referencedColumnName="id")
      * })

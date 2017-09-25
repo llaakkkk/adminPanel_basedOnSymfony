@@ -1,0 +1,9 @@
+UserBundle\Entity\User:
+    user_{1..25}:
+        firstName: adminName
+        lastName: adminSurname
+        email: admin+<current()>@admin.com
+        created: <(new \DateTime('2017-09-24'))>
+        updated: <(new \DateTime('2017-09-24'))>
+
+
