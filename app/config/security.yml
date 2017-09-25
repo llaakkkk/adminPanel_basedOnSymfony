@@ -21,7 +21,7 @@ security:
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         db_provider:
-          entity: { class: AdminBundle:AdminUser, property: email }
+          entity: { class: AdminBundle:AdminUser, property: email, manager_name: admin }
 
 #    acl:
 #        connection: default

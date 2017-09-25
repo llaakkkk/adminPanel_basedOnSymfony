@@ -11,6 +11,7 @@ namespace AuthBundle\Security;
 
 use AuthBundle\Form\LoginForm;
 use AdminBundle\Repository\AdminUserRepository;
+use AdminBundle\Entity\AdminUser;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +38,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      */
     private $passwordEncoder;
 
-    public function __construct( EntityManager $em, FormFactoryInterface $formFactory, RouterInterface $router, UserPasswordEncoder $passwordEncoder)
+    public function __construct(EntityManager $em, FormFactoryInterface $formFactory, RouterInterface $router, UserPasswordEncoder $passwordEncoder)
     {
         $this->em = $em;
         $this->formFactory = $formFactory;
@@ -78,15 +79,14 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     {
        $username = $credentials['_username'];
 
-//        $repository =
-//            $this->getDoctrine()
-//                ->getManager('YourManager')
-//                ->getRepository('YourBundle:YourEntity');
+        if (null === $username) {
+            return;
+        }
+//        return $this->em->getRepository('AdminBundle\Entity\AdminUser')
+//           ->findOneBy(['email' => $username]);
 
-
-        var_dump($this->em->getConfiguration()->getDefaultRepositoryClassName());die;
-       return $this->em->getRepository($this->em->getConfiguration())
-           ->findOneBy(['email' => $username]);
+        // if a User object, checkCredentials() is called
+        return $userProvider->loadUserByUsername($username);
     }
 
     /**
