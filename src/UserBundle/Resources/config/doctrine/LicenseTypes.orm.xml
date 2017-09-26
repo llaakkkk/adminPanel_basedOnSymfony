@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AppBundle\Entity\Migrations" table="migrations">
+  <entity name="UserBundle\Entity\LicenseTypes" table="license_types">
     <id name="id" type="integer" column="id">
       <generator strategy="SEQUENCE"/>
-      <sequence-generator sequence-name="migrations_id_seq" allocation-size="1" initial-value="1"/>
+      <sequence-generator sequence-name="license_types_id_seq" allocation-size="1" initial-value="1"/>
     </id>
-    <field name="fileName" type="string" column="file_name" length="255" nullable="true">
+    <field name="name" type="string" column="name" length="255" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="pathToFile" type="string" column="path_to_file" length="1023" nullable="true">
+    <field name="slug" type="string" column="slug" length="255" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
     <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="default">now()</option>
+      </options>
+    </field>
+    <field name="updated" type="datetime" column="updated" nullable="false">
       <options>
         <option name="default">now()</option>
       </options>

@@ -3,7 +3,7 @@
 namespace UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use \AppBundle\Entity\PaymentSystemProducts as PaymentSystemProducts;
+use AppBundle\Entity\PaymentSystemProducts;
 
 /**
  * SubscriptionStatus
@@ -47,7 +47,7 @@ class SubscriptionStatus
     /**
      * @var \AppBundle\Entity\PaymentSystemProducts
      *
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\PaymentSystemProducts")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PaymentSystemProducts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
      * })

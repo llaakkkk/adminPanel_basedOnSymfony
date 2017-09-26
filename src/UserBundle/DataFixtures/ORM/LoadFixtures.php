@@ -2,7 +2,7 @@
 
 namespace UserBundle\DataFixtures\ORM;
 
-use UserBundle\Entity\User;
+use UserBundle\Entity\Users;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;

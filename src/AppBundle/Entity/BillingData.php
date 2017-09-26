@@ -72,9 +72,9 @@ class BillingData
     private $id;
 
     /**
-     * @var \AppBundle\Entity\Users
+     * @var \UserBundle\Entity\Users
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Users")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Users")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * })

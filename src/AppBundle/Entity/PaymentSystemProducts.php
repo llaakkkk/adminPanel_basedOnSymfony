@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use UserBundle\Entity\LicenseTypes;
 
 /**
  * PaymentSystemProducts
@@ -58,9 +59,9 @@ class PaymentSystemProducts
     private $id;
 
     /**
-     * @var \AppBundle\Entity\LicenseTypes
+     * @var \UserBundle\Entity\LicenseTypes
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\LicenseTypes")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\LicenseTypes")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="license_type_id", referencedColumnName="id")
      * })
