@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace MarketingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -82,9 +82,9 @@ class BillingData
     private $user;
 
     /**
-     * @var \AppBundle\Entity\PaymentSystemProducts
+     * @var \MarketingBundle\Entity\PaymentSystemProducts
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PaymentSystemProducts")
+     * @ORM\ManyToOne(targetEntity="MarketingBundle\Entity\PaymentSystemProducts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
      * })

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AppBundle\Entity\PaymentSystemProducts" table="payment_system_products">
+  <entity name="MarketingBundle\Entity\PaymentSystemProducts" table="payment_system_products">
     <indexes>
       <index name="IDX_DDD8077B2C55C7C8" columns="license_type_id"/>
       <index name="IDX_DDD8077B93BC008D" columns="payment_system_id"/>

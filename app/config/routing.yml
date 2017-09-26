@@ -14,7 +14,7 @@ auth:
     prefix:   /
 
 app:
-    resource: '@AppBundle/Controller/'
+    resource: '@MarketingBundle/Controller/'
     type: annotation
 
 #admin_area:

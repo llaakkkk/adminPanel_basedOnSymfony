@@ -3,7 +3,7 @@
 namespace UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Entity\PaymentSystemProducts;
+use MarketingBundle\Entity\PaymentSystemProducts;
 
 /**
  * SubscriptionStatus
@@ -45,9 +45,9 @@ class SubscriptionStatus
     private $id;
 
     /**
-     * @var \AppBundle\Entity\PaymentSystemProducts
+     * @var \MarketingBundle\Entity\PaymentSystemProducts
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PaymentSystemProducts")
+     * @ORM\ManyToOne(targetEntity="MarketingBundle\Entity\PaymentSystemProducts")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
      * })
@@ -64,6 +64,79 @@ class SubscriptionStatus
      */
     private $licenseStatus;
 
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return PaymentSystemProducts
+     */
+    public function getProduct(): PaymentSystemProducts
+    {
+        return $this->product;
+    }
+
+    /**
+     * @param PaymentSystemProducts $product
+     */
+    public function setProduct(PaymentSystemProducts $product)
+    {
+        $this->product = $product;
+    }
+
+    /**
+     * @return LicenseStatus
+     */
+    public function getLicenseStatus(): LicenseStatus
+    {
+        return $this->licenseStatus;
+    }
+
+    /**
+     * @param LicenseStatus $licenseStatus
+     */
+    public function setLicenseStatus(LicenseStatus $licenseStatus)
+    {
+        $this->licenseStatus = $licenseStatus;
+    }
+
+
+    /**
+     * @return \DateTime
+     */
+    public function getNextChargeDate(): \DateTime
+    {
+        return $this->nextChargeDate;
+    }
+
+    /**
+     * @param \DateTime $nextChargeDate
+     */
+    public function setNextChargeDate(\DateTime $nextChargeDate)
+    {
+        $this->nextChargeDate = $nextChargeDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated(): \DateTime
+    {
+        return $this->created;
+    }
+
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated(): \DateTime
+    {
+        return $this->updated;
+    }
 
 }
 

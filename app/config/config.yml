@@ -81,7 +81,7 @@ doctrine:
                 connection: default
                 mappings:
                     UserBundle: ~
-                    AppBundle: ~
+                    MarketingBundle: ~
             admin:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
 #                auto_mapping: true

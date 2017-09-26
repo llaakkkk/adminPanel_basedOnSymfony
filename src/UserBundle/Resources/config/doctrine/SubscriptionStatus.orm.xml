@@ -20,7 +20,7 @@
         <option name="default">now()</option>
       </options>
     </field>
-    <many-to-one field="product" target-entity="AppBundle\Entity\PaymentSystemProducts" fetch="LAZY">
+    <many-to-one field="product" target-entity="MarketingBundle\Entity\PaymentSystemProducts" fetch="LAZY">
       <join-columns>
         <join-column name="product_id" referenced-column-name="id"/>
       </join-columns>

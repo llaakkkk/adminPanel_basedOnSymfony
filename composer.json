@@ -5,7 +5,7 @@
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
         "psr-4": {
-            "AppBundle\\": "src/AppBundle",
+            "MarketingBundle\\": "src/MarketingBundle",
             "AuthBundle\\": "src/AuthBundle",
             "AdminBundle\\": "src/AdminBundle",
             "UserBundle\\": "src/UserBundle"

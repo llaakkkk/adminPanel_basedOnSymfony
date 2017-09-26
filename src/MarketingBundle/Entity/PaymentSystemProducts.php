@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace MarketingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use UserBundle\Entity\LicenseTypes;
@@ -69,9 +69,9 @@ class PaymentSystemProducts
     private $licenseType;
 
     /**
-     * @var \AppBundle\Entity\PaymentSystems
+     * @var \MarketingBundle\Entity\PaymentSystems
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PaymentSystems")
+     * @ORM\ManyToOne(targetEntity="MarketingBundle\Entity\PaymentSystems")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="payment_system_id", referencedColumnName="id")
      * })
