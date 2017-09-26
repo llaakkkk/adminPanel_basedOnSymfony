@@ -14,6 +14,17 @@ use UserBundle\Entity\LicenseTypes;
 class PaymentSystemProducts
 {
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="payment_system_products_id_seq", allocationSize=1, initialValue=1)
+     */
+    private $id;
+
+
+    /**
      * @var string
      *
      * @ORM\Column(name="product_id", type="string", length=32, nullable=true)
@@ -35,30 +46,6 @@ class PaymentSystemProducts
     private $slug;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created = 'now()';
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
-    private $updated = 'now()';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="payment_system_products_id_seq", allocationSize=1, initialValue=1)
-     */
-    private $id;
-
-    /**
      * @var \UserBundle\Entity\LicenseTypes
      *
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\LicenseTypes")
@@ -77,6 +64,125 @@ class PaymentSystemProducts
      * })
      */
     private $paymentSystem;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created = 'now()';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated = 'now()';
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductId(): string
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @param string $productId
+     */
+    public function setProductId(string $productId)
+    {
+        $this->productId = $productId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     */
+    public function setSlug(string $slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return LicenseTypes
+     */
+    public function getLicenseType(): LicenseTypes
+    {
+        return $this->licenseType;
+    }
+
+    /**
+     * @param LicenseTypes $licenseType
+     */
+    public function setLicenseType(LicenseTypes $licenseType)
+    {
+        $this->licenseType = $licenseType;
+    }
+
+    /**
+     * @return PaymentSystems
+     */
+    public function getPaymentSystem(): PaymentSystems
+    {
+        return $this->paymentSystem;
+    }
+
+    /**
+     * @param PaymentSystems $paymentSystem
+     */
+    public function setPaymentSystem(PaymentSystems $paymentSystem)
+    {
+        $this->paymentSystem = $paymentSystem;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated(): \DateTime
+    {
+        return $this->created;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated(): \DateTime
+    {
+        return $this->updated;
+    }
+
 
 
 }
