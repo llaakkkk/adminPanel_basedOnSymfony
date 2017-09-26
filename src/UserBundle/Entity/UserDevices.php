@@ -12,6 +12,19 @@ use  AppBundle\Entity\SubscriptionStatus;
  */
 class UserDevices
 {
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="bigint")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="user_devices_id_seq", allocationSize=1, initialValue=1)
+     */
+
+    private $id;
+
+
     /**
      * @var integer
      *
@@ -124,15 +137,6 @@ class UserDevices
      */
     private $activationKey;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="bigint")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="user_devices_id_seq", allocationSize=1, initialValue=1)
-     */
-    private $id;
 
     /**
      * @var \UserBundle\Entity\SubscriptionStatus
@@ -144,6 +148,279 @@ class UserDevices
      */
     private $subscriptionStatus;
 
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param int $userId
+     */
+    public function setUserId(int $userId)
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModelName(): string
+    {
+        return $this->modelName;
+    }
+
+    /**
+     * @param string $modelName
+     */
+    public function setModelName(string $modelName)
+    {
+        $this->modelName = $modelName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModelNumber(): string
+    {
+        return $this->modelNumber;
+    }
+
+    /**
+     * @param string $modelNumber
+     */
+    public function setModelNumber(string $modelNumber)
+    {
+        $this->modelNumber = $modelNumber;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMemoryCapacity(): int
+    {
+        return $this->memoryCapacity;
+    }
+
+    /**
+     * @param int $memoryCapacity
+     */
+    public function setMemoryCapacity(int $memoryCapacity)
+    {
+        $this->memoryCapacity = $memoryCapacity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMemoreFrequency(): int
+    {
+        return $this->memoreFrequency;
+    }
+
+    /**
+     * @param int $memoreFrequency
+     */
+    public function setMemoreFrequency(int $memoreFrequency)
+    {
+        $this->memoreFrequency = $memoreFrequency;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHarddriveType(): string
+    {
+        return $this->harddriveType;
+    }
+
+    /**
+     * @param string $harddriveType
+     */
+    public function setHarddriveType(string $harddriveType)
+    {
+        $this->harddriveType = $harddriveType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHarddriveCapacity(): int
+    {
+        return $this->harddriveCapacity;
+    }
+
+    /**
+     * @param int $harddriveCapacity
+     */
+    public function setHarddriveCapacity(int $harddriveCapacity)
+    {
+        $this->harddriveCapacity = $harddriveCapacity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProccessorModel(): string
+    {
+        return $this->proccessorModel;
+    }
+
+    /**
+     * @param string $proccessorModel
+     */
+    public function setProccessorModel(string $proccessorModel)
+    {
+        $this->proccessorModel = $proccessorModel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOsVersion(): string
+    {
+        return $this->osVersion;
+    }
+
+    /**
+     * @param string $osVersion
+     */
+    public function setOsVersion(string $osVersion)
+    {
+        $this->osVersion = $osVersion;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOsBiuld(): string
+    {
+        return $this->osBiuld;
+    }
+
+    /**
+     * @param string $osBiuld
+     */
+    public function setOsBiuld(string $osBiuld)
+    {
+        $this->osBiuld = $osBiuld;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMacAddress(): string
+    {
+        return $this->macAddress;
+    }
+
+    /**
+     * @param string $macAddress
+     */
+    public function setMacAddress(string $macAddress)
+    {
+        $this->macAddress = $macAddress;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName(): string
+    {
+        return $this->userName;
+    }
+
+    /**
+     * @param string $userName
+     */
+    public function setUserName(string $userName)
+    {
+        $this->userName = $userName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * @param string $uuid
+     */
+    public function setUuid(string $uuid)
+    {
+        $this->uuid = $uuid;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated(): \DateTime
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime $created
+     */
+    public function setCreated(\DateTime $created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated(): \DateTime
+    {
+        return $this->updated;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getActivationKey(): string
+    {
+        return $this->activationKey;
+    }
+
+    /**
+     * @param string $activationKey
+     */
+    public function setActivationKey(string $activationKey)
+    {
+        $this->activationKey = $activationKey;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSubscriptionStatus(): int
+    {
+        return $this->subscriptionStatus;
+    }
+
+    /**
+     * @param int $subscriptionStatus
+     */
+    public function setSubscriptionStatus(int $subscriptionStatus)
+    {
+        $this->subscriptionStatus = $subscriptionStatus;
+    }
 
 }
 
