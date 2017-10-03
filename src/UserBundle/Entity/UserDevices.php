@@ -7,8 +7,9 @@ use  MarketingBundle\Entity\SubscriptionStatus;
 /**
  * UserDevices
  *
- * @ORM\Table(name="user_devices", indexes={@ORM\Index(name="IDX_490A50905948C201", columns={"subscription_status_id"})})
- * @ORM\Entity
+ * @ORM\Table(name="user_devices")
+ *  @ORM\Entity(repositoryClass="UserBundle\Repository\UserDevicesRepository")
+ * @ORM\Index(name="IDX_490A50905948C201", columns={"subscription_status_id"})
  */
 class UserDevices
 {
@@ -25,10 +26,14 @@ class UserDevices
     private $id;
 
 
+
     /**
-     * @var integer
+     * @var \UserBundle\Entity\Users
      *
-     * @ORM\Column(name="user_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * })
      */
     private $userId;
 
@@ -160,7 +165,7 @@ class UserDevices
     /**
      * @return int
      */
-    public function getUserId(): int
+    public function getUserId()
     {
         return $this->userId;
     }
@@ -407,17 +412,17 @@ class UserDevices
     }
 
     /**
-     * @return int
+     * @return \UserBundle\Entity\SubscriptionStatus
      */
-    public function getSubscriptionStatus(): int
+    public function getSubscriptionStatus()
     {
         return $this->subscriptionStatus;
     }
 
     /**
-     * @param int $subscriptionStatus
+     * @param  \UserBundle\Entity\SubscriptionStatus $subscriptionStatus
      */
-    public function setSubscriptionStatus(int $subscriptionStatus)
+    public function setSubscriptionStatus( $subscriptionStatus)
     {
         $this->subscriptionStatus = $subscriptionStatus;
     }

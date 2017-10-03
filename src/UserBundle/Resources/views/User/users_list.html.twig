@@ -38,8 +38,20 @@
                             <tr>
                                 <td colspan="10">
                                     <ul class="pagination pull-right"></ul>
+                                    {#{{ dump(users) }}#}
                                 </td>
                             </tr>
+                            {% for user in users %}
+                                <tr>
+                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.userId.firstName }} {{ user.userId.lastName }}</a></td>
+                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.userId.email }}</a></td>
+                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.activationKey }}</a></td>
+                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.licenseStatus.name }}</a></td>
+                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.product.name }}</a></td>
+                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.userId.created.date|date("F jS \\a\\t g:ia") }}</a></td>
+                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.licenseStatus.id }}</a></td>
+                                </tr>
+                            {% endfor %}
                             </tfoot>
                         </table>
 

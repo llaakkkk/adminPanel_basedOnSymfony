@@ -1,0 +1,52 @@
+#UserBundle\Entity\Users:
+#    user_{1..10}:
+#        firstName: <firstName()>
+#        lastName: <lastName()>
+#        email: admin+<current()>@admin.com
+#        created: <(new \DateTime('2017-09-24'))>
+#        updated: <(new \DateTime('2017-09-24'))>
+#
+
+#UserBundle\Entity\UserDevices:
+#    user_device_{1..25}:
+#        userId: <current()>
+#        modelName: '<username()>'
+#        modelNumber:  '<numberBetween(1,998889)>'
+#        memoryCapacity:  '<numberBetween(1,998889)>'
+#        memoreFrequency:  '<numberBetween(1,998889)>'
+#        harddriveType:  type+<current()>
+#        harddriveCapacity:  <numberBetween(1,998889)>
+#        proccessorModel:  model+<current()>
+#        osVersion:  <numberBetween(1,21)>
+#        osBiuld:  <numberBetween(1,21)>
+#        macAddress:  <numberBetween(1,2221122)>
+#        userName:  <firstName()>
+#        uuid:  <city()>
+#        activationKey:  randomString
+#        subscriptionStatus:  randomString
+#        created: <(new \DateTime('2017-09-24'))>
+#        updated: <(new \DateTime('2017-09-24'))>
+
+#UserBundle\Entity\LicenseStatus:
+#    user_{1..5}:
+#        name: <city()>
+#        slug: <city()><current()>
+#        created: <(new \DateTime('2017-09-24'))>
+#        updated: <(new \DateTime('2017-09-24'))>
+
+#MarketingBundle\Entity\PaymentSystems:
+#    payment_systems{1..5}:
+#        name: <city()>
+#        slug: <city()><current()>
+#        created: <(new \DateTime('2017-09-24'))>
+#        updated: <(new \DateTime('2017-09-24'))>
+
+#MarketingBundle\Entity\PaymentSystemProducts:
+#    payment_systems_prod{1..10}:
+#        productId: <numberBetween(1, 10)>
+#        name: <city()>
+#        slug: <city()><current()>
+#        licenseType: <numberBetween(11, 15)>
+#        paymentSystem: <numberBetween(6, 15)>
+#        created: <(new \DateTime('2017-09-24'))>
+#        updated: <(new \DateTime('2017-09-24'))>

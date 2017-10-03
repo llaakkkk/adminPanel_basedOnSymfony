@@ -3,13 +3,16 @@
 namespace UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use UserBundle\Repository\UserRepository;
 
 /**
- * Users
+ * Class Users
  *
- * @ORM\Table(name="users", uniqueConstraints={@ORM\UniqueConstraint(name="users_email_uindex", columns={"email"})})
- * @ORM\Entity
+ * @ORM\Table(name="users")
+ * @ORM\Entity(repositoryClass="UserBundle\Repository\UsersRepository")
+ * @ORM\UniqueConstraint(name="users_email_uindex", columns={"email"})
  */
+
 class Users
 {
 

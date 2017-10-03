@@ -53,6 +53,10 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    # this creates a service per class whose id is the fully-qualified class name
+    UserBundle\:
+        resource: '../../src/UserBundle/*'
+
     UserBundle\Controller\:
         resource: '../../src/UserBundle/Controller'
         public: true
