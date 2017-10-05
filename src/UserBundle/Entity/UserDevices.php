@@ -3,14 +3,16 @@
 namespace UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use  MarketingBundle\Entity\SubscriptionStatus;
+use  UserBundle\Entity\SubscriptionStatus;
 /**
  * UserDevices
  *
  * @ORM\Table(name="user_devices")
  *  @ORM\Entity(repositoryClass="UserBundle\Repository\UserDevicesRepository")
- * @ORM\Index(name="IDX_490A50905948C201", columns={"subscription_status_id"})
  */
+// * @ORM\Index(name="IDX_490A50905948C201", columns={"subscription_status_id"})
+
+
 class UserDevices
 {
 
@@ -61,9 +63,9 @@ class UserDevices
     /**
      * @var integer
      *
-     * @ORM\Column(name="memore_frequency", type="integer", nullable=true)
+     * @ORM\Column(name="memory_frequency", type="integer", nullable=true)
      */
-    private $memoreFrequency;
+    private $memoryFrequency;
 
     /**
      * @var string
@@ -141,6 +143,34 @@ class UserDevices
      * @ORM\Column(name="activation_key", type="string", length=255, nullable=true)
      */
     private $activationKey;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="serial_number", type="string", length=255, nullable=true)
+     */
+    private $serialNumber;
+
+   /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_test", type="boolean", nullable=false, columnDefinition="false")
+     */
+    private $isTest;
+
+   /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_hidden", type="boolean", nullable=false, columnDefinition="false")
+     */
+    private $isHidden;
+
+   /**
+     * @var string
+     *
+     * @ORM\Column(name="application_build_version", type="string", length=64, nullable=true)
+     */
+    private $applicationBuildVersion;
 
 
     /**
@@ -229,17 +259,17 @@ class UserDevices
     /**
      * @return int
      */
-    public function getMemoreFrequency(): int
+    public function getMemoryFrequency(): int
     {
-        return $this->memoreFrequency;
+        return $this->memoryFrequency;
     }
 
     /**
-     * @param int $memoreFrequency
+     * @param int $memoryFrequency
      */
-    public function setMemoreFrequency(int $memoreFrequency)
+    public function setMemoryFrequency(int $memoryFrequency)
     {
-        $this->memoreFrequency = $memoreFrequency;
+        $this->memoryFrequency = $memoryFrequency;
     }
 
     /**
@@ -409,6 +439,53 @@ class UserDevices
     public function setActivationKey(string $activationKey)
     {
         $this->activationKey = $activationKey;
+    }
+
+
+    public function getIsTest()
+    {
+        return $this->isTest;
+    }
+
+
+    public function setIsTest(boolean $isTest)
+    {
+        $this->isTest = $isTest;
+    }
+
+
+    public function getIsHidden()
+    {
+        return $this->isHidden;
+    }
+
+
+    public function setIsHidden(boolean $isHidden)
+    {
+        $this->isHidden = $isHidden;
+    }
+
+    public function getSerialNumber()
+    {
+        return $this->serialNumber;
+    }
+
+
+    public function setSerialNumber(string $serialNumber)
+    {
+        $this->serialNumber = $serialNumber;
+    }
+
+
+    public function getApplicationBuildVersion()
+    {
+        return $this->applicationBuildVersion;
+    }
+
+
+    public function setApplicationBuildVersion(string $applicationBuildVersion)
+    {
+        $this->applicationBuildVersion = $applicationBuildVersion;
     }
 
     /**
