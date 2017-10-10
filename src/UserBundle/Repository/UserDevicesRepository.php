@@ -9,6 +9,8 @@
 namespace UserBundle\Repository;
 
 use \Doctrine\ORM\EntityRepository;
+use \UserBundle\Entity\LanguagesToUserDevices;
+
 
 class UserDevicesRepository extends EntityRepository
 {
@@ -16,6 +18,7 @@ class UserDevicesRepository extends EntityRepository
     public function getUserDevicesByUserId($userId)
     {
         return $this->createQueryBuilder('u')
+            ->select('u')
             ->where('u.userId = :userId')
             ->setParameter('userId', $userId)
             ->getQuery()

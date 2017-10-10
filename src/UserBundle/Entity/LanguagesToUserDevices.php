@@ -1,6 +1,6 @@
 <?php
 
-namespace MarketingBundle\Entity;
+namespace UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use UserBundle\Entity\UserDevices;
@@ -24,9 +24,9 @@ class LanguagesToUserDevices
     private $id;
 
     /**
-     * @var \MarketingBundle\Entity\Languages
+     * @var \UserBundle\Entity\Languages
      *
-     * @ORM\ManyToOne(targetEntity="MarketingBundle\Entity\Languages")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Languages")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="language_id", referencedColumnName="id")
      * })
@@ -36,17 +36,17 @@ class LanguagesToUserDevices
     /**
      * @var \UserBundle\Entity\UserDevices
      *
-     * @ORM\ManyToOne(targetEntity="MarketingBundle\Entity\UserDevices")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\UserDevices")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="user_device_id", referencedColumnName="id")
      * })
      */
     private $userDevice;
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+
+
+
+    public function getId()
     {
         return $this->id;
     }

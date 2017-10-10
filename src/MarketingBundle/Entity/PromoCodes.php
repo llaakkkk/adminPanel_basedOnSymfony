@@ -76,7 +76,5 @@ class PromoCodes
         $this->discount = $discount;
     }
 
-
-
 }
 

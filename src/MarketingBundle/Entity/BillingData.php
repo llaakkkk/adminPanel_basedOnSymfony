@@ -3,7 +3,7 @@
 namespace MarketingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use UserBundle\Entity\Users;
 /**
  * BillingData
  *
@@ -92,6 +92,24 @@ class BillingData
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated = 'now()';
+
+    /**
+     * @var \UserBundle\Entity\Users
+     *
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Users")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * })
+     */
+    private $userId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="promo_code", type="integer", nullable=true)
+     */
+    private $promoCode;
+
 
     /**
      * @return int
@@ -227,6 +245,33 @@ class BillingData
     public function getUpdated(): \DateTime
     {
         return $this->updated;
+    }
+
+    /**
+     * @return \UserBundle\Entity\Users
+     */
+    public function getUserId(): \UserBundle\Entity\Users
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param \UserBundle\Entity\Users $userId
+     */
+    public function setUserId(\UserBundle\Entity\Users $userId)
+    {
+        $this->userId = $userId;
+    }
+
+    public function getPromoCode()
+    {
+        return $this->promoCode;
+    }
+
+
+    public function setPromoCode( $promoCode)
+    {
+        $this->promoCode = $promoCode;
     }
 
 

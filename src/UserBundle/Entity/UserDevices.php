@@ -3,7 +3,8 @@
 namespace UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use  UserBundle\Entity\SubscriptionStatus;
+use UserBundle\Entity\SubscriptionStatus;
+
 /**
  * UserDevices
  *
@@ -26,8 +27,6 @@ class UserDevices
      */
 
     private $id;
-
-
 
     /**
      * @var \UserBundle\Entity\Users
@@ -70,23 +69,23 @@ class UserDevices
     /**
      * @var string
      *
-     * @ORM\Column(name="harddrive_type", type="string", length=8, nullable=true)
+     * @ORM\Column(name="hard_drive_type", type="string", length=8, nullable=true)
      */
-    private $harddriveType;
+    private $hardDriveType;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="harddrive_capacity", type="integer", nullable=true)
+     * @ORM\Column(name="hard_drive_capacity", type="integer", nullable=true)
      */
-    private $harddriveCapacity;
+    private $hardDriveCapacity;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="proccessor_model", type="string", length=32, nullable=true)
+     * @ORM\Column(name="processor_model", type="string", length=32, nullable=true)
      */
-    private $proccessorModel;
+    private $processorModel;
 
     /**
      * @var string
@@ -98,9 +97,9 @@ class UserDevices
     /**
      * @var string
      *
-     * @ORM\Column(name="os_biuld", type="string", length=16, nullable=true)
+     * @ORM\Column(name="os_build", type="string", length=16, nullable=true)
      */
-    private $osBiuld;
+    private $osBuild;
 
     /**
      * @var string
@@ -183,27 +182,34 @@ class UserDevices
      */
     private $subscriptionStatus;
 
-
     /**
-     * @return mixed
+     *  @ORM\ManyToMany(targetEntity="LanguagesToUserDevices", mappedBy="userDevice")
+     *  @ORM\JoinTable(
+     *  name="LanguagesToUserDevices",
+     *  joinColumns={
+     *      @ORM\JoinColumn(name="user_device_id", referencedColumnName="id")
+     *  },
+     *   inverseJoinColumns={
+     *  @ORM\JoinColumn(name="id", referencedColumnName="id")
+     *   }
+     * )
+
      */
+    private $deviceLanguage;
+
+
+
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return int
-     */
     public function getUserId()
     {
         return $this->userId;
     }
 
-    /**
-     * @param int $userId
-     */
-    public function setUserId(int $userId)
+    public function setUserId( $userId)
     {
         $this->userId = $userId;
     }
@@ -275,49 +281,45 @@ class UserDevices
     /**
      * @return string
      */
-    public function getHarddriveType(): string
+    public function getHardDriveType(): string
     {
-        return $this->harddriveType;
+        return $this->hardDriveType;
+    }
+
+
+    public function setHardDriveType(string $hardDriveType)
+    {
+        $this->hardDriveType = $hardDriveType;
+    }
+
+
+    public function getHardDriveCapacity()
+    {
+        return $this->hardDriveCapacity;
     }
 
     /**
-     * @param string $harddriveType
+     * @param int $hardDriveCapacity
      */
-    public function setHarddriveType(string $harddriveType)
+    public function setHardDriveCapacity(int $hardDriveCapacity)
     {
-        $this->harddriveType = $harddriveType;
-    }
-
-    /**
-     * @return int
-     */
-    public function getHarddriveCapacity(): int
-    {
-        return $this->harddriveCapacity;
-    }
-
-    /**
-     * @param int $harddriveCapacity
-     */
-    public function setHarddriveCapacity(int $harddriveCapacity)
-    {
-        $this->harddriveCapacity = $harddriveCapacity;
+        $this->hardDriveCapacity = $hardDriveCapacity;
     }
 
     /**
      * @return string
      */
-    public function getProccessorModel(): string
+    public function getProcessorModel(): string
     {
-        return $this->proccessorModel;
+        return $this->processorModel;
     }
 
     /**
-     * @param string $proccessorModel
+     * @param string $processorModel
      */
-    public function setProccessorModel(string $proccessorModel)
+    public function setProcessorModel(string $processorModel)
     {
-        $this->proccessorModel = $proccessorModel;
+        $this->processorModel = $processorModel;
     }
 
     /**
@@ -339,17 +341,17 @@ class UserDevices
     /**
      * @return string
      */
-    public function getOsBiuld(): string
+    public function getOsBuild()
     {
-        return $this->osBiuld;
+        return $this->osBuild;
     }
 
     /**
-     * @param string $osBiuld
+     * @param string $osBuild
      */
-    public function setOsBiuld(string $osBiuld)
+    public function setOsBuild(string $osBuild)
     {
-        $this->osBiuld = $osBiuld;
+        $this->osBiuld = $osBuild;
     }
 
     /**
@@ -504,5 +506,15 @@ class UserDevices
         $this->subscriptionStatus = $subscriptionStatus;
     }
 
+    public function getDeviceLanguage()
+    {
+        return $this->deviceLanguage;
+    }
+
+
+    public function setDeviceLanguage( $deviceLanguage)
+    {
+        $this->deviceLanguage = $deviceLanguage;
+    }
 }
 

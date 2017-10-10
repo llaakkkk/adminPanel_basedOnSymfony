@@ -29,18 +29,24 @@ class UserController extends Controller
      */
     public function userAction($id)
     {
-        $repository = $this->getDoctrine()->getRepository('UserBundle:Users', 'default');
+        $userRepository = $this->getDoctrine()->getRepository('UserBundle:Users', 'default');
 
-        $user = $repository->getUserId($id);
+        $user = $userRepository->getUserId($id);
 
 
-        $repository = $this->getDoctrine()->getRepository('UserBundle:UserDevices', 'default');
+        $deviceRepository = $this->getDoctrine()->getRepository('UserBundle:UserDevices', 'default');
 
-        $userDevices = $repository->getUserDevicesByUserId($id);
+        $userDevices = $deviceRepository->getUserDevicesByUserId($id);
 
+        $billingRepository = $this->getDoctrine()->getRepository('MarketingBundle:BillingData', 'default');
+
+        $billingData = $billingRepository->findAll();
+
+//        var_dump($userDevices->getDeviceLanguage());
         return $this->render('UserBundle:User:user.html.twig', [
             'user' => $user,
-            'userDevices' => $userDevices
+            'userDevices' => $userDevices,
+            'billingData' => $billingData
         ]);
     }
 
