@@ -57,9 +57,9 @@
                 <li>
                     <a href="#"><i class="fa fa-angle-double-right"></i> <span class="nav-label">Marketing</span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="#"><i class="fa fa-square-o"></i> Stats</a></li>
-                        <li><a href="#"><i class="fa fa-square-o"></i> Marketing</a></li>
-                        <li><a href="#"><i class="fa fa-square-o"></i> Funnel</a></li>
+                        <li><a href="{{ path('stats_all') }}"><i class="fa fa-square-o"></i> Stats</a></li>
+                        <li><a href="{{ path('marketing_all') }}"><i class="fa fa-square-o"></i> Marketing</a></li>
+                        <li><a href="{{ path('funnel_all') }}"><i class="fa fa-square-o"></i> Funnel</a></li>
                         <li><a href="#"><i class="fa fa-square-o"></i> Uninstalls</a></li>
                     </ul>
                 </li>
@@ -73,9 +73,7 @@
                     </ul>
                 </li>
                 {% endif %}
-
             </ul>
-
         </div>
     </nav>
     {% endblock %}
@@ -131,10 +129,10 @@
         {% block footer %}
             <div class="footer">
                 <div class="pull-right">
-                    10GB of <strong>250GB</strong> Free.
+                   Be happy
                 </div>
                 <div>
-                    <strong>Copyright</strong> Example Company &copy; 2014-2015
+                    <strong>Copyright</strong> MFP &copy; 2017
                 </div>
             </div>
         {% endblock %}
