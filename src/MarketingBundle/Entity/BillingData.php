@@ -110,6 +110,15 @@ class BillingData
      */
     private $promoCode;
 
+    /**
+     * @var \UserBundle\Entity\UserDevices
+     *
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\UserDevices")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_device_id", referencedColumnName="id")
+     * })
+     */
+    private $userDevice;
 
     /**
      * @return int
@@ -151,18 +160,14 @@ class BillingData
         $this->product = $product;
     }
 
-    /**
-     * @return json
-     */
-    public function getPaymentData(): json
+
+    public function getPaymentData()
     {
         return $this->paymentData;
     }
 
-    /**
-     * @param json $paymentData
-     */
-    public function setPaymentData(json $paymentData)
+
+    public function setPaymentData( $paymentData)
     {
         $this->paymentData = $paymentData;
     }
@@ -273,6 +278,23 @@ class BillingData
     {
         $this->promoCode = $promoCode;
     }
+
+    /**
+     * @return \UserBundle\Entity\UserDevices
+     */
+    public function getUserDevice(): \UserBundle\Entity\UserDevices
+    {
+        return $this->userDevice;
+    }
+
+    /**
+     * @param \UserBundle\Entity\UserDevices $userDevice
+     */
+    public function setUserDevice(\UserBundle\Entity\UserDevices $userDevice)
+    {
+        $this->userDevice = $userDevice;
+    }
+
 
 
 
