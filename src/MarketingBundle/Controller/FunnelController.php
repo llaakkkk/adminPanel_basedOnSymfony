@@ -27,7 +27,7 @@ class FunnelController extends Controller
 //
 //        $users = $repository->findAll();
 
-        $GA = new GoogleReportingAPI('30daysAgo', 'today');
+        $GA = new GoogleReportingAPI('7daysAgo', 'today');
         $metrics = [
             'traffic' => 'ga:newUsers',
             'downloads' => 'ga:goal18Starts',
@@ -37,9 +37,9 @@ class FunnelController extends Controller
 
 //        var_dump($traffic, $downloads,$installs);
 
-        var_dump($gaReport);
+//        var_dump($gaReport);
         return $this->render('MarketingBundle:Funnel:funnel_reports.html.twig', [
-
+            'gaReport' => $gaReport
 
         ]);
     }
