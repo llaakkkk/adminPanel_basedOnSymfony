@@ -450,7 +450,7 @@ class UserDevices
     }
 
 
-    public function setIsTest(boolean $isTest)
+    public function setIsTest( $isTest)
     {
         $this->isTest = $isTest;
     }
@@ -462,7 +462,7 @@ class UserDevices
     }
 
 
-    public function setIsHidden(boolean $isHidden)
+    public function setIsHidden($isHidden)
     {
         $this->isHidden = $isHidden;
     }

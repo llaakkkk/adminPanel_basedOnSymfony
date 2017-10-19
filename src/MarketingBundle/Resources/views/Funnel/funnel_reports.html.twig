@@ -32,16 +32,6 @@
                             <div class="col-lg-4">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        Segment
-                                    </div>
-                                    <div class="panel-body">
-                                        //TODO
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
                                         Type of install
                                     </div>
                                     <div class="panel-body">
@@ -52,14 +42,23 @@
                                             <option value="paid-users">Paid users</option>
                                         </select>
                                     </div>
-
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        Segment
+                                    </div>
+                                    <div class="panel-body">
+                                        //TODO
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
 
 
-                        <table class="table table-bordered table-hover dataTables-example" style="font-size: 10px;">
+                        <table class="table table-bordered table-hover dataTables-example" style="font-size: 12px;">
                             <thead>
                             <tr>
                                 <!-- // 16 cols -->
@@ -67,14 +66,11 @@
                                 <th>Downloads</th>
                                 <th>Installs</th>
                                 <th>Subscriptions (1 month)</th>
-                                <th>Subscriptions (6 month)</th>
                                 <th>Subscriptions (12 month)</th>
                                 <th>Traffic --> Downloads, %</th>
                                 <th>Traffic --> Installs, % </th>
                                 <th>Traffic --> Subscriptions (1 month), %</th>
                                 <th>Traffic --> Subscriptions (12 month), %</th>
-                                <th>Trial --> 1month, %</th>
-                                <th>Trial --> 12month, %</th>
                                 <th>Install --> Subscription (1 month), %</th>
                                 <th>Install --> Subscription (12 month), %</th>
                                 <th>1month --> 12 month</th>
@@ -86,19 +82,16 @@
                                 <td>{{ gaReport['traffic'] }}</td>
                                 <td>{{ gaReport['downloads'] }}</td>
                                 <td>{{ gaReport['installs'] }}</td>
-                                <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                                <td>1</td>
-                                <td><span class="line">5,3,2,-1,-3,-2,2,3,5,2</span></td>
-                                <td>Samantha</td>
-                                <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                                <td>1</td>
-                                <td><span class="line">5,3,2,-1,-3,-2,2,3,5,2</span></td>
-                                <td>Samantha</td>
-                                <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                                <td>1</td>
-                                <td><span class="line">5,3,2,-1,-3,-2,2,3,5,2</span></td>
-                                <td>Samantha</td>
-                                <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
+                                <td>{{ subscriptionMonths }} </td>
+                                <td>{{ subscriptionYear }} </td>
+                                <td>{{ trafficToDownloads}}</td>
+                                <td>{{ trafficToInstalls }} </td>
+                                <td>{{ trafficToMonthSubscription }}</td>
+                                <td>{{ trafficToYearSubscription }}</td>
+                                <td>{{ installsToMonthSubscription }}</td>
+                                <td>{{ installsToYearSubscription }}</td>
+                                <td>//TODO</td>
+                                <td>//TODO</td>
                             </tr>
 
                             </tbody>
@@ -127,7 +120,7 @@
         $(function() {
             $('.select2-container--default').select2();
 
-            var start = moment().subtract(29, 'days');
+            var start = moment().subtract(6, 'days');
             var end = moment();
 
             function cb(start, end) {
@@ -148,7 +141,6 @@
             }, cb);
 
             cb(start, end);
-
         });
 
 

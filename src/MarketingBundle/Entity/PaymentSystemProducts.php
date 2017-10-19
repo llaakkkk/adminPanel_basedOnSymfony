@@ -136,17 +136,17 @@ class PaymentSystemProducts
     }
 
     /**
-     * @return LicenseTypes
+     * @return  \UserBundle\Entity\LicenseTypes
      */
-    public function getLicenseType(): LicenseTypes
+    public function getLicenseType(): \UserBundle\Entity\LicenseTypes
     {
         return $this->licenseType;
     }
 
     /**
-     * @param LicenseTypes $licenseType
+     * @param  \UserBundle\Entity\LicenseTypes $licenseType
      */
-    public function setLicenseType(LicenseTypes $licenseType)
+    public function setLicenseType(\UserBundle\Entity\LicenseTypes $licenseType)
     {
         $this->licenseType = $licenseType;
     }

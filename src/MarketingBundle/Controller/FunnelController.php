@@ -23,9 +23,7 @@ class FunnelController extends Controller
      */
     public function funnelAction(Request $request)
     {
-//        $repository = $this->getDoctrine()->getRepository(':UserDevices', 'default');
-//
-//        $users = $repository->findAll();
+        $repository = $this->getDoctrine()->getRepository('UserBundle:UserDevices', 'default');
 
         $GA = new GoogleReportingAPI('7daysAgo', 'today');
         $metrics = [
@@ -35,11 +33,27 @@ class FunnelController extends Controller
         ];
         $gaReport = $GA->getMetricsData($metrics);
 
-//        var_dump($traffic, $downloads,$installs);
 
-//        var_dump($gaReport);
+        $subscriptionMonths = $repository->getSubscriptionsCountByName('month');
+        $subscriptionYear = $repository->getSubscriptionsCountByName('year');
+        $trafficToDownloads = round(($gaReport['downloads'] / $gaReport['traffic']) * 100, 2);
+        $trafficToInstalls = round(($gaReport['installs'] / $gaReport['traffic']) * 100, 2);
+        $trafficToMonthSubscription = round(($subscriptionMonths['sub_count'] / $gaReport['traffic']) * 100, 2);
+        $trafficToYearSubscription = round(($subscriptionYear['sub_count'] / $gaReport['traffic']) * 100, 2);
+        $installsToMonthSubscription = round(($subscriptionMonths['sub_count'] / $gaReport['installs']) * 100, 2);
+        $installsToYearSubscription = round(($subscriptionYear['sub_count'] / $gaReport['installs']) * 100, 2);
+
+
         return $this->render('MarketingBundle:Funnel:funnel_reports.html.twig', [
-            'gaReport' => $gaReport
+            'gaReport' => $gaReport,
+            'subscriptionMonths' => $subscriptionMonths['sub_count'],
+            'subscriptionYear' => $subscriptionYear['sub_count'],
+            'trafficToDownloads' => $trafficToDownloads,
+            'trafficToInstalls' => $trafficToInstalls,
+            'trafficToMonthSubscription' => $trafficToMonthSubscription,
+            'trafficToYearSubscription' => $trafficToYearSubscription,
+            'installsToMonthSubscription' => $installsToMonthSubscription,
+            'installsToYearSubscription' => $installsToYearSubscription,
 
         ]);
     }

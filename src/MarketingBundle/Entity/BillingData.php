@@ -7,7 +7,7 @@ use UserBundle\Entity\Users;
 /**
  * BillingData
  *
- * @ORM\Table(name="billing_data", indexes={@ORM\Index(name="IDX_D281CDA4A76ED395", columns={"user_id"}), @ORM\Index(name="IDX_D281CDA44584665A", columns={"product_id"})})
+ * @ORM\Table(name="billing_data", indexes={@ORM\Index(name="IDX_D281CDA4A76ED395", columns={"user_id"}), @ORM\Index(name="IDX_D281CDA44584665A", columns={"product_id"}), @ORM\Index(name="IDX_D281CDA494444A30", columns={"user_device_id"}), @ORM\Index(name="IDX_D281CDA43D8C939E", columns={"promo_code"}), @ORM\Index(name="IDX_D281CDA45AA1164F", columns={"payment_method_id"})})
  * @ORM\Entity
  */
 class BillingData
@@ -119,6 +119,17 @@ class BillingData
      * })
      */
     private $userDevice;
+
+    /**
+     * @var \MarketingBundle\Entity\PaymentMethods
+     *
+     * @ORM\ManyToOne(targetEntity="MarketingBundle\Entity\PaymentMethods")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="payment_method_id", referencedColumnName="id")
+     * })
+     */
+    private $paymentMethod;
+
 
     /**
      * @return int
@@ -293,6 +304,22 @@ class BillingData
     public function setUserDevice(\UserBundle\Entity\UserDevices $userDevice)
     {
         $this->userDevice = $userDevice;
+    }
+
+    /**
+     * @return PaymentMethods
+     */
+    public function getPaymentMethod(): PaymentMethods
+    {
+        return $this->paymentMethod;
+    }
+
+    /**
+     * @param PaymentMethods $paymentMethod
+     */
+    public function setPaymentMethod(PaymentMethods $paymentMethod)
+    {
+        $this->paymentMethod = $paymentMethod;
     }
 
 
