@@ -57,4 +57,5 @@ class FunnelController extends Controller
 
         ]);
     }
+
 }

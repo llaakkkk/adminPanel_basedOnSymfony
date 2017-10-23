@@ -209,7 +209,7 @@ class UserDevices
         return $this->userId;
     }
 
-    public function setUserId( $userId)
+    public function setUserId($userId)
     {
         $this->userId = $userId;
     }
@@ -450,7 +450,7 @@ class UserDevices
     }
 
 
-    public function setIsTest( $isTest)
+    public function setIsTest($isTest)
     {
         $this->isTest = $isTest;
     }
