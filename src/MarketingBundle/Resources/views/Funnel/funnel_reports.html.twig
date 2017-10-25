@@ -16,16 +16,19 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
+                            <form action="/funnel" id="dataFilter" method="get" enctype="multipart/form-data">
                             <div class="col-lg-4">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         Period
                                     </div>
                                     <div class="panel-body">
-                                        <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-                                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
-                                            <span></span> <b class="caret"></b>
-                                        </div></div>
+                                        {% include 'MarketingBundle:Filters:date_filter.html.twig' %}
+                                        {#<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">#}
+                                            {#<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;#}
+                                            {#<span></span> <b class="caret"></b>#}
+                                        {#</div>#}
+                                    </div>
 
                                 </div>
                             </div>
@@ -35,11 +38,10 @@
                                         Type of install
                                     </div>
                                     <div class="panel-body">
-                                        <select name="type-of-install" class="select2-container--default" id="type-of-install">
-                                            <option value="all" selected>All</option>
-                                            <option value="free-install">Free install</option>
-                                            <option value="paid-install">Paid install</option>
-                                            <option value="paid-users">Paid users</option>
+                                        <select name="type-of-install" class="select2-container--default" onchange="this.form.submit()" id="type-of-install" style="width: 100%">
+                                            {% for typeOfInstall in typesOfInstall %}
+                                                <option value="{{ typeOfInstall.name }}" {%  if (quered['type-of-install'] is defined) and (typeOfInstall.name in quered['type-of-install']) %} selected {% endif %}> {{ typeOfInstall.title }}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
@@ -54,7 +56,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            </form>
                         </div>
 
 
@@ -120,10 +122,11 @@
         $(function() {
             $('.select2-container--default').select2();
 
-            var start = moment().subtract(6, 'days');
-            var end = moment();
+            var start = moment('{{ dateFrom | date('Ymd') }}');
+            var end = moment('{{ dateTo| date('Ymd') }}');
 
             function cb(start, end) {
+                console.log(start, end)
                 $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
             }
 
@@ -140,10 +143,32 @@
                 }
             }, cb);
 
+
             cb(start, end);
+
+            $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
+                var dateFrom = picker.startDate.format('YYYY-MM-DD');
+                var dateTo = picker.endDate.format('YYYY-MM-DD');
+                var inputFrom = $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "date_from").val(dateFrom);
+                var inputTo = $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "date_to").val(dateTo);
+                $('#dataFilter').append($(inputFrom));
+                $('#dataFilter').append($(inputTo));
+                $('#dataFilter').submit();
+            });
         });
 
-
+//        $(".select2-container--default").on('change', function(e) {
+//            // Access to full data
+//            var data = $(this).select2('data');
+//            //Then I take the values like if I work with an array
+//            var value = data[0].id;
+//            var text = data[0].text;
+//            console.log(value,text,data );
+//        });
     </script>
 
 {% endblock %}

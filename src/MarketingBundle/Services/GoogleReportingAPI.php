@@ -36,7 +36,6 @@ class GoogleReportingAPI
 
         $this->dateFrom = $dateFrom;
         $this->dateTo = $dateTo;
-
     }
 
     public function getMetricsData($metrics)
@@ -44,7 +43,6 @@ class GoogleReportingAPI
         $report = $this->getReport($metrics);
 
         return $this->getReportResults($report);
-
     }
 
     public function getReport($metrics) {

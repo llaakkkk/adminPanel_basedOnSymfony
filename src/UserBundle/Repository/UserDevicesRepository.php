@@ -27,7 +27,7 @@ class UserDevicesRepository extends EntityRepository
             ->getResult();
     }
 
-    public function getSubscriptionsCountByName($licenseType)
+    public function getSubscriptionsCountByName($licenseType, $typeOfInstall = null)
     {
         $rsm = new ResultSetMapping();
 

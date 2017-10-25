@@ -23,6 +23,13 @@ class FunnelController extends Controller
      */
     public function funnelAction(Request $request)
     {
+
+
+        $query = $request->query->all();
+
+        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : strtotime("-7 day");
+        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to']  : time();
+
         $repository = $this->getDoctrine()->getRepository('UserBundle:UserDevices', 'default');
 
         $GA = new GoogleReportingAPI('7daysAgo', 'today');
@@ -34,8 +41,8 @@ class FunnelController extends Controller
         $gaReport = $GA->getMetricsData($metrics);
 
 
-        $subscriptionMonths = $repository->getSubscriptionsCountByName('month');
-        $subscriptionYear = $repository->getSubscriptionsCountByName('year');
+        $subscriptionMonths = $repository->getSubscriptionsCountByName('month', $query);
+        $subscriptionYear = $repository->getSubscriptionsCountByName('year', $query);
         $trafficToDownloads = round(($gaReport['downloads'] / $gaReport['traffic']) * 100, 2);
         $trafficToInstalls = round(($gaReport['installs'] / $gaReport['traffic']) * 100, 2);
         $trafficToMonthSubscription = round(($subscriptionMonths['sub_count'] / $gaReport['traffic']) * 100, 2);
@@ -43,6 +50,12 @@ class FunnelController extends Controller
         $installsToMonthSubscription = round(($subscriptionMonths['sub_count'] / $gaReport['installs']) * 100, 2);
         $installsToYearSubscription = round(($subscriptionYear['sub_count'] / $gaReport['installs']) * 100, 2);
 
+        $typesOfInstall = [
+            ['name' => 'all', 'title' => 'All'],
+            ['name' => 'free-install', 'title' => 'Free install'],
+            ['name' => 'paid-install', 'title' => 'Paid install'],
+            ['name' => 'paid-users', 'title'=> 'Paid users']
+        ];
 
         return $this->render('MarketingBundle:Funnel:funnel_reports.html.twig', [
             'gaReport' => $gaReport,
@@ -54,6 +67,10 @@ class FunnelController extends Controller
             'trafficToYearSubscription' => $trafficToYearSubscription,
             'installsToMonthSubscription' => $installsToMonthSubscription,
             'installsToYearSubscription' => $installsToYearSubscription,
+            'typesOfInstall' => $typesOfInstall,
+            'quered' => $query,
+            'dateFrom' => $dateFrom,
+            'dateTo' => $dateTo
 
         ]);
     }
