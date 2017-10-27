@@ -28,8 +28,8 @@ class FunnelController extends Controller
     {
         $query = $request->query->all();
 
-        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : strtotime("-7 day");
-        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to']  : time();
+        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : date('Y-m-d',strtotime("-7 day"));
+        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to']  : date('Y-m-d', time());
         $em = $this->getDoctrine()->getManager('default');
 
         $funnel = new FunnelReport($em);
@@ -56,8 +56,8 @@ class FunnelController extends Controller
     public function funnelReportAction()
     {
         $query = [];
-        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : strtotime("-7 day");
-        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to']  : time();
+        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : date('Y-m-d',strtotime("-7 day"));
+        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to'] : date('Y-m-d', time());
 
         $em = $this->getDoctrine()->getManager('default');
         $funnel = new FunnelReport($em);

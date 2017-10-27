@@ -1,5 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block title %} Users {% endblock %}
+{% block style %}
+    {{ parent() }}
+    <link href="{{ asset('css/plugins/dataTables/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
+{% endblock %}
 {% block content %}
     <div class="wrapper wrapper-content animated fadeInRight">
 
@@ -16,6 +22,42 @@
                         </div>
                     </div>
                     <div class="ibox-content">
+                        <div class="row">
+                            <form action="/user" id="dataFilter" method="get" enctype="multipart/form-data">
+                                <div class="col-lg-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            Period
+                                        </div>
+                                        <div class="panel-body">
+                                            {% include 'UserBundle:Filters:date_filter.html.twig' %}
+                                            {#<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">#}
+                                            {#<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;#}
+                                            {#<span></span> <b class="caret"></b>#}
+                                            {#</div>#}
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            Type of install
+                                        </div>
+                                        <div class="panel-body">
+                                            <select name="type-of-install" multiple="multiple" class="select2-container--default" id="type-of-install" style="width: 100%">
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                            <div class="col-md-12">
+                                <a class="btn btn-default" href="/user_repor">Download report</a>
+                            </div>
+                        </div>
                         <table class="table table-stripped toggle-arrow-tiny" data-page-size="8">
                             <thead>
                             <tr>
@@ -41,14 +83,17 @@
                                     {#{{ dump(users) }}#}
                                 </td>
                             </tr>
+                            {{ dump(users) }}
                             {% for user in users %}
                                 <tr>
                                     <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.userId.firstName }} {{ user.userId.lastName }}</a></td>
                                     <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.userId.email }}</a></td>
                                     <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.activationKey }}</a></td>
-                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.licenseStatus.name }}</a></td>
                                     <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.product.name }}</a></td>
+                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.licenseStatus.name }}</a></td>
                                     <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.userId.created.date|date("F jS \\a\\t g:ia") }}</a></td>
+                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">date</a></td>
+                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.product.id }}</a></td>
                                     <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.licenseStatus.id }}</a></td>
                                 </tr>
                             {% endfor %}
@@ -60,4 +105,72 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/momentjs/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+
+            $('.dataTables-example').DataTable();
+
+        });
+
+        $(function() {
+            $('.select2-container--default').select2();
+
+            var start = moment('{{ dateFrom | date('Ymd') }}');
+            var end = moment('{{ dateTo| date('Ymd') }}');
+
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            }
+
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            cb(start, end);
+
+            $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
+                var dateFrom = picker.startDate.format('YYYY-MM-DD');
+                var dateTo = picker.endDate.format('YYYY-MM-DD');
+                setDateAndSubmit(dateFrom, dateTo);
+
+            });
+
+            $('#type-of-install').on('change', function () {
+                var dateFrom = start.format('YYYY-MM-DD');
+                var dateTo = end.format('YYYY-MM-DD');
+                setDateAndSubmit(dateFrom, dateTo);
+            })
+
+        });
+        function setDateAndSubmit(dateFrom, dateTo) {
+            var inputFrom = $("<input>")
+                .attr("type", "hidden")
+                .attr("name", "date_from").val(dateFrom);
+            var inputTo = $("<input>")
+                .attr("type", "hidden")
+                .attr("name", "date_to").val(dateTo);
+            $('#dataFilter').append($(inputFrom));
+            $('#dataFilter').append($(inputTo));
+            $('#dataFilter').submit();
+        }
+
+    </script>
+
 {% endblock %}
