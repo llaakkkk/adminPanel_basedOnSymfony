@@ -6,9 +6,7 @@
  * Time: 17:02
  */
 
-namespace MarketingBundle\Services;
-
-
+namespace MarketingBundle\Utils;
 
 class GoogleReportingAPI
 {
@@ -45,7 +43,8 @@ class GoogleReportingAPI
         return $this->getReportResults($report);
     }
 
-    public function getReport($metrics) {
+    public function getReport($metrics)
+    {
 
 
         $VIEW_ID = self::VIEW_ID;
@@ -57,7 +56,6 @@ class GoogleReportingAPI
 
         $metricsToSet = [];
         foreach ($metrics as $metricName => $metricValue) {
-
             $metric = new \Google_Service_AnalyticsReporting_Metric();
             $metric->setExpression($metricValue);
             $metric->setAlias($metricName);
@@ -71,35 +69,35 @@ class GoogleReportingAPI
         $request->setMetrics($metricsToSet);
 
         $body = new \Google_Service_AnalyticsReporting_GetReportsRequest();
-        $body->setReportRequests( array( $request) );
+        $body->setReportRequests([$request]);
 
-        $response = $this->analytics->reports->batchGet( $body );
+        $response = $this->analytics->reports->batchGet($body);
 
         return $response;
     }
 
 
-    public function getReportResults($reports) {
+    public function getReportResults($reports)
+    {
         $data = [];
 
-        for ( $reportIndex = 0; $reportIndex < count( $reports ); $reportIndex++ ) {
+        for ($reportIndex = 0; $reportIndex < count($reports); $reportIndex++) {
             $report = $reports[ $reportIndex ];
             $header = $report->getColumnHeader();
 
             $metricHeaders = $header->getMetricHeader()->getMetricHeaderEntries();
             $rows = $report->getData()->getRows();
 
-            for ( $rowIndex = 0; $rowIndex < count($rows); $rowIndex++) {
+            for ($rowIndex = 0; $rowIndex < count($rows); $rowIndex++) {
                 $row = $rows[ $rowIndex ];
                 $metrics = $row->getMetrics();
 
 
-                for ($j = 0; $j < count( $metricHeaders ) && $j < count( $metrics ); $j++) {
+                for ($j = 0; $j < count($metricHeaders) && $j < count($metrics); $j++) {
                     $values = $metrics[$j];
-                    for ( $valueIndex = 0; $valueIndex < count( $values->getValues() ); $valueIndex++ ) {
+                    for ($valueIndex = 0; $valueIndex < count($values->getValues()); $valueIndex++) {
                         $entry = $metricHeaders[$valueIndex];
                         $data[$entry->getName()] = $values->getValues()[ $valueIndex ];
-
                     }
                 }
             }

@@ -38,7 +38,7 @@
                                         Type of install
                                     </div>
                                     <div class="panel-body">
-                                        <select name="type-of-install" class="select2-container--default" onchange="this.form.submit()" id="type-of-install" style="width: 100%">
+                                        <select name="type-of-install" class="select2-container--default" id="type-of-install" style="width: 100%">
                                             {% for typeOfInstall in typesOfInstall %}
                                                 <option value="{{ typeOfInstall.name }}" {%  if (quered['type-of-install'] is defined) and (typeOfInstall.name in quered['type-of-install']) %} selected {% endif %}> {{ typeOfInstall.title }}</option>
                                             {% endfor %}
@@ -49,14 +49,18 @@
                             <div class="col-lg-4">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        Segment
+                                       Segment
                                     </div>
                                     <div class="panel-body">
-                                        //TODO
+                                        //todo
                                     </div>
+
                                 </div>
                             </div>
                             </form>
+                            <div class="col-md-12">
+                                <a class="btn btn-default" href="{{ path('funnel_report') }}">Download report</a>
+                            </div>
                         </div>
 
 
@@ -126,7 +130,6 @@
             var end = moment('{{ dateTo| date('Ymd') }}');
 
             function cb(start, end) {
-                console.log(start, end)
                 $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
             }
 
@@ -143,32 +146,34 @@
                 }
             }, cb);
 
-
             cb(start, end);
 
             $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
                 var dateFrom = picker.startDate.format('YYYY-MM-DD');
                 var dateTo = picker.endDate.format('YYYY-MM-DD');
-                var inputFrom = $("<input>")
-                    .attr("type", "hidden")
-                    .attr("name", "date_from").val(dateFrom);
-                var inputTo = $("<input>")
-                    .attr("type", "hidden")
-                    .attr("name", "date_to").val(dateTo);
-                $('#dataFilter').append($(inputFrom));
-                $('#dataFilter').append($(inputTo));
-                $('#dataFilter').submit();
-            });
-        });
+                setDateAndSubmit(dateFrom, dateTo);
 
-//        $(".select2-container--default").on('change', function(e) {
-//            // Access to full data
-//            var data = $(this).select2('data');
-//            //Then I take the values like if I work with an array
-//            var value = data[0].id;
-//            var text = data[0].text;
-//            console.log(value,text,data );
-//        });
+            });
+
+            $('#type-of-install').on('change', function () {
+                var dateFrom = start.format('YYYY-MM-DD');
+                var dateTo = end.format('YYYY-MM-DD');
+                setDateAndSubmit(dateFrom, dateTo);
+            })
+
+        });
+        function setDateAndSubmit(dateFrom, dateTo) {
+            var inputFrom = $("<input>")
+                .attr("type", "hidden")
+                .attr("name", "date_from").val(dateFrom);
+            var inputTo = $("<input>")
+                .attr("type", "hidden")
+                .attr("name", "date_to").val(dateTo);
+            $('#dataFilter').append($(inputFrom));
+            $('#dataFilter').append($(inputTo));
+            $('#dataFilter').submit();
+        }
+
     </script>
 
 {% endblock %}

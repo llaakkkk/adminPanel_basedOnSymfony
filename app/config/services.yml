@@ -61,6 +61,12 @@ services:
         resource: '../../src/UserBundle/Controller'
         public: true
         tags: ['controller.service_arguments']
+    funnelReport:
+        class:        MarketingBundle\Utils\FunnelReport
+        arguments:    ["@doctrine.orm.entity_manager"]
+    gaReport:
+        class:        MarketingBundle\Utils\GoogleReportingAPI
+        arguments:    []
 
     # add more services, or override services that need manual wiring
     # MarketingBundle\Service\ExampleService:

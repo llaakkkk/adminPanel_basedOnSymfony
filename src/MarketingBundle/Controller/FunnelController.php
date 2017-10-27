@@ -8,10 +8,13 @@
 
 namespace MarketingBundle\Controller;
 
-use MarketingBundle\Services\GoogleReportingAPI;
+use Doctrine\ORM\EntityManager;
+use MarketingBundle\Utils\GoogleReportingAPI;
+use MarketingBundle\Utils\FunnelReport;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FunnelController extends Controller
 {
@@ -23,32 +26,14 @@ class FunnelController extends Controller
      */
     public function funnelAction(Request $request)
     {
-
-
         $query = $request->query->all();
 
         $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : strtotime("-7 day");
         $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to']  : time();
+        $em = $this->getDoctrine()->getManager('default');
 
-        $repository = $this->getDoctrine()->getRepository('UserBundle:UserDevices', 'default');
-
-        $GA = new GoogleReportingAPI('7daysAgo', 'today');
-        $metrics = [
-            'traffic' => 'ga:newUsers',
-            'downloads' => 'ga:goal18Starts',
-            'installs' => 'ga:goal7Starts'
-        ];
-        $gaReport = $GA->getMetricsData($metrics);
-
-
-        $subscriptionMonths = $repository->getSubscriptionsCountByName('month', $query);
-        $subscriptionYear = $repository->getSubscriptionsCountByName('year', $query);
-        $trafficToDownloads = round(($gaReport['downloads'] / $gaReport['traffic']) * 100, 2);
-        $trafficToInstalls = round(($gaReport['installs'] / $gaReport['traffic']) * 100, 2);
-        $trafficToMonthSubscription = round(($subscriptionMonths['sub_count'] / $gaReport['traffic']) * 100, 2);
-        $trafficToYearSubscription = round(($subscriptionYear['sub_count'] / $gaReport['traffic']) * 100, 2);
-        $installsToMonthSubscription = round(($subscriptionMonths['sub_count'] / $gaReport['installs']) * 100, 2);
-        $installsToYearSubscription = round(($subscriptionYear['sub_count'] / $gaReport['installs']) * 100, 2);
+        $funnel = new FunnelReport($em);
+        $report = $funnel->getDataForReport($dateFrom, $dateTo, $query);
 
         $typesOfInstall = [
             ['name' => 'all', 'title' => 'All'],
@@ -57,22 +42,58 @@ class FunnelController extends Controller
             ['name' => 'paid-users', 'title'=> 'Paid users']
         ];
 
-        return $this->render('MarketingBundle:Funnel:funnel_reports.html.twig', [
-            'gaReport' => $gaReport,
-            'subscriptionMonths' => $subscriptionMonths['sub_count'],
-            'subscriptionYear' => $subscriptionYear['sub_count'],
-            'trafficToDownloads' => $trafficToDownloads,
-            'trafficToInstalls' => $trafficToInstalls,
-            'trafficToMonthSubscription' => $trafficToMonthSubscription,
-            'trafficToYearSubscription' => $trafficToYearSubscription,
-            'installsToMonthSubscription' => $installsToMonthSubscription,
-            'installsToYearSubscription' => $installsToYearSubscription,
-            'typesOfInstall' => $typesOfInstall,
-            'quered' => $query,
-            'dateFrom' => $dateFrom,
-            'dateTo' => $dateTo
+        return $this->render('MarketingBundle:Funnel:funnel_reports.html.twig', array_merge(
+            $report,
+            ['typesOfInstall' => $typesOfInstall,
+                'quered' => $query,
+                'dateFrom' => $dateFrom,
+                'dateTo' => $dateTo])
+        );
+    }
+    /**
+     * @Route("/funnel_report", name="funnel_report")
+     */
+    public function funnelReportAction()
+    {
+        $query = [];
+        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : strtotime("-7 day");
+        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to']  : time();
 
-        ]);
+        $em = $this->getDoctrine()->getManager('default');
+        $funnel = new FunnelReport($em);
+        $report = $funnel->getDataForReport($dateFrom, $dateTo, $query);
+
+        $dataToSave = [ $report['gaReport']['traffic'], $report['gaReport']['downloads'],
+            $report['gaReport']['installs'],
+            $report['subscriptionMonths'],$report['subscriptionYear'], $report['trafficToDownloads'],
+            $report['trafficToInstalls'], $report['trafficToMonthSubscription'], $report['trafficToYearSubscription'],
+            $report['installsToMonthSubscription'], $report['installsToYearSubscription'] ];
+
+//        var_dump($dataToSave);die;
+        $response = new StreamedResponse();
+
+        $response->setCallback(function () use (&$dataToSave) {
+
+            $handle = fopen('php://output', 'w+');
+
+            fputcsv($handle, ['Traffic', 'Downloads', 'Installs', 'Subscriptions (1 month)',
+                'Subscriptions (12 month)', 'Traffic --> Downloads, %',
+                'Traffic --> Installs, % ', 'Traffic --> Subscriptions (1 month), %',
+                'Traffic --> Subscriptions (12 month), %',
+                'Install --> Subscription (1 month), %',
+                   'Install --> Subscription (12 month), %',
+                '1month --> 12 month', 'Revenue' ], ';');
+
+            fputcsv($handle, $dataToSave, ';');
+
+            fclose($handle);
+        });
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename="funnel_report-'. date('c').'".csv"');
+
+        return $response;
     }
 
 }
