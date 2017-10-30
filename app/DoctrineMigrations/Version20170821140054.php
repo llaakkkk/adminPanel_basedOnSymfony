@@ -17,10 +17,22 @@ class Version20170821140054 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        $this->addSql('CREATE TABLE admin_user
+(
+  id       INTEGER                                                  NOT NULL
+    CONSTRAINT admin_user_pkey
+    PRIMARY KEY,
+  username VARCHAR(255)                                             NOT NULL,
+  email    VARCHAR(255)                                             NOT NULL,
+  password VARCHAR(255)                                             NOT NULL,
+  roles    JSON,
+  created  TIMESTAMP(0) DEFAULT NULL :: TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  updated  TIMESTAMP(0) DEFAULT NULL :: TIMESTAMP WITHOUT TIME ZONE NOT NULL
+);
+');
+        $this->addSql('CREATE UNIQUE INDEX uniq_ad8a54a9e7927c74
+  ON admin_user (email);');
 
-        $this->addSql('ALTER TABLE admin_user ALTER role TYPE INT USING (role::integer)');
-        $this->addSql('ALTER TABLE admin_user ALTER role DROP DEFAULT');
-        $this->addSql('ALTER TABLE admin_user ALTER role TYPE INT USING (role::integer)');
     }
 
     /**

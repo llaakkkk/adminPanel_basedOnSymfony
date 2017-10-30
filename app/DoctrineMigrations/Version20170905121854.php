@@ -18,8 +18,8 @@ class Version20170905121854 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE admin_user ALTER created SET NOT NULL');
-        $this->addSql('ALTER TABLE admin_user ALTER updated SET NOT NULL');
+//        $this->addSql('ALTER TABLE admin_user ALTER created SET NOT NULL');
+//        $this->addSql('ALTER TABLE admin_user ALTER updated SET NOT NULL');
     }
 
     /**

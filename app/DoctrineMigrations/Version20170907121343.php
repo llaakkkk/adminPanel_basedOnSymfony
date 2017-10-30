@@ -18,7 +18,7 @@ class Version20170907121343 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE admin_user RENAME COLUMN name TO username');
+//        $this->addSql('ALTER TABLE admin_user RENAME COLUMN name TO username');
     }
 
     /**

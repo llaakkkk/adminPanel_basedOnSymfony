@@ -18,8 +18,8 @@ class Version20170905115801 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE admin_user ADD created TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
-        $this->addSql('ALTER TABLE admin_user ADD updated TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
+//        $this->addSql('ALTER TABLE admin_user ADD created TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
+//        $this->addSql('ALTER TABLE admin_user ADD updated TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
     }
 
     /**
