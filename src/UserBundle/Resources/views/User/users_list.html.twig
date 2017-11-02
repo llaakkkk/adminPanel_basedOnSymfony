@@ -24,66 +24,104 @@
                     <div class="ibox-content">
                         <div class="row">
                             <form action="/user" id="dataFilter" method="get" enctype="multipart/form-data">
-                                <div class="col-lg-4">
+                                <div class="col-lg-3">
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
                                             Period
                                         </div>
                                         <div class="panel-body">
                                             {% include 'UserBundle:Filters:date_filter.html.twig' %}
-                                            {#<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">#}
-                                            {#<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;#}
-                                            {#<span></span> <b class="caret"></b>#}
-                                            {#</div>#}
                                         </div>
 
                                     </div>
                                 </div>
-                                <div class="col-lg-8">
+                                <div class="col-lg-9">
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
-                                            Type of install
+                                            <label for="type-of-user">Segment</label>
                                         </div>
                                         <div class="panel-body">
-                                            <select name="type-of-install" multiple="multiple" class="select2-container--default" id="type-of-install" style="width: 100%">
-
-
-                                            </select>
+                                            <div class="col-md-3">
+                                                <label for="license-type">License Type</label>
+                                                <select name="license-type" multiple class="select2-container--default" id="license-type" style="width: 100%">
+                                                        {% for license in licenses %}
+                                                            <option value="{{ license.slug }}">{{ license.name }}</option>
+                                                        {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="billing-status">Billing Status</label>
+                                                <select name="billing-status" id="billing-status" multiple class="select2-container--default" style="width: 100%">
+                                                        {% for status in billingStatus %}
+                                                            <option value="{{ status.slug }}">{{ status.name }}</option>
+                                                        {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="app-version">MFP version</label>
+                                                <select name="app-version" id="app-version" multiple class="select2-container--default" style="width: 100%">
+                                                        {% for version in appVersions %}
+                                                            <option value="{{ version.applicationBuildVersion }}">{{ version.applicationBuildVersion }}</option>
+                                                        {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="os-version">MacOS</label>
+                                                <select name="os-version" id="os-version" multiple class="select2-container--default" style="width: 100%">
+                                                        {% for version in osVersions %}
+                                                            <option value="{{ version.osVersion }}">{{ version.osVersion }}</option>
+                                                        {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="languages">Languages</label>
+                                                <select name="languages" multiple class="select2-container--default" id="languages" style="width: 100%">
+                                                    {% for language in languages %}
+                                                        <option value="{{ language.slug }}">{{ language.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="countries">Countries</label>
+                                                <select name="countries"  id="countries" multiple class="select2-container--default" style="width: 100%">
+                                                    {% for language in languages %}
+                                                        <option value="{{ language.slug }}">{{ language.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="model-name">Mac type</label>
+                                                <select name="model-name"  id="model-name" multiple class="select2-container--default" style="width: 100%">
+                                                    {% for model in modelName %}
+                                                        <option value="{{ model.modelName }}">{{ model.modelName }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                             </form>
                             <div class="col-md-12">
-                                <a class="btn btn-default" href="/user_repor">Download report</a>
+                                <a class="btn btn-default" href="/user_report">Download report</a>
                             </div>
                         </div>
-                        <table class="table table-stripped toggle-arrow-tiny" data-page-size="8">
+                        <table class="table table-stripped toggle-arrow-tiny dataUsersTable" data-page-size="10">
                             <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Activation key</th>
-                                <th>License</th>
-                                <th>Billing status</th>
-                                <th>Created</th>
-                                <th>Last billed</th>
-                                <th>Order ID</th>
-                                <th>Coupon code</th>
-                                <th></th>
-                            </tr>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Activation key</th>
+                                    <th>License</th>
+                                    <th>Billing status</th>
+                                    <th>Created</th>
+                                    <th>Last billed</th>
+                                    <th>Order ID</th>
+                                    <th>Coupon code</th>
+                                </tr>
                             </thead>
                             <tbody>
-
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td colspan="10">
-                                    <ul class="pagination pull-right"></ul>
-                                    {#{{ dump(users) }}#}
-                                </td>
-                            </tr>
-                            {{ dump(users) }}
+                            {#{{ dump(users) }}#}
                             {% for user in users %}
                                 <tr>
                                     <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.userId.firstName }} {{ user.userId.lastName }}</a></td>
@@ -97,6 +135,9 @@
                                     <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.licenseStatus.id }}</a></td>
                                 </tr>
                             {% endfor %}
+                            </tbody>
+                            <tfoot>
+
                             </tfoot>
                         </table>
 
@@ -109,16 +150,13 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/momentjs/moment.min.js') }}"></script>
     <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    {#<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>#}
+
     <script>
-        $(document).ready(function(){
-
-            $('.dataTables-example').DataTable();
-
-        });
 
         $(function() {
             $('.select2-container--default').select2();
@@ -170,6 +208,14 @@
             $('#dataFilter').append($(inputTo));
             $('#dataFilter').submit();
         }
+        $(document).ready(function(){
+
+            $('.dataUsersTable').DataTable({
+//                "lengthMenu": [[25, 50, -1], [25, 50, "All"]]
+            });
+
+        });
+
 
     </script>
 

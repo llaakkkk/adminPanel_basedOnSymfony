@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * LicenseTypes
  *
  * @ORM\Table(name="license_types")
- * @ORM\Entity
+ *  @ORM\Entity(repositoryClass="UserBundle\Repository\LicenseTypesRepository")
  */
 class LicenseTypes
 {

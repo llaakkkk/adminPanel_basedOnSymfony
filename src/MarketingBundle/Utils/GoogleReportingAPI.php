@@ -22,7 +22,8 @@ class GoogleReportingAPI
     public function __construct($dateFrom, $dateTo)
     {
 
-        putenv('GOOGLE_APPLICATION_CREDENTIALS=/home/user/projects/admin_mfp/ga-key.json');
+//        putenv('GOOGLE_APPLICATION_CREDENTIALS=/home/user/projects/admin_mfp/ga-key.json');
+        putenv('GOOGLE_APPLICATION_CREDENTIALS=/home/lakie/Desktop/projects/admin_mfp/ga-key.json');
 
         // Create and configure a new client object.
         $this->client = new \Google_Client();

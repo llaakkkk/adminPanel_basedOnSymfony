@@ -27,6 +27,33 @@ class UserDevicesRepository extends EntityRepository
             ->getResult();
     }
 
+    public function getUsersDevicesByAppVersion()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.applicationBuildVersion')
+            ->groupBy('u.applicationBuildVersion')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getUsersDevicesByOSVersion()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.osVersion')
+            ->groupBy('u.osVersion')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getUsersDevicesByModelName()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.modelName')
+            ->groupBy('u.modelName')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getSubscriptionsCountByName($licenseType, $typeOfInstall = null)
     {
         $rsm = new ResultSetMapping();
@@ -45,5 +72,7 @@ class UserDevicesRepository extends EntityRepository
 
         return $users;
     }
+
+
 
 }

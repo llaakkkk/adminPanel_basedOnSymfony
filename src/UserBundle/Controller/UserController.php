@@ -23,15 +23,32 @@ class UserController extends Controller
 
         $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : strtotime("-7 day");
         $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to']  : time();
+        $em = $this->getDoctrine()->getManager('default');
 
-        $repository = $this->getDoctrine()->getRepository('UserBundle:UserDevices', 'default');
+        $repository = $em->getRepository('UserBundle:UserDevices');
 
         $users = $repository->findAll();
+//        $em = $this->getDoctrine()->getEntityManager('UserBundle:LicenseTypes');
+
+        $licensesTypes = $em->getRepository('UserBundle:LicenseTypes')->findAll();
+        $billingStatus = $em->getRepository('UserBundle:LicenseStatus')->findAll();
+
+        $appVersions = $em->getRepository('UserBundle:UserDevices')->getUsersDevicesByAppVersion();
+        $osVersions = $em->getRepository('UserBundle:UserDevices')->getUsersDevicesByOSVersion();
+        $languages = $em->getRepository('UserBundle:Languages')->findAll();
+        $modelName = $em->getRepository('UserBundle:UserDevices')->getUsersDevicesByModelName();
+
 
         return $this->render('UserBundle:User:users_list.html.twig', [
             'users' => $users,
             'dateFrom' => $dateFrom,
-            'dateTo' => $dateTo
+            'dateTo' => $dateTo,
+            'licenses' => $licensesTypes,
+            'billingStatus' => $billingStatus,
+            'appVersions' => $appVersions,
+            'osVersions' => $osVersions,
+            'languages' => $languages,
+            'modelName' => $modelName
         ]);
     }
 

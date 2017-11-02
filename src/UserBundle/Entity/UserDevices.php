@@ -62,9 +62,9 @@ class UserDevices
     /**
      * @var integer
      *
-     * @ORM\Column(name="memory_frequency", type="integer", nullable=true)
+     * @ORM\Column(name="number_of_cores", type="integer", nullable=true)
      */
-    private $memoryFrequency;
+    private $numberOfCores;
 
     /**
      * @var string
@@ -265,17 +265,17 @@ class UserDevices
     /**
      * @return int
      */
-    public function getMemoryFrequency(): int
+    public function getNumberOfCores(): int
     {
-        return $this->memoryFrequency;
+        return $this->numberOfCores;
     }
 
     /**
-     * @param int $memoryFrequency
+     * @param int $numberOfCores
      */
-    public function setMemoryFrequency(int $memoryFrequency)
+    public function setNumberOfCores(int $numberOfCores)
     {
-        $this->memoryFrequency = $memoryFrequency;
+        $this->numberOfCores = $numberOfCores;
     }
 
     /**
