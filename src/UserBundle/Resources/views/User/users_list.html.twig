@@ -8,7 +8,7 @@
 {% endblock %}
 {% block content %}
     <div class="wrapper wrapper-content animated fadeInRight">
-
+        {{ dump(query) }}
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
@@ -43,57 +43,57 @@
                                         <div class="panel-body">
                                             <div class="col-md-3">
                                                 <label for="license-type">License Type</label>
-                                                <select name="license-type" multiple class="select2-container--default" id="license-type" style="width: 100%">
+                                                <select name="license-type[]" multiple class="select2-container--default" id="license-type" style="width: 100%">
                                                         {% for license in licenses %}
-                                                            <option value="{{ license.slug }}">{{ license.name }}</option>
+                                                            <option value="{{ license.slug }}" {%  if (query['license-type'] is defined) and (license.slug in query['license-type']) %} selected {% endif %}>{{ license.name }}</option>
                                                         {% endfor %}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="billing-status">Billing Status</label>
-                                                <select name="billing-status" id="billing-status" multiple class="select2-container--default" style="width: 100%">
+                                                <select name="billing-status[]" id="billing-status" multiple class="select2-container--default" style="width: 100%">
                                                         {% for status in billingStatus %}
-                                                            <option value="{{ status.slug }}">{{ status.name }}</option>
+                                                            <option value="{{ status.slug }}" {% if (query['billing-status'] is defined) and (status.slug in query['billing-status']) %} selected {% endif %}>{{ status.name }}</option>
                                                         {% endfor %}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="app-version">MFP version</label>
-                                                <select name="app-version" id="app-version" multiple class="select2-container--default" style="width: 100%">
+                                                <select name="app-version[]" id="app-version" multiple class="select2-container--default" style="width: 100%">
                                                         {% for version in appVersions %}
-                                                            <option value="{{ version.applicationBuildVersion }}">{{ version.applicationBuildVersion }}</option>
+                                                            <option value="{{ version.applicationBuildVersion }}" {% if (query['app-version'] is defined) and (version.applicationBuildVersion in query['app-version']) %} selected {% endif %}>{{ version.applicationBuildVersion }}</option>
                                                         {% endfor %}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="os-version">MacOS</label>
-                                                <select name="os-version" id="os-version" multiple class="select2-container--default" style="width: 100%">
+                                                <select name="os-version[]" id="os-version" multiple class="select2-container--default" style="width: 100%">
                                                         {% for version in osVersions %}
-                                                            <option value="{{ version.osVersion }}">{{ version.osVersion }}</option>
+                                                            <option value="{{ version.osVersion }}" {% if (query['os-version'] is defined) and (version.osVersion in query['os-version']) %} selected {% endif %}>{{ version.osVersion }}</option>
                                                         {% endfor %}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="languages">Languages</label>
-                                                <select name="languages" multiple class="select2-container--default" id="languages" style="width: 100%">
+                                                <select name="languages[]" multiple class="select2-container--default" id="languages" style="width: 100%">
                                                     {% for language in languages %}
-                                                        <option value="{{ language.slug }}">{{ language.name }}</option>
+                                                        <option value="{{ language.slug }}" {% if (query['languages'] is defined) and (language.slug in query['languages']) %} selected {% endif %}>{{ language.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="countries">Countries</label>
-                                                <select name="countries"  id="countries" multiple class="select2-container--default" style="width: 100%">
+                                                <select name="countries[]"  id="countries" multiple class="select2-container--default" style="width: 100%">
                                                     {% for language in languages %}
-                                                        <option value="{{ language.slug }}">{{ language.name }}</option>
+                                                        <option value="{{ language.slug }}" {% if (query['languages'] is defined) and (language.slug in query['languages']) %} selected {% endif %}>{{ language.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="model-name">Mac type</label>
-                                                <select name="model-name"  id="model-name" multiple class="select2-container--default" style="width: 100%">
+                                                <select name="model-name[]"  id="model-name" multiple class="select2-container--default" style="width: 100%">
                                                     {% for model in modelName %}
-                                                        <option value="{{ model.modelName }}">{{ model.modelName }}</option>
+                                                        <option value="{{ model.modelName }}" {% if (query['model-name'] is defined) and (model.modelName in query['model-name']) %} selected {% endif %}>{{ model.modelName }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
@@ -190,7 +190,7 @@
 
             });
 
-            $('#type-of-install').on('change', function () {
+            $('.select2-container--default').on('change', function () {
                 var dateFrom = start.format('YYYY-MM-DD');
                 var dateTo = end.format('YYYY-MM-DD');
                 setDateAndSubmit(dateFrom, dateTo);
@@ -211,7 +211,7 @@
         $(document).ready(function(){
 
             $('.dataUsersTable').DataTable({
-//                "lengthMenu": [[25, 50, -1], [25, 50, "All"]]
+                "lengthMenu": [[25, 50, -1], [25, 50, "All"]]
             });
 
         });
