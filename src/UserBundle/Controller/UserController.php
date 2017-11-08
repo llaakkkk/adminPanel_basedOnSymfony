@@ -29,7 +29,7 @@ class UserController extends Controller
         $repository = $em->getRepository('UserBundle:UserDevices');
 
         $users = $repository->getUserList($query);
-var_dump($users);die;
+//var_dump($repository);die;
         $licensesTypes = $em->getRepository('UserBundle:LicenseTypes')->findAll();
         $billingStatus = $em->getRepository('UserBundle:LicenseStatus')->findAll();
         $appVersions = $em->getRepository('UserBundle:UserDevices')->getUsersDevicesByAppVersion();

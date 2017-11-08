@@ -77,20 +77,20 @@ class UserDevicesRepository extends EntityRepository
     {
         $rsm = new ResultSetMapping();
 
-        $rsm->addEntityResult('UserBundle\Repository\UserDevicesRepository', 'ud');
+        $rsm->addEntityResult('UserBundle:UserDevices', 'ud');
         $rsm->addFieldResult('ud', 'activation_key', 'activation_key');
         $rsm->addFieldResult('ud', 'created', 'created');
-        $rsm->addJoinedEntityResult('User', 'u', 'ud', 'user_id');
+        $rsm->addJoinedEntityResult('UserBundle:Users', 'u', 'ud', 'userId');
         $rsm->addFieldResult('u', 'first_name', 'first_name');
         $rsm->addFieldResult('u', 'last_name', 'last_name');
         $rsm->addFieldResult('u', 'email', 'email');
-        $rsm->addJoinedEntityResult('SubscriptionStatus', 'ss', 'ud', 'subscription_status_id');
-        $rsm->addJoinedEntityResult('LicenseStatus', 'ls', 'ss', 'license_status_id');
+        $rsm->addJoinedEntityResult('UserBundle:SubscriptionStatus', 'ss', 'ud', 'subscriptionStatus');
+        $rsm->addJoinedEntityResult('UserBundle:LicenseStatus', 'ls', 'ss', 'licenseStatus');
         $rsm->addFieldResult('ls', 'name', 'license_status');
-        $rsm->addJoinedEntityResult('PaymentSystemProducts', 'psp', 'ss', 'product_id');
-        $rsm->addJoinedEntityResult('LicenseTypes', 'lt', 'psp', 'license_type_id');
+        $rsm->addJoinedEntityResult('MarketingBundle:PaymentSystemProducts', 'psp', 'ss', 'product');
+        $rsm->addJoinedEntityResult('UserBundle:LicenseTypes', 'lt', 'psp', 'licenseType');
         $rsm->addFieldResult('lt', 'name', 'license_type');
-        $rsm->addJoinedEntityResult('BillingData', 'bd', 'ud', 'id');
+        $rsm->addJoinedEntityResult('MarketingBundle:BillingData', 'bd', 'ud', 'billingData');
         $rsm->addFieldResult('bd', 'last_billed', 'last_billed');
         $rsm->addFieldResult('bd', 'order_id', 'order_id');
         $rsm->addFieldResult('bd', 'promo_code', 'promo_code');
