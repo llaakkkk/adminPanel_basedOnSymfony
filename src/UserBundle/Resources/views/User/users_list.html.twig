@@ -121,18 +121,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            {#{{ dump(users) }}#}
-                            {% for user in users %}
+                            {{ dump(usersDevices) }}
+                            {% for userDevice in usersDevices %}
                                 <tr>
-                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.userId.firstName }} {{ user.userId.lastName }}</a></td>
-                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.userId.email }}</a></td>
-                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.activationKey }}</a></td>
-                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.product.name }}</a></td>
-                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.licenseStatus.name }}</a></td>
-                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.userId.created.date|date("F jS \\a\\t g:ia") }}</a></td>
-                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">date</a></td>
-                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.product.id }}</a></td>
-                                    <td><a href="{{ path('user', {'id': user.userId.id}) }}">{{ user.subscriptionStatus.licenseStatus.id }}</a></td>
+                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.userId.id is defined %}{{ userDevice.userId.firstName }} {{ userDevice.userId.lastName }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.userId.id is defined %}{{ userDevice.userId.email }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.activationKey is defined %}{{ userDevice.activationKey }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.subscriptionStatus.product.name is defined %}{{ userDevice.subscriptionStatus.product.name }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.subscriptionStatus.licenseStatus.name is defined %}{{ userDevice.subscriptionStatus.licenseStatus.name }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.created is defined %}{{ userDevice.created.date|date("F jS \\a\\t g:ia") }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">date</a></td>
+                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.subscriptionStatus.product.id is defined %}{{ userDevice.subscriptionStatus.product.id }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}"{% if userDevice.subscriptionStatus.licenseStatus.id is defined %}>{{ userDevice.subscriptionStatus.licenseStatus.id }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.subscriptionStatus.licenseStatus.id is defined %}{{ userDevice.subscriptionStatus.licenseStatus.id }}{% else %}-{% endif %}</a></td>
                                 </tr>
                             {% endfor %}
                             </tbody>

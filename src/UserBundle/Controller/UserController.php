@@ -26,10 +26,10 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager('default');
 
-        $repository = $em->getRepository('UserBundle:UserDevices');
+//        $users = $em->getRepository('UserBundle:UserDevices')->getUserList($query);
+        $usersDevices = $em->getRepository('UserBundle:UserDevices')->findAll();
 
-        $users = $repository->getUserList($query);
-//var_dump($repository);die;
+//var_dump($users);die;
         $licensesTypes = $em->getRepository('UserBundle:LicenseTypes')->findAll();
         $billingStatus = $em->getRepository('UserBundle:LicenseStatus')->findAll();
         $appVersions = $em->getRepository('UserBundle:UserDevices')->getUsersDevicesByAppVersion();
@@ -40,7 +40,7 @@ class UserController extends Controller
 
         return $this->render('UserBundle:User:users_list.html.twig', [
             'query' => $query,
-            'users' => $users,
+            'usersDevices' => $usersDevices,
             'dateFrom' => $dateFrom,
             'dateTo' => $dateTo,
             'licenses' => $licensesTypes,

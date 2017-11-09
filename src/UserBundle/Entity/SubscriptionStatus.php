@@ -72,10 +72,10 @@ class SubscriptionStatus
         return $this->id;
     }
 
-    /**
-     * @return PaymentSystemProducts
-     */
-    public function getProduct(): PaymentSystemProducts
+//    /**
+//     * @return PaymentSystemProducts
+//     */
+    public function getProduct()
     {
         return $this->product;
     }
