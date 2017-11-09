@@ -59,7 +59,7 @@
                             </div>
                             </form>
                             <div class="col-md-12">
-                                <a class="btn btn-default" href="{{ path('funnel_report') }}">Download report</a>
+                                <a class="btn btn-default" id="funnel-report" href="">Download report</a>
                             </div>
                         </div>
 
@@ -120,6 +120,7 @@
         $(document).ready(function(){
 
             $('.dataTables').DataTable();
+            $('#funnel-report').attr('href',{{ path('funnel_report') }}+ window.location.search)
 
         });
 

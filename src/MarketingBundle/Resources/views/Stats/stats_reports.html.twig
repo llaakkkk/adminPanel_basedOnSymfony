@@ -68,7 +68,7 @@
                         <div class="row">
 
                         <div class="col-md-12">
-                            <a class="btn btn-default" href="{{ path('funnel_report') }}">Download report</a>
+                            <a class="btn btn-default" id="stats-report" href="{{ path('stats_report') }}">Download report</a>
                         </div>
                         <table class="table table-striped dataTables">
                             <thead>
@@ -102,7 +102,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="col-md-12">
-                            <a class="btn btn-default" href="{{ path('funnel_report') }}">Download report</a>
+                            <a class="btn btn-default" id="stats-revenue-report" href="{{ path('stats_revenue_report') }}">Download report</a>
                         </div>
                         <table class="table table-striped dataTables">
                             <thead>
@@ -142,7 +142,12 @@
     <script>
         $(document).ready(function(){
 
+            var parameters = window.location.search;
+
             $('.dataTables').DataTable();
+            $('#stats-report').attr('href','{{ path('stats_report') }}' + parameters)
+            $('#stats-revenue-report').attr('href','{{ path('stats_revenue_report') }}' + parameters)
+            console.log('{{ path('stats_revenue_report') }}'+ parameters);
 
         });
 

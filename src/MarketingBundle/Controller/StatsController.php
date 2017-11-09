@@ -59,4 +59,96 @@ class StatsController extends Controller
 
         ]);
     }
+
+    /**
+     * @Route("/stats_report", name="stats_report")
+     */
+    public function statsReportAction()
+    {
+        $query = [];
+        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : date('Y-m-d',strtotime("-7 day"));
+        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to'] : date('Y-m-d', time());
+
+        $em = $this->getDoctrine()->getManager('default');
+        $funnel = new FunnelReport($em);
+        $report = $funnel->getDataForReport($dateFrom, $dateTo, $query);
+
+        $dataToSave = [ $report['gaReport']['traffic'], $report['gaReport']['downloads'],
+            $report['gaReport']['installs'],
+            $report['subscriptionMonths'],$report['subscriptionYear'], $report['trafficToDownloads'],
+            $report['trafficToInstalls'], $report['trafficToMonthSubscription'], $report['trafficToYearSubscription'],
+            $report['installsToMonthSubscription'], $report['installsToYearSubscription'] ];
+
+//        var_dump($dataToSave);die;
+        $response = new StreamedResponse();
+
+        $response->setCallback(function () use (&$dataToSave) {
+
+            $handle = fopen('php://output', 'w+');
+
+            fputcsv($handle, ['Traffic', 'Downloads', 'Installs', 'Subscriptions (1 month)',
+                'Subscriptions (12 month)', 'Traffic --> Downloads, %',
+                'Traffic --> Installs, % ', 'Traffic --> Subscriptions (1 month), %',
+                'Traffic --> Subscriptions (12 month), %',
+                'Install --> Subscription (1 month), %',
+                'Install --> Subscription (12 month), %',
+                '1month --> 12 month', 'Revenue' ], ';');
+
+            fputcsv($handle, $dataToSave, ';');
+
+            fclose($handle);
+        });
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename="funnel_report-'. date('c').'".csv"');
+
+        return $response;
+    }
+
+    /**
+     * @Route("/stats_revenue_report", name="stats_revenue_report")
+     */
+    public function statsRevenueReportAction()
+    {
+        $query = [];
+        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : date('Y-m-d',strtotime("-7 day"));
+        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to'] : date('Y-m-d', time());
+
+        $em = $this->getDoctrine()->getManager('default');
+        $funnel = new FunnelReport($em);
+        $report = $funnel->getDataForReport($dateFrom, $dateTo, $query);
+
+        $dataToSave = [ $report['gaReport']['traffic'], $report['gaReport']['downloads'],
+            $report['gaReport']['installs'],
+            $report['subscriptionMonths'],$report['subscriptionYear'], $report['trafficToDownloads'],
+            $report['trafficToInstalls'], $report['trafficToMonthSubscription'], $report['trafficToYearSubscription'],
+            $report['installsToMonthSubscription'], $report['installsToYearSubscription'] ];
+
+//        var_dump($dataToSave);die;
+        $response = new StreamedResponse();
+
+        $response->setCallback(function () use (&$dataToSave) {
+
+            $handle = fopen('php://output', 'w+');
+
+            fputcsv($handle, ['Traffic', 'Downloads', 'Installs', 'Subscriptions (1 month)',
+                'Subscriptions (12 month)', 'Traffic --> Downloads, %',
+                'Traffic --> Installs, % ', 'Traffic --> Subscriptions (1 month), %',
+                'Traffic --> Subscriptions (12 month), %',
+                'Install --> Subscription (1 month), %',
+                'Install --> Subscription (12 month), %',
+                '1month --> 12 month', 'Revenue' ], ';');
+
+            fputcsv($handle, $dataToSave, ';');
+
+            fclose($handle);
+        });
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename="funnel_report-'. date('c').'".csv"');
+
+        return $response;
+    }
 }
