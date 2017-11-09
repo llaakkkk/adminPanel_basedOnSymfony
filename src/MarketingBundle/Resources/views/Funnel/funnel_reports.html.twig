@@ -16,7 +16,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            <form action="/funnel" id="dataFilter" method="get" enctype="multipart/form-data">
+                            <form action="{{ path('funnel_all') }}" id="dataFilter" method="get" enctype="multipart/form-data">
                             <div class="col-lg-4">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
@@ -155,7 +155,7 @@
 
             });
 
-            $('#type-of-install').on('change', function () {
+            $('.select2-container--default').on('change', function () {
                 var dateFrom = start.format('YYYY-MM-DD');
                 var dateTo = end.format('YYYY-MM-DD');
                 setDateAndSubmit(dateFrom, dateTo);

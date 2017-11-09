@@ -8,7 +8,7 @@
 
 namespace MarketingBundle\Controller;
 
-use MarketingBundle\Services\GoogleReportingAPI;
+use MarketingBundle\Utils\GoogleReportingAPI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,11 +23,10 @@ class StatsController extends Controller
      */
     public function statsAction(Request $request)
     {
-//        $repository = $this->getDoctrine()->getRepository(':UserDevices', 'default');
-//
-//        $users = $repository->findAll();
+        $em = $this->getDoctrine()->getManager('default');
 
-        $userDevicesRepository = $this->getDoctrine()->getRepository('UserBundle:UserDevices', 'default');
+
+        $userDevicesRepository = $em->getRepository('UserBundle:UserDevices');
 
         $GA = new GoogleReportingAPI('7daysAgo', 'today');
         $metrics = [
