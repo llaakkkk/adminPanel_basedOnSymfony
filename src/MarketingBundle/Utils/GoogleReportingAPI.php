@@ -22,7 +22,7 @@ class GoogleReportingAPI
     public function __construct($dateFrom, $dateTo)
     {
 
-        putenv('GOOGLE_APPLICATION_CREDENTIALS='.__DIR__.'/../../../ga-key.json');
+        putenv('GOOGLE_APPLICATION_CREDENTIALS='.__DIR__.'/../Resources/config/ga-key.json');
 //        putenv('GOOGLE_APPLICATION_CREDENTIALS=/home/lakie/Desktop/projects/admin_mfp/ga-key.json');
 
         // Create and configure a new client object.
@@ -39,6 +39,7 @@ class GoogleReportingAPI
 
     public function getMetricsData($metrics)
     {
+        $report = $this->getReport($metrics);
         $report = $this->getReport($metrics);
 
         return $this->getReportResults($report);

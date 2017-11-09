@@ -501,7 +501,7 @@ class UserDevices
     /**
      * @param  \UserBundle\Entity\SubscriptionStatus $subscriptionStatus
      */
-    public function setSubscriptionStatus( $subscriptionStatus)
+    public function setSubscriptionStatus($subscriptionStatus)
     {
         $this->subscriptionStatus = $subscriptionStatus;
     }
@@ -512,7 +512,7 @@ class UserDevices
     }
 
 
-    public function setDeviceLanguage( $deviceLanguage)
+    public function setDeviceLanguage($deviceLanguage)
     {
         $this->deviceLanguage = $deviceLanguage;
     }

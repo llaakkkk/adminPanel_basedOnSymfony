@@ -21,15 +21,15 @@ class UserController extends Controller
     {
         $query = $request->query->all();
 
-        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : date('Y-m-d',strtotime("-7 day"));
-        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to']  : date('Y-m-d', time());
+        $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
+        $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to']  : date('Y-m-d', time());
 
         $em = $this->getDoctrine()->getManager('default');
 
 //        $users = $em->getRepository('UserBundle:UserDevices')->getUserList($query);
-        $usersDevices = $em->getRepository('UserBundle:UserDevices')->findAll();
+        $usersDevices = $em->getRepository('UserBundle:UserDevices')->getUserList($query);
 
-//var_dump($users);die;
+//var_dump($usersDevices);die;
         $licensesTypes = $em->getRepository('UserBundle:LicenseTypes')->findAll();
         $billingStatus = $em->getRepository('UserBundle:LicenseStatus')->findAll();
         $appVersions = $em->getRepository('UserBundle:UserDevices')->getUsersDevicesByAppVersion();
@@ -41,8 +41,8 @@ class UserController extends Controller
         return $this->render('UserBundle:User:users_list.html.twig', [
             'query' => $query,
             'usersDevices' => $usersDevices,
-            'dateFrom' => $dateFrom,
-            'dateTo' => $dateTo,
+            'dateFrom' => $query['date-from'],
+            'dateTo' => $query['date-to'],
             'licenses' => $licensesTypes,
             'billingStatus' => $billingStatus,
             'appVersions' => $appVersions,

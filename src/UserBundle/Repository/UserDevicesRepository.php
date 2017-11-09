@@ -135,6 +135,30 @@ class UserDevicesRepository extends EntityRepository
     {
 
 
+        $users = $this->createQueryBuilder('ud')
+            ->where('ud.created > :date_from')
+            ->setParameter('date_from', $query['date-from'])
+            ->andWhere('ud.created < :date_to')
+            ->setParameter('date_to', $query['date-to']);
+
+        //            ->groupBy('ud.osVersion')
+        //            ->where('m.reciever = ?1')
+        //
+
+
+        if (isset($query['license-type']) && !empty($query['license-type'])) {
+            $users->andWhere('ud.userName IN(:license_type)')
+                ->setParameter('license_type', array_values($query['license-type']));
+
+        }
+        if (isset($query['billing-status']) && !empty($query['billing-status'])) {
+            $users->andWhere('ud.subscriptionStatus.licenseStatus.name IN(:license_status)')
+                ->setParameter('license_status', array_values($query['billing-status']));
+
+        }
+
+        return $users->getQuery()
+            ->getResult();
     }
 
 
