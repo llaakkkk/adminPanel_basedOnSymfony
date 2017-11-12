@@ -50,6 +50,7 @@ class FunnelController extends Controller
                 'dateTo' => $dateTo])
         );
     }
+
     /**
      * @Route("/funnel_report", name="funnel_report")
      */

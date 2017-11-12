@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %} Stats {% endblock %}
+{% block title %} Uninstalls {% endblock %}
 {% block style %}
     {{ parent() }}
     <link href="{{ asset('css/plugins/dataTables/datatables.min.css') }}" rel="stylesheet">
@@ -12,69 +12,101 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Stats </h5>
+                        <h5>Uninstalls </h5>
 
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            <div class="col-lg-4">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        Period
-                                    </div>
-                                    <div class="panel-body">
-                                        <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-                                            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
-                                            <span></span> <b class="caret"></b>
-                                        </div></div>
+                            <form action="{{ path('uninstalls_all') }}" id="dataFilter" method="get" enctype="multipart/form-data">
+                                <div class="col-lg-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            Period
+                                        </div>
+                                        <div class="panel-body">
+                                            {% include 'MarketingBundle:Filters:date_filter.html.twig' %}
 
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        Type of install
-                                    </div>
-                                    <div class="panel-body">
-                                        <select name="type-of-install" class="select2-container--default" id="type-of-install">
-                                            <option value="all" selected>All</option>
-                                            <option value="free-install">New</option>
-                                            <option value="paid-install">Old</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        Compare
-                                    </div>
-                                    <div class="panel-body">
-                                        <button class="btn btn-info">Compare to</button>
-                                    </div>
-                                </div>
-                            </div>
+                                        </div>
 
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <label for="type-of-user">Segment</label>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-md-3">
+                                                <label for="os-version">MacOS</label>
+                                                <select name="os-version[]" id="os-version" multiple class="select2-container--default" style="width: 100%">
+                                                    {% for version in osVersions %}
+                                                        <option value="{{ version.osVersion }}" {% if (query['os-version'] is defined) and (version.osVersion in query['os-version']) %} selected {% endif %}>{{ version.osVersion }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="languages">Languages</label>
+                                                <select name="languages[]" multiple class="select2-container--default" id="languages" style="width: 100%">
+                                                    {% for language in languages %}
+                                                        <option value="{{ language.slug }}" {% if (query['languages'] is defined) and (language.slug in query['languages']) %} selected {% endif %}>{{ language.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="countries">Countries</label>
+                                                <select name="countries[]"  id="countries" multiple class="select2-container--default" style="width: 100%">
+                                                    {% for language in languages %}
+                                                        <option value="{{ language.slug }}" {% if (query['languages'] is defined) and (language.slug in query['languages']) %} selected {% endif %}>{{ language.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="model-name">Mac type</label>
+                                                <select name="model-name[]"  id="model-name" multiple class="select2-container--default" style="width: 100%">
+                                                    {% for model in modelName %}
+                                                        <option value="{{ model.modelName }}" {% if (query['model-name'] is defined) and (model.modelName in query['model-name']) %} selected {% endif %}>{{ model.modelName }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="col-md-12">
+                                <a class="btn btn-default" id="uninstalls-report" href="">Download report</a>
+                            </div>
                         </div>
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>Installs</th>
-                                <th>1 Month</th>
-                                <th>1 Year</th>
-                                <th>Revenue</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>{{ installs }}</td>
-                                <td>{{ subscriptionMonths }}</td>
-                                <td>{{ subscriptionYear }}</td>
-                                <td>{{ revenue }}</td>
-                            </tr>
+                    </div>
+                </div>
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-striped dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Activation key</th>
+                                            <th>License</th>
+                                            <th>Message</th>
+                                            <th>Build</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for uninstall in uninstalls %}
+                                        <tr>
+                                            <td>{{ uninstall.activation_key }}</td>
+                                            <td>{{ uninstall.license_type_name }}</td>
+                                            <td>-</td>
+                                            <td>{{ uninstall.application_build_version }}</td>
+                                            <td>{{ uninstall.last_date | date("F jS \\a\\t g:ia") }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
 
-                            </tbody>
-                        </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -90,15 +122,18 @@
     <script>
         $(document).ready(function(){
 
-            $('.dataTables-example').DataTable();
+            $('.dataTable').DataTable();
+            $('#uninstalls-report').attr('href', '{{ path('uninstalls_report') }}' + window.location.search)
+
 
         });
 
         $(function() {
             $('.select2-container--default').select2();
 
-            var start = moment().subtract(6, 'days');
-            var end = moment();
+            var start = moment('{{ query['date-from'] | date('Ymd') }}');
+            var end = moment('{{ query['date-to']| date('Ymd') }}');
+
 
             function cb(start, end) {
                 $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
@@ -118,8 +153,32 @@
             }, cb);
 
             cb(start, end);
-        });
 
+            $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
+                var dateFrom = picker.startDate.format('YYYY-MM-DD');
+                var dateTo = picker.endDate.format('YYYY-MM-DD');
+                setDateAndSubmit(dateFrom, dateTo);
+
+            });
+
+            $('.select2-container--default').on('change', function () {
+                var dateFrom = start.format('YYYY-MM-DD');
+                var dateTo = end.format('YYYY-MM-DD');
+                setDateAndSubmit(dateFrom, dateTo);
+            })
+
+        });
+        function setDateAndSubmit(dateFrom, dateTo) {
+            var inputFrom = $("<input>")
+                .attr("type", "hidden")
+                .attr("name", "date-from").val(dateFrom);
+            var inputTo = $("<input>")
+                .attr("type", "hidden")
+                .attr("name", "date-to").val(dateTo);
+            $('#dataFilter').append($(inputFrom));
+            $('#dataFilter').append($(inputTo));
+            $('#dataFilter').submit();
+        }
 
     </script>
 

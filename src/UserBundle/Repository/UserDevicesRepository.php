@@ -161,6 +161,53 @@ class UserDevicesRepository extends EntityRepository
             ->getResult();
     }
 
+    public function getUninstallsReportData($query)
+    {
+        $em = $this->getEntityManager();
+        $sql = "SELECT ud.activation_key,
+                      ud.user_id,
+                      ud.id as device_id,
+                      pp.license_type_id,
+                      lt.name as license_type_name,
+                      lt.slug as license_type_slug,
+                      ud.application_build_version,
+                      ud.updated as last_date
+                    FROM user_devices ud
+                    LEFT JOIN subscription_status ss ON ss.id = ud.subscription_status_id
+                    INNER JOIN payment_system_products pp ON pp.id = ss.product_id
+                    INNER JOIN license_types lt ON pp.license_type_id = lt.id
+                    WHERE ud.created > :date_from AND ud.created < :date_to";
+
+        if (isset($query['os-version']) && !empty($query['os-version'])){
+            $sql .= ' AND ud.os_version IN (:os_version)';
+        }
+        if (isset($query['model-name']) && !empty($query['model-name'])){
+            $sql .= ' AND ud.model_name IN (:model_name)';
+        }
+
+        $statement = $em->getConnection()->prepare($sql);
+        $dateFrom = new \DateTime($query['date-from']);
+        $dateTo = new \DateTime($query['date-to']);
+
+        $statement->bindValue('date_from', $dateFrom->getTimestamp());
+        $statement->bindValue('date_to', $dateTo->getTimestamp());
+
+        if (!empty($query['os-version'])){
+            $statement->bindValue('os_version', implode(",", $query['os-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        }
+        if (!empty($query['model-name'])){
+            $statement->bindValue('model_name',implode(",", $query['model-name']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        }
+
+
+        $statement->execute();
+
+        $result = $statement->fetchAll();
+
+        return $result;
+
+    }
+
 
 
 }
