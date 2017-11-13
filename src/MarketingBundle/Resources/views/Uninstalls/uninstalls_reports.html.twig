@@ -55,9 +55,7 @@
                                             <div class="col-md-3">
                                                 <label for="countries">Countries</label>
                                                 <select name="countries[]"  id="countries" multiple class="select2-container--default" style="width: 100%">
-                                                    {% for language in languages %}
-                                                        <option value="{{ language.slug }}" {% if (query['languages'] is defined) and (language.slug in query['languages']) %} selected {% endif %}>{{ language.name }}</option>
-                                                    {% endfor %}
+
                                                 </select>
                                             </div>
                                             <div class="col-md-3">

@@ -214,36 +214,41 @@ class UserDevicesRepository extends EntityRepository
                     LEFT JOIN subscription_status ss ON ss.id = ud.subscription_status_id
                     INNER JOIN payment_system_products pp ON pp.id = ss.product_id
                     INNER JOIN license_types lt ON pp.license_type_id = lt.id
-                    WHERE ud.created > :date_from AND ud.created < :date_to";
+                    LEFT JOIN languages_to_user_devices lud ON lud.user_device_id = ud.id
+                    LEFT JOIN languages l ON l.id = lud.language_id
+                    WHERE ud.updated > :date_from AND ud.updated < :date_to";
 
-        if (isset($query['os-version']) && !empty($query['os-version'])){
+        if (isset($query['os-version']) && !empty($query['os-version'])) {
             $sql .= ' AND ud.os_version IN (:os_version)';
         }
-        if (isset($query['model-name']) && !empty($query['model-name'])){
+        if (isset($query['model-name']) && !empty($query['model-name'])) {
             $sql .= ' AND ud.model_name IN (:model_name)';
         }
 
+        if (isset($query['languages']) && !empty($query['languages'])) {
+            $sql .= ' AND l.slug IN (:languages)';
+        }
+
         $statement = $em->getConnection()->prepare($sql);
-        $dateFrom = new \DateTime($query['date-from']);
-        $dateTo = new \DateTime($query['date-to']);
 
-        $statement->bindValue('date_from', $dateFrom->getTimestamp());
-        $statement->bindValue('date_to', $dateTo->getTimestamp());
+        $statement->bindValue('date_from', $query['date-from'], \PDO::PARAM_STR);
+        $statement->bindValue('date_to', $query['date-to'], \PDO::PARAM_STR);
 
-        if (!empty($query['os-version'])){
+        if (!empty($query['os-version'])) {
             $statement->bindValue('os_version', implode(",", $query['os-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
         }
-        if (!empty($query['model-name'])){
-            $statement->bindValue('model_name',implode(",", $query['model-name']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        if (!empty($query['model-name'])) {
+            $statement->bindValue('model_name', implode(",", $query['model-name']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
         }
-
+        if (!empty($query['languages'])) {
+            $statement->bindValue('languages', implode(",", $query['languages']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        }
 
         $statement->execute();
 
         $result = $statement->fetchAll();
 
         return $result;
-
     }
 
 

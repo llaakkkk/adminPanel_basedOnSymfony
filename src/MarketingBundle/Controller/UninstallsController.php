@@ -53,10 +53,10 @@ class UninstallsController extends Controller
     /**
      * @Route("/uninstalls_report", name="uninstalls_report")
      */
-    public function uninstallsReportAction()
+    public function uninstallsReportAction(Request $request)
     {
-        $query = [];
-        #
+        $query = $request->query->all();
+
         $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
         $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to'] : date('Y-m-d', time());
 
@@ -87,8 +87,6 @@ class UninstallsController extends Controller
         $response->headers->set('Content-Disposition', 'attachment; filename="uninstalls_report-'. date('c').'".csv"');
 
         return $response;
-
-
     }
 
 
