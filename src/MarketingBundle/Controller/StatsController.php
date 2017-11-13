@@ -24,6 +24,7 @@ class StatsController extends Controller
     public function statsAction(Request $request)
     {
         $query = $request->query->all();
+
         $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
         $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to']  : date('Y-m-d', time());
 
@@ -32,7 +33,7 @@ class StatsController extends Controller
 
         $userDevicesRepository = $em->getRepository('UserBundle:UserDevices');
 
-        $GA = new GoogleReportingAPI('7daysAgo', 'today');
+        $GA = new GoogleReportingAPI($query['date-from'], $query['date-to']);
         $metrics = [
             'traffic' => 'ga:newUsers',
             'downloads' => 'ga:goal18Starts',
@@ -41,41 +42,60 @@ class StatsController extends Controller
         $gaReport = $GA->getMetricsData($metrics);
 
 
-        $subscriptionMonths = $userDevicesRepository->getSubscriptionsCountByName('month');
-        $subscriptionYear = $userDevicesRepository->getSubscriptionsCountByName('year');
+        $subscriptionMonths = $userDevicesRepository->getSubscriptionsCountByName('month', $query);
+        $subscriptionYear = $userDevicesRepository->getSubscriptionsCountByName('year', $query);
 
-        $billingDataRepository = $this->getDoctrine()->getRepository('MarketingBundle:BillingData', 'default');
-        $revenue = $billingDataRepository->getUserRevenueByDate();
+        $revenue = $em->getRepository('MarketingBundle:BillingData')->getUserRevenueByDate($query);
 
-        $refunds = $billingDataRepository->getUserRefundsByDate();
-        $usersWithRefunds = $billingDataRepository->getUserRefundsCountByDate();
-        $users = $billingDataRepository->getUserCountByDate();
+        $refunds = $em->getRepository('MarketingBundle:BillingData')->getUserRefundsByDate($query);
+        $usersWithRefunds = $em->getRepository('MarketingBundle:BillingData')->getUserRefundsCountByDate($query);
+        $users = $em->getRepository('MarketingBundle:BillingData')->getUserCountByDate($query);
+        $monthlyRebills = $em->getRepository('MarketingBundle:BillingData')->getUserRebillsCountByDate('month', $query);
+        $yearlyRebills = $em->getRepository('MarketingBundle:BillingData')->getUserRebillsCountByDate('year', $query);
 
-        $refundsPercent = ($usersWithRefunds['user_count'] / $users['user_count']) * 100;
+
+
+        if ($users['user_count']) {
+            $refundsPercent = ($usersWithRefunds['user_count'] / $users['user_count']) * 100;
+            $avgMonthlyRebills= ($monthlyRebills / $users['user_count']);
+            $avgYearlyRebills = ($yearlyRebills / $users['user_count']);
+            $averageCheck = ($revenue / $users['user_count']);
+
+        } else {
+            $refundsPercent = 0;
+            $avgMonthlyRebills = 0;
+            $avgYearlyRebills = 0;
+            $averageCheck = 0;
+        }
 
         return $this->render('MarketingBundle:Stats:stats_reports.html.twig', [
+            'query' => $query,
             'installs' => $gaReport['installs'],
             'subscriptionMonths' => $subscriptionMonths['sub_count'],
             'subscriptionYear' => $subscriptionYear['sub_count'],
             'revenue' => $revenue['revenue'],
             'refunds' => $refunds['refund'],
-            'refundsPercent' => $refundsPercent
-
+            'refundsPercent' => $refundsPercent,
+            'avgMonthlyRebills' => $avgMonthlyRebills,
+            'avgYearlyRebills' => $avgYearlyRebills,
+            'averageCheck' => $averageCheck
         ]);
     }
 
     /**
      * @Route("/stats_report", name="stats_report")
      */
-    public function statsReportAction()
+    public function statsReportAction(Request $request)
     {
-        $query = [];
-        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : date('Y-m-d',strtotime("-7 day"));
-        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to'] : date('Y-m-d', time());
+
+        $query = $request->query->all();
+
+        $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
+        $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to']  : date('Y-m-d', time());
 
         $em = $this->getDoctrine()->getManager('default');
         $funnel = new FunnelReport($em);
-        $report = $funnel->getDataForReport($dateFrom, $dateTo, $query);
+        $report = $funnel->getDataForReport($query);
 
         $dataToSave = [ $report['gaReport']['traffic'], $report['gaReport']['downloads'],
             $report['gaReport']['installs'],
@@ -113,15 +133,17 @@ class StatsController extends Controller
     /**
      * @Route("/stats_revenue_report", name="stats_revenue_report")
      */
-    public function statsRevenueReportAction()
+    public function statsRevenueReportAction(Request $request)
     {
-        $query = [];
-        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : date('Y-m-d',strtotime("-7 day"));
-        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to'] : date('Y-m-d', time());
+
+        $query = $request->query->all();
+
+        $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
+        $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to']  : date('Y-m-d', time());
 
         $em = $this->getDoctrine()->getManager('default');
         $funnel = new FunnelReport($em);
-        $report = $funnel->getDataForReport($dateFrom, $dateTo, $query);
+        $report = $funnel->getDataForReport($query);
 
         $dataToSave = [ $report['gaReport']['traffic'], $report['gaReport']['downloads'],
             $report['gaReport']['installs'],

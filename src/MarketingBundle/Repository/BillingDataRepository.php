@@ -16,7 +16,7 @@ class BillingDataRepository extends EntityRepository
 {
 
     //$dateFrom, $dateTo
-    public function getUserRevenueByDate()
+    public function getUserRevenueByDate($query)
     {
         $rsm = new ResultSetMapping();
 
@@ -26,15 +26,19 @@ class BillingDataRepository extends EntityRepository
             FROM billing_data bd
               INNER JOIN payment_system_products psp ON psp.id = bd.product_id
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
-            WHERE bd.event_type IN ('SubscriptionChargeSucceed', 'OrderCharged') AND lt.slug IN ('month', 'year')", $rsm);
+              LEFT JOIN users u ON u.id = bd.user_id
+            WHERE bd.event_type IN ('SubscriptionChargeSucceed', 'OrderCharged') AND lt.slug IN ('month', 'year')
+            AND u.created >= :date_from AND u.created <= :date_to", $rsm);
 
-//        $qb->setParameter(1, $licenseType);
+        $qb->setParameter('date_from', $query['date-from']);
+        $qb->setParameter('date_to', $query['date-to']);
+
         $users = $qb->getOneOrNullResult();
 
         return $users;
     }
 
-    public function getUserRefundsByDate()
+    public function getUserRefundsByDate($query)
     {
         $rsm = new ResultSetMapping();
 
@@ -46,15 +50,18 @@ class BillingDataRepository extends EntityRepository
             FROM billing_data bd
               INNER JOIN payment_system_products psp ON psp.id = bd.product_id
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
-            WHERE bd.event_type = 'OrderRefunded' AND lt.slug IN ('month', 'year');", $rsm);
+              LEFT JOIN users u ON u.id = bd.user_id
+            WHERE bd.event_type = 'OrderRefunded' AND lt.slug IN ('month', 'year')
+            AND u.created >= :date_from AND u.created <= :date_to", $rsm);
 
-//        $qb->setParameter(1, $licenseType);
+        $qb->setParameter('date_from', $query['date-from']);
+        $qb->setParameter('date_to', $query['date-to']);
         $users = $qb->getOneOrNullResult();
 
         return $users;
     }
 
-    public function getUserRefundsCountByDate()
+    public function getUserRefundsCountByDate($query)
     {
         $rsm = new ResultSetMapping();
 
@@ -65,16 +72,67 @@ class BillingDataRepository extends EntityRepository
             FROM billing_data bd
               INNER JOIN payment_system_products psp ON psp.id = bd.product_id
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
+              LEFT JOIN users u ON u.id = bd.user_id
             WHERE bd.event_type = 'OrderRefunded' AND lt.slug IN ('month', 'year')
+            AND u.created >= :date_from AND u.created <= :date_to
             GROUP BY bd.user_device_id", $rsm);
 
-//        $qb->setParameter(1, $licenseType);
+        $qb->setParameter('date_from', $query['date-from']);
+        $qb->setParameter('date_to', $query['date-to']);
+
         $users = $qb->getOneOrNullResult();
 
         return $users;
     }
 
-    public function getUserCountByDate()
+    public function getUserRebillsCountByDate($licenseType, $query)
+    {
+        $rsm = new ResultSetMapping();
+
+        $rsm->addScalarResult('user_count', 'user_count');
+
+        $qb = $this->getEntityManager()->createNativeQuery("
+            SELECT count(bd.user_device_id) AS user_count
+            FROM billing_data bd
+              INNER JOIN payment_system_products psp ON psp.id = bd.product_id
+              INNER JOIN license_types lt ON lt.id = psp.license_type_id
+              LEFT JOIN users u ON u.id = bd.user_id
+            WHERE bd.event_type = 'SubscriptionChargeSucceed' AND lt.slug = :licence_type
+            AND u.created >= :date_from AND u.created <= :date_to
+            GROUP BY bd.user_device_id", $rsm);
+
+        $qb->setParameter('licence_type', $licenseType);
+        $qb->setParameter('date_from', $query['date-from']);
+        $qb->setParameter('date_to', $query['date-to']);
+
+        $users = $qb->getOneOrNullResult();
+
+        return $users;
+    }
+    public function getUserRebillsByDate($query)
+    {
+        $rsm = new ResultSetMapping();
+
+        $rsm->addScalarResult('rebill', 'rebill');
+
+        $qb = $this->getEntityManager()->createNativeQuery("
+            SELECT 
+              sum(bd.price) as rebill
+            FROM billing_data bd
+              INNER JOIN payment_system_products psp ON psp.id = bd.product_id
+              INNER JOIN license_types lt ON lt.id = psp.license_type_id
+              LEFT JOIN users u ON u.id = bd.user_id
+            WHERE bd.event_type = 'SubscriptionChargeSucceed' AND lt.slug IN ('month', 'year')
+            AND u.created >= :date_from AND u.created <= :date_to", $rsm);
+
+        $qb->setParameter('date_from', $query['date-from']);
+        $qb->setParameter('date_to', $query['date-to']);
+        $users = $qb->getOneOrNullResult();
+
+        return $users;
+    }
+
+    public function getUserCountByDate($query)
     {
         $rsm = new ResultSetMapping();
 
@@ -85,16 +143,20 @@ class BillingDataRepository extends EntityRepository
             FROM billing_data bd
               INNER JOIN payment_system_products psp ON psp.id = bd.product_id
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
+              LEFT JOIN users u ON u.id = bd.user_id
             WHERE bd.event_type IN ('SubscriptionChargeSucceed', 'OrderCharged') AND lt.slug IN ('month', 'year')
+             AND u.created >= :date_from AND u.created <= :date_to
             GROUP BY bd.user_device_id", $rsm);
 
-//        $qb->setParameter(1, $licenseType);
+        $qb->setParameter('date_from', $query['date-from']);
+        $qb->setParameter('date_to', $query['date-to']);
+
         $users = $qb->getOneOrNullResult();
 
         return $users;
     }
 
-    public function getUserDiscountSumByDate()
+    public function getUserDiscountSumByDate($query)
     {
         $rsm = new ResultSetMapping();
 
@@ -105,10 +167,14 @@ class BillingDataRepository extends EntityRepository
             FROM billing_data bd
               INNER JOIN payment_system_products psp ON psp.id = bd.product_id
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
+              LEFT JOIN users u ON u.id = bd.user_id
             WHERE bd.event_type IN ('SubscriptionChargeSucceed', 'OrderCharged') AND lt.slug IN ('month', 'year')
+            AND u.created >= :date_from AND u.created <= :date_to
             GROUP BY bd.user_id", $rsm);
 
-//        $qb->setParameter(1, $licenseType);
+        $qb->setParameter('date_from', $query['date-from']);
+        $qb->setParameter('date_to', $query['date-to']);
+
         $users = $qb->getOneOrNullResult();
 
         return $users;

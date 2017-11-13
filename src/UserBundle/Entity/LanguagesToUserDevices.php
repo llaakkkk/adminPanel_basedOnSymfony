@@ -83,7 +83,5 @@ class LanguagesToUserDevices
         $this->userDevice = $userDevice;
     }
 
-
-
 }
 

@@ -84,7 +84,7 @@
                                 <td>{{ installs }}</td>
                                 <td>{{ subscriptionMonths }}</td>
                                 <td>{{ subscriptionYear }}</td>
-                                <td>{{ revenue }}</td>
+                                <td>{{ revenue | number_format }}</td>
                             </tr>
 
                             </tbody>
@@ -117,12 +117,12 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td>{{ revenue }}</td>
-                                <td>{{ refunds }}, {{ refundsPercent }}</td>
+                                <td>{{ revenue | number_format }}</td>
+                                <td>{{ refunds | number_format }}, {{ refundsPercent | number_format }}</td>
                                 <td>Samantha</td>
-                                <td>1</td>
-                                <td></td>
-                                <td>Samantha</td>
+                                <td>{{  (avgMonthlyRebills) | number_format(2, '.', ',') }}</td>
+                                <td>{{  (avgYearlyRebills) | number_format(2, '.', ',') }}</td>
+                                <td>{{  (averageCheck) | number_format(2, '.', ',') }}</td>
 
                             </tr>
                             </tbody>
@@ -153,8 +153,8 @@
         $(function() {
             $('.select2-container--default').select2();
 
-            var start = moment().subtract(6, 'days');
-            var end = moment();
+            var start = moment('{{ query['date-from'] | date('Ymd') }}');
+            var end = moment('{{ query['date-to']| date('Ymd') }}');
 
             function cb(start, end) {
                 $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
