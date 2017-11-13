@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use UserBundle\Entity\Users;
 use UserBundle\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
 class UserController extends Controller
@@ -50,6 +51,56 @@ class UserController extends Controller
             'languages' => $languages,
             'modelName' => $modelName
         ]);
+    }
+
+    /**
+     * @Route("/users_report", name="users_report")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function usersReportAction(Request $request)
+    {
+        $query = $request->query->all();
+
+        $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
+        $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to'] : date('Y-m-d', time());
+
+        $em = $this->getDoctrine()->getManager('default');
+        $usersDevices = $em->getRepository('UserBundle:UserDevices')->getUserList($query);
+
+        $response = new StreamedResponse();
+
+        $response->setCallback(function () use (&$usersDevices) {
+
+            $handle = fopen('php://output', 'w+');
+
+            fputcsv($handle, ['Name', 'Email', 'Activation key', 'License',
+                'Billing status', 'Created', 'Last billed', 'Order ID', 'Coupon code'], ';');
+
+            foreach ($usersDevices as $usersDevice) {
+                $dataToSave = [
+                    $usersDevice['user_id'] ? $usersDevice['user_id'] : '-',
+                    $usersDevice['email'] ? $usersDevice['email'] : '-',
+                    $usersDevice['activation_key'] ? $usersDevice['activation_key'] : '-',
+                    $usersDevice['license_type'] ? $usersDevice['license_type'] : '-',
+                    $usersDevice['license_status'] ? $usersDevice['license_status'] : '-',
+                    $usersDevice['created'] ? $usersDevice['created'] : '-',
+                    $usersDevice['last_billed'] ? $usersDevice['last_billed'] : '-',
+                    $usersDevice['order_id'] ? $usersDevice['order_id'] : '-',
+                    $usersDevice['promo_code'] ? $usersDevice['promo_code'] : '-',
+                ];
+                fputcsv($handle, $dataToSave, ';');
+
+            }
+
+            fclose($handle);
+        });
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename="uninstalls_report-'. date('c').'".csv"');
+
+        return $response;
     }
 
     /**

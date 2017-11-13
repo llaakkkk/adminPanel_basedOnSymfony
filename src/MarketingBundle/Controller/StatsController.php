@@ -176,7 +176,7 @@ class StatsController extends Controller
             $averageCheck = 0;
         }
 
-        $dataToSave = [ $revenue['revenue'], $refunds['refund'] .', '. $refundsPercent,
+        $dataToSave = [$revenue['revenue'], $refunds['refund'] .', '. $refundsPercent,
             '-', $avgMonthlyRebills, $avgYearlyRebills, $averageCheck];
 
         $response = new StreamedResponse();

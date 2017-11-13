@@ -125,8 +125,7 @@ class UserDevicesRepository extends EntityRepository
                                promo_code
                              FROM billing_data
                              GROUP BY (user_device_id,order_id, promo_code)
-            ) bd ON bd.user_device_id = ud.id
-            ", $rsm);
+            ) bd ON bd.user_device_id = ud.id", $rsm);
 
 
 //        $qb->setParameter(1, $licenseType);
@@ -141,7 +140,6 @@ class UserDevicesRepository extends EntityRepository
 
     public function getUserList($query)
     {
-
         $sql = 'SELECT 
               ud.activation_key,
               ud.created,
@@ -168,39 +166,63 @@ class UserDevicesRepository extends EntityRepository
                                promo_code
                              FROM billing_data
                              GROUP BY (user_device_id,order_id, promo_code)
-            ) bd ON bd.user_device_id = ud.id';
+            ) bd ON bd.user_device_id = ud.id
+            WHERE ud.updated > :date_from AND ud.updated < :date_to';
 
+        if (isset($query['license-type']) && !empty($query['license-type'])) {
+            $sql .= ' AND lt.slug IN (:license_type)';
+        }
+
+        if (isset($query['billing-status']) && !empty($query['billing-status'])) {
+            $sql .= ' AND ls.slug IN (:billing_status)';
+        }
+
+        if (isset($query['app-version']) && !empty($query['app-version'])) {
+            $sql .= ' AND ud.application_build_version IN (:application_build_version)';
+        }
+
+        if (isset($query['os-version']) && !empty($query['os-version'])) {
+            $sql .= ' AND ud.os_version IN (:os_version)';
+        }
+        if (isset($query['model-name']) && !empty($query['model-name'])) {
+            $sql .= ' AND ud.model_name IN (:model_name)';
+        }
+
+        if (isset($query['languages']) && !empty($query['languages'])) {
+            $sql .= ' AND l.slug IN (:languages)';
+        }
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+
+        $statement->bindValue('date_from', $query['date-from'], \PDO::PARAM_STR);
+        $statement->bindValue('date_to', $query['date-to'], \PDO::PARAM_STR);
+
+        if (!empty($query['license-type'])) {
+            $statement->bindValue('license_type', implode(",", $query['license-type']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        }
+
+        if (!empty($query['billing-status'])) {
+            $statement->bindValue('billing_status', implode(",", $query['billing-status']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        }
+
+        if (isset($query['app-version'])) {
+            $statement->bindValue('application_build_version', implode(",", $query['app-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        }
+
+        if (!empty($query['os-version'])) {
+            $statement->bindValue('os_version', implode(",", $query['os-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        }
+        if (!empty($query['model-name'])) {
+            $statement->bindValue('model_name', implode(",", $query['model-name']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        }
+        if (!empty($query['languages'])) {
+            $statement->bindValue('languages', implode(",", $query['languages']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+        }
         $statement->execute();
 
         $result = $statement->fetchAll();
 
-        return $result;
 
-//        $users = $this->createQueryBuilder('ud')
-//            ->where('ud.created > :date_from')
-//            ->setParameter('date_from', $query['date-from'])
-//            ->andWhere('ud.created < :date_to')
-//            ->setParameter('date_to', $query['date-to']);
-//
-//        //            ->groupBy('ud.osVersion')
-//        //            ->where('m.reciever = ?1')
-//        //
-//
-//
-//        if (isset($query['license-type']) && !empty($query['license-type'])) {
-//            $users->andWhere('ud.userName IN(:license_type)')
-//                ->setParameter('license_type', array_values($query['license-type']));
-//
-//        }
-//        if (isset($query['billing-status']) && !empty($query['billing-status'])) {
-//            $users->andWhere('ud.subscriptionStatus.licenseStatus.name IN(:license_status)')
-//                ->setParameter('license_status', array_values($query['billing-status']));
-//
-//        }
-//
-//        return $users->getQuery()
-//            ->getResult();
+        return $result;
     }
 
     public function getUninstallsReportData($query)
