@@ -93,7 +93,7 @@
                                     <tbody>
                                     {% for uninstall in uninstalls %}
                                         <tr>
-                                            <td>{{ uninstall.activation_key }}</td>
+                                            <td><a href="{{ path('user', {'id': uninstall.user_id}) }}">{{ uninstall.activation_key }}</a></td>
                                             <td>{{ uninstall.license_type_name }}</td>
                                             <td>-</td>
                                             <td>{{ uninstall.application_build_version }}</td>

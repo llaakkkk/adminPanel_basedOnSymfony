@@ -65,13 +65,13 @@ class UserDevicesRepository extends EntityRepository
             LEFT JOIN subscription_status ss ON ud.subscription_status_id = ss.id
             INNER JOIN payment_system_products psp ON ss.product_id = psp.id
             INNER JOIN license_types lt ON psp.license_type_id = lt.id
-            WHERE lt.slug = :license_type AND ud.created > :date_from AND ud.created < :date_to";
+            WHERE lt.slug = ? AND ud.created > ? AND ud.created < ?";
 
         $qb = $this->getEntityManager()->createNativeQuery($sql, $rsm);
 
-        $qb->setParameter('license_type', $licenseType);
-        $qb->setParameter('date_from', $filter['date-from']);
-        $qb->setParameter('date_to', $filter['date-to']);
+        $qb->setParameter(1, $licenseType);
+        $qb->setParameter(2, $filter['date-from']);
+        $qb->setParameter(3, $filter['date-to']);
         $users = $qb->getOneOrNullResult();
 
         return $users;

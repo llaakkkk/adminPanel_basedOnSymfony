@@ -52,6 +52,7 @@ class FunnelController extends Controller
     /**
      * @Route("/funnel_report", name="funnel_report")
      * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function funnelReportAction(Request $request)
     {
