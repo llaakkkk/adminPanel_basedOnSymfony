@@ -8,10 +8,11 @@
 
 namespace MarketingBundle\Controller;
 
-use MarketingBundle\Services\GoogleReportingAPI;
+use MarketingBundle\Utils\GoogleReportingAPI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class UninstallsController extends Controller
 {
@@ -21,43 +22,74 @@ class UninstallsController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function statsAction(Request $request)
+    public function uninstallsAction(Request $request)
     {
-//        $repository = $this->getDoctrine()->getRepository(':UserDevices', 'default');
-//
-//        $users = $repository->findAll();
+        $query = $request->query->all();
 
-        $userDevicesRepository = $this->getDoctrine()->getRepository('UserBundle:UserDevices', 'default');
+        $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
+        $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to']  : date('Y-m-d', time());
+        $em = $this->getDoctrine()->getManager('default');
 
-        $GA = new GoogleReportingAPI('7daysAgo', 'today');
-        $metrics = [
-            'traffic' => 'ga:newUsers',
-            'downloads' => 'ga:goal18Starts',
-            'installs' => 'ga:goal7Starts'
-        ];
-        $gaReport = $GA->getMetricsData($metrics);
+        $osVersions = $em->getRepository('UserBundle:UserDevices')->getUsersDevicesByOSVersion();
+        $languages = $em->getRepository('UserBundle:Languages')->findAll();
+        //todo country
+        $modelName = $em->getRepository('UserBundle:UserDevices')->getUsersDevicesByModelName();
 
-
-        $subscriptionMonths = $userDevicesRepository->getSubscriptionsCountByName('month');
-        $subscriptionYear = $userDevicesRepository->getSubscriptionsCountByName('year');
-
-        $billingDataRepository = $this->getDoctrine()->getRepository('MarketingBundle:BillingData', 'default');
-        $revenue = $billingDataRepository->getUserRevenueByDate();
-
-        $refunds = $billingDataRepository->getUserRefundsByDate();
-        $usersWithRefunds = $billingDataRepository->getUserRefundsCountByDate();
-        $users = $billingDataRepository->getUserCountByDate();
-
-        $refundsPercent = ($usersWithRefunds['user_count'] / $users['user_count']) * 100;
+        $uninstalls = $em->getRepository('UserBundle:UserDevices')->getUninstallsReportData($query);
+//var_dump($uninstalls);
 
         return $this->render('MarketingBundle:Uninstalls:uninstalls_reports.html.twig', [
-            'installs' => $gaReport['installs'],
-            'subscriptionMonths' => $subscriptionMonths['sub_count'],
-            'subscriptionYear' => $subscriptionYear['sub_count'],
-            'revenue' => $revenue['revenue'],
-            'refunds' => $refunds['refund'],
-            'refundsPercent' => $refundsPercent
+            'query' => $query,
+            'dateFrom' => $query['date-from'],
+            'dateTo' => $query['date-to'],
+            'osVersions' => $osVersions,
+            'languages' => $languages,
+            'modelName' => $modelName,
+            'uninstalls' => $uninstalls
 
         ]);
     }
+
+    /**
+     * @Route("/uninstalls_report", name="uninstalls_report")
+     */
+    public function uninstallsReportAction()
+    {
+        $query = [];
+        #
+        $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
+        $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to'] : date('Y-m-d', time());
+
+        $em = $this->getDoctrine()->getManager('default');
+        $uninstalls = $em->getRepository('UserBundle:UserDevices')->getUninstallsReportData($query);
+
+        $response = new StreamedResponse();
+
+        $response->setCallback(function () use (&$uninstalls) {
+
+            $handle = fopen('php://output', 'w+');
+
+            fputcsv($handle, ['Activation key', 'License', 'Message', 'Build',
+                'Date'], ';');
+
+            foreach ($uninstalls as $uninstall) {
+                $dataToSave = [$uninstall['activation_key'], $uninstall['license_type_name'],
+                    '-', $uninstall['application_build_version'],$uninstall['last_date']];
+                fputcsv($handle, $dataToSave, ';');
+
+            }
+
+            fclose($handle);
+        });
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename="uninstalls_report-'. date('c').'".csv"');
+
+        return $response;
+
+
+    }
+
+
 }
