@@ -164,7 +164,7 @@ class UserDevices
      */
     private $isHidden;
 
-   /**
+    /**
      * @var string
      *
      * @ORM\Column(name="application_build_version", type="string", length=64, nullable=true)
@@ -195,9 +195,21 @@ class UserDevices
      * )
 
      */
+
     private $deviceLanguage;
 
+    /**
+     * @ORM\OneToMany(targetEntity="MarketingBundle\Entity\BillingData", mappedBy="userDevice")
+     * @ORM\JoinColumn(name="id", referencedColumnName="user_device_id")
+     */
+    private $billingData;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="MarketingBundle\Entity\BillingData", inversedBy="userDevice")
+//     * @ORM\JoinColumn(name="user_device_id", referencedColumnName="id")
+//     */
+
+//    private $billingData;
 
     public function getId()
     {

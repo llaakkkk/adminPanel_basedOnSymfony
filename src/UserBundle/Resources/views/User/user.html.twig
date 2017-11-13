@@ -9,7 +9,7 @@
             {#{{ dump(userDevices.deviceLanguage) }}#}
             <div class="col-sm-4">
                 <div class="ibox ">
-
+                    <div class="ibox-title"> <a href="{{ path('users_list') }}">Back to Users list</a></div>
                     <div class="ibox-content">
                         <div class="tab-content">
                             <div id="contact" class="tab-pane active">
@@ -96,10 +96,10 @@
                                                 <tbody>
                                                 {% for userDevice in userDevices %}
                                                     <tr>
-                                                        <td>{{ userDevice.activationKey }}</td>
-                                                        <td>{{ userDevice.serialNumber }}</td>
-                                                        <td>{{ userDevice.modelName }} {{ userDevice.modelNumber }}</td>
-                                                        <td>{{ userDevice.osVersion }} {{ userDevice.osBuild }}</td>
+                                                        <td>{% if userDevice.activationKey is defined %}{{ userDevice.activationKey }}{% else %}-{% endif %}</td>
+                                                        <td>{% if userDevice.serialNumber is defined %}{{ userDevice.serialNumber }}{% else %}-{% endif %}</td>
+                                                        <td>{% if userDevice.modelName is defined %}{{ userDevice.modelName }} {% else %}-{% endif %}{% if userDevice.modelNumber is defined %}{{ userDevice.modelNumber }}{% else %}-{% endif %}</td>
+                                                        <td>{% if userDevice.osVersion is defined %}{{ userDevice.osVersion }}{% else %}-{% endif %} {% if userDevice.osBuild is defined %}{{ userDevice.osBuild }}{% else %}-{% endif %}</td>
                                                         {#{{ dump(userDevice.deviceLanguage) }}#}
                                                         {#<td>#}
                                                             {#{% for language in userDevice.deviceLanguage %}#}
@@ -111,9 +111,9 @@
                                                         {#<td>{{ userDevice.deviceLanguage.language.name }}</td>#}
                                                         <td> </td>
                                                         <td> </td>
-                                                        <td>{{ userDevice.created.date|date("F jS \\a\\t g:ia") }}</td>
+                                                        <td>{% if userDevice.created is defined %}{{ userDevice.created.date|date("F jS \\a\\t g:ia") }}{% else %}-{% endif %}</td>
                                                         <td>{% if userDevice.isTest %} test {% else %}real{% endif%}</td>
-                                                        <td>{{ userDevice.applicationBuildVersion }}</td>
+                                                        <td>{% if userDevice.applicationBuildVersion is defined %}{{ userDevice.applicationBuildVersion }}{% else %}-{% endif %}</td>
                                                     </tr>
                                                 {% endfor %}
 
@@ -140,13 +140,13 @@
                                                 <tbody>
                                                 {% for data in billingData %}
                                                     <tr>
-                                                        <td>{{ data.product.licenseType.name }}</td>
-                                                        <td>{{ data.userDevice.subscriptionStatus.licenseStatus.name }}</td>
-                                                        <td>{{ data.orderId }}</td>
-                                                        <td>{{ data.userDevice.subscriptionStatus.nextChargeDate | date("F jS \\a\\t g:ia")  }}</td>
-                                                        <td>{{ data.paymentData['ORDER_TOTAL_AMOUNT'] }}</td>
-                                                        <td>{{ data.eventType }}, *{{ data.paymentData['CREDITCARD_LAST4'] }} </td>
-                                                        <td>{{ data.promoCode ? data.promoCode : '-' }} </td>
+                                                        <td>{% if data.product.licenseType.name is defined %}{{ data.product.licenseType.name }}{% else %}-{% endif %}</td>
+                                                        <td>{% if data.userDevice.subscriptionStatus.licenseStatus.name is defined %}{{ data.userDevice.subscriptionStatus.licenseStatus.name }}{% else %}-{% endif %}</td>
+                                                        <td>{% if data.orderId is defined %}{{ data.orderId }}{% else %}-{% endif %}</td>
+                                                        <td>{% if data.userDevice.subscriptionStatus.nextChargeDate is defined %}{{ data.userDevice.subscriptionStatus.nextChargeDate | date("F jS \\a\\t g:ia")  }}{% else %}-{% endif %}</td>
+                                                        <td>{% if data.paymentData['ORDER_TOTAL_AMOUNT'] is defined %}{{ data.paymentData['ORDER_TOTAL_AMOUNT'] }}{% else %}-{% endif %}</td>
+                                                        <td>{% if data.eventType is defined %}{{ data.eventType }}, *{{ data.paymentData['CREDITCARD_LAST4'] }}{% else %}-{% endif %} </td>
+                                                        <td>{% if data.promoCode is defined %}{{ data.promoCode }}{% else %}-{% endif %} </td>
                                                     </tr>
                                                 {% endfor %}
 

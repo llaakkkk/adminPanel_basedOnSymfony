@@ -14,6 +14,16 @@ use MarketingBundle\Entity\PaymentSystemProducts;
 class SubscriptionStatus
 {
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="subscription_status_id_seq", allocationSize=1, initialValue=1)
+     */
+    private $id;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="next_charge_date", type="datetime", nullable=true)
@@ -33,16 +43,6 @@ class SubscriptionStatus
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
     private $updated = 'now()';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="subscription_status_id_seq", allocationSize=1, initialValue=1)
-     */
-    private $id;
 
     /**
      * @var \MarketingBundle\Entity\PaymentSystemProducts

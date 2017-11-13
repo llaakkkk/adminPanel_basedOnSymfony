@@ -16,6 +16,7 @@
                         <h5>Users</h5>
 
                         <div class="ibox-tools">
+
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
                             </a>
@@ -124,16 +125,15 @@
                             {{ dump(usersDevices) }}
                             {% for userDevice in usersDevices %}
                                 <tr>
-                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.userId.id is defined %}{{ userDevice.userId.firstName }} {{ userDevice.userId.lastName }}{% else %}-{% endif %}</a></td>
-                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.userId.id is defined %}{{ userDevice.userId.email }}{% else %}-{% endif %}</a></td>
-                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.activationKey is defined %}{{ userDevice.activationKey }}{% else %}-{% endif %}</a></td>
-                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.subscriptionStatus.product.name is defined %}{{ userDevice.subscriptionStatus.product.name }}{% else %}-{% endif %}</a></td>
-                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.subscriptionStatus.licenseStatus.name is defined %}{{ userDevice.subscriptionStatus.licenseStatus.name }}{% else %}-{% endif %}</a></td>
-                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.created is defined %}{{ userDevice.created.date|date("F jS \\a\\t g:ia") }}{% else %}-{% endif %}</a></td>
-                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">date</a></td>
-                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.subscriptionStatus.product.id is defined %}{{ userDevice.subscriptionStatus.product.id }}{% else %}-{% endif %}</a></td>
-                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}"{% if userDevice.subscriptionStatus.licenseStatus.id is defined %}>{{ userDevice.subscriptionStatus.licenseStatus.id }}{% else %}-{% endif %}</a></td>
-                                    <td><a href="{% if userDevice.userId.id is defined %}{{ path('user', {'id': userDevice.userId.id}) }}{% endif %}">{% if userDevice.subscriptionStatus.licenseStatus.id is defined %}{{ userDevice.subscriptionStatus.licenseStatus.id }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{% if userDevice.user_id is defined %}{{ userDevice.first_name }} {{ userDevice.last_name }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{% if userDevice.email is defined %}{{ userDevice.email }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{% if userDevice.activation_key is defined %}{{ userDevice.activation_key }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{% if userDevice.license_type is defined %}{{ userDevice.license_type }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{% if userDevice.license_status is defined %}{{ userDevice.license_status }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{% if userDevice.created is defined %}{{ userDevice.created|date("F jS \\a\\t g:ia") }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{% if userDevice.last_billed is not null %}{{ userDevice.last_billed |date("F jS \\a\\t g:ia") }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{% if userDevice.order_id is not null %}{{ userDevice.order_id }}{% else %}-{% endif %}</a></td>
+                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}"{% if userDevice.promo_code is not null %}>{{ userDevice.promo_code }}{% else %}-{% endif %}</a></td>
                                 </tr>
                             {% endfor %}
                             </tbody>

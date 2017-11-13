@@ -155,10 +155,8 @@ class BillingData
         $this->user = $user;
     }
 
-    /**
-     * @return PaymentSystemProducts
-     */
-    public function getProduct(): PaymentSystemProducts
+
+    public function getProduct()
     {
         return $this->product;
     }
@@ -178,7 +176,7 @@ class BillingData
     }
 
 
-    public function setPaymentData( $paymentData)
+    public function setPaymentData($paymentData)
     {
         $this->paymentData = $paymentData;
     }
@@ -285,15 +283,13 @@ class BillingData
     }
 
 
-    public function setPromoCode( $promoCode)
+    public function setPromoCode($promoCode)
     {
         $this->promoCode = $promoCode;
     }
 
-    /**
-     * @return \UserBundle\Entity\UserDevices
-     */
-    public function getUserDevice(): \UserBundle\Entity\UserDevices
+
+    public function getUserDevice()
     {
         return $this->userDevice;
     }

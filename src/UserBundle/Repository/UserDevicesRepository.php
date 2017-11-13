@@ -90,10 +90,10 @@ class UserDevicesRepository extends EntityRepository
         $rsm->addJoinedEntityResult('MarketingBundle:PaymentSystemProducts', 'psp', 'ss', 'product');
         $rsm->addJoinedEntityResult('UserBundle:LicenseTypes', 'lt', 'psp', 'licenseType');
         $rsm->addFieldResult('lt', 'name', 'license_type');
-//        $rsm->addJoinedEntityResult('MarketingBundle:BillingData', 'bd', 'ud', 'billingData');
-//        $rsm->addFieldResult('bd', 'last_billed', 'last_billed');
-//        $rsm->addFieldResult('bd', 'order_id', 'order_id');
-//        $rsm->addFieldResult('bd', 'promo_code', 'promo_code');
+        $rsm->addJoinedEntityResult('MarketingBundle:BillingData', 'bd', 'ud', 'billingData');
+        $rsm->addFieldResult('bd', 'last_billed', 'created');
+        $rsm->addFieldResult('bd', 'order_id', 'orderId');
+        $rsm->addFieldResult('bd', 'promo_code', 'promoCode');
 
 
         $qb = $this->getEntityManager()->createNativeQuery("
@@ -104,28 +104,32 @@ class UserDevicesRepository extends EntityRepository
               u.last_name,
               u.email,
               ls.name AS license_status,
-              lt.name AS license_type
+              lt.name AS license_type,
+              bd.last_billed,
+              bd.order_id,
+              bd.promo_code
             FROM user_devices ud
             LEFT JOIN users u ON u.id = ud.user_id
             LEFT JOIN subscription_status ss ON ss.id = ud.subscription_status_id
             INNER JOIN license_status ls ON ls.id = ss.license_status_id
             LEFT JOIN payment_system_products psp ON psp.id = ss.product_id
-            INNER JOIN license_types lt ON lt.id = psp.license_type_id
+            INNER JOIN license_types lt ON lt.id = psp.license_type_id           
+            LEFT JOIN (
+            SELECT max(created) as last_billed,
+                               order_id,
+                               user_device_id,
+                               promo_code
+                             FROM billing_data
+                             GROUP BY (user_device_id,order_id, promo_code)
+            ) bd ON bd.user_device_id = ud.id
             ", $rsm);
 
-//        bd.last_billed,
-//              bd.order_id,
-//              bd.promo_code
-//        LEFT JOIN (
-//        SELECT max(created) as last_billed,
-//                           order_id,
-//                           user_device_id,
-//                           promo_code
-//                         FROM billing_data
-//                         GROUP BY (user_device_id,order_id, promo_code)
-//            ) bd ON bd.user_device_id = ud.id
+
 //        $qb->setParameter(1, $licenseType);
         $users = $qb->getResult();
+
+
+
 
         return $users;
     }
@@ -134,31 +138,65 @@ class UserDevicesRepository extends EntityRepository
     public function getUserList($query)
     {
 
+        $sql = 'SELECT 
+              ud.activation_key,
+              ud.created,
+              ud.id as user_device_id,
+              u.first_name,
+              u.last_name,
+              u.email,
+              u.id as user_id,
+              ls.name AS license_status,
+              lt.name AS license_type,
+              bd.last_billed,
+              bd.order_id,
+              bd.promo_code
+            FROM user_devices ud
+            LEFT JOIN users u ON u.id = ud.user_id
+            LEFT JOIN subscription_status ss ON ss.id = ud.subscription_status_id
+            INNER JOIN license_status ls ON ls.id = ss.license_status_id
+            LEFT JOIN payment_system_products psp ON psp.id = ss.product_id
+            INNER JOIN license_types lt ON lt.id = psp.license_type_id           
+            LEFT JOIN (
+            SELECT max(created) as last_billed,
+                               order_id,
+                               user_device_id,
+                               promo_code
+                             FROM billing_data
+                             GROUP BY (user_device_id,order_id, promo_code)
+            ) bd ON bd.user_device_id = ud.id';
 
-        $users = $this->createQueryBuilder('ud')
-            ->where('ud.created > :date_from')
-            ->setParameter('date_from', $query['date-from'])
-            ->andWhere('ud.created < :date_to')
-            ->setParameter('date_to', $query['date-to']);
+        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $statement->execute();
 
-        //            ->groupBy('ud.osVersion')
-        //            ->where('m.reciever = ?1')
-        //
+        $result = $statement->fetchAll();
 
+        return $result;
 
-        if (isset($query['license-type']) && !empty($query['license-type'])) {
-            $users->andWhere('ud.userName IN(:license_type)')
-                ->setParameter('license_type', array_values($query['license-type']));
-
-        }
-        if (isset($query['billing-status']) && !empty($query['billing-status'])) {
-            $users->andWhere('ud.subscriptionStatus.licenseStatus.name IN(:license_status)')
-                ->setParameter('license_status', array_values($query['billing-status']));
-
-        }
-
-        return $users->getQuery()
-            ->getResult();
+//        $users = $this->createQueryBuilder('ud')
+//            ->where('ud.created > :date_from')
+//            ->setParameter('date_from', $query['date-from'])
+//            ->andWhere('ud.created < :date_to')
+//            ->setParameter('date_to', $query['date-to']);
+//
+//        //            ->groupBy('ud.osVersion')
+//        //            ->where('m.reciever = ?1')
+//        //
+//
+//
+//        if (isset($query['license-type']) && !empty($query['license-type'])) {
+//            $users->andWhere('ud.userName IN(:license_type)')
+//                ->setParameter('license_type', array_values($query['license-type']));
+//
+//        }
+//        if (isset($query['billing-status']) && !empty($query['billing-status'])) {
+//            $users->andWhere('ud.subscriptionStatus.licenseStatus.name IN(:license_status)')
+//                ->setParameter('license_status', array_values($query['billing-status']));
+//
+//        }
+//
+//        return $users->getQuery()
+//            ->getResult();
     }
 
 

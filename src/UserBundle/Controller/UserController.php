@@ -26,7 +26,7 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager('default');
 
-//        $users = $em->getRepository('UserBundle:UserDevices')->getUserList($query);
+//        $usersDevices = $em->getRepository('UserBundle:UserDevices')->getUserListTest($query);
         $usersDevices = $em->getRepository('UserBundle:UserDevices')->getUserList($query);
 
 //var_dump($usersDevices);die;
@@ -58,18 +58,13 @@ class UserController extends Controller
      */
     public function userAction($id)
     {
-        $userRepository = $this->getDoctrine()->getRepository('UserBundle:Users', 'default');
+        $em = $this->getDoctrine()->getManager('default');
 
-        $user = $userRepository->getUserId($id);
+        $user = $em->getRepository('UserBundle:Users')->getUserId($id);
 
+        $userDevices =$em->getRepository('UserBundle:UserDevices')->findBy(['userId' => $id]);
 
-        $deviceRepository = $this->getDoctrine()->getRepository('UserBundle:UserDevices', 'default');
-
-        $userDevices = $deviceRepository->getUserDevicesByUserId($id);
-
-        $billingRepository = $this->getDoctrine()->getRepository('MarketingBundle:BillingData', 'default');
-
-        $billingData = $billingRepository->findAll();
+        $billingData = $em->getRepository('MarketingBundle:BillingData')->findBy(['userId' => $id]);
 
 //        var_dump($userDevices->getDeviceLanguage());
         return $this->render('UserBundle:User:user.html.twig', [
