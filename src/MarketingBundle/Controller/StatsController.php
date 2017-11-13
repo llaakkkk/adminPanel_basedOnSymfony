@@ -9,9 +9,11 @@
 namespace MarketingBundle\Controller;
 
 use MarketingBundle\Utils\GoogleReportingAPI;
+use MarketingBundle\Utils\FunnelReport;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class StatsController extends Controller
 {
@@ -57,9 +59,9 @@ class StatsController extends Controller
 
         if ($users['user_count']) {
             $refundsPercent = ($usersWithRefunds['user_count'] / $users['user_count']) * 100;
-            $avgMonthlyRebills= ($monthlyRebills / $users['user_count']);
-            $avgYearlyRebills = ($yearlyRebills / $users['user_count']);
-            $averageCheck = ($revenue / $users['user_count']);
+            $avgMonthlyRebills= ($monthlyRebills['user_count'] / $users['user_count']);
+            $avgYearlyRebills = ($yearlyRebills['user_count'] / $users['user_count']);
+            $averageCheck = ($revenue['revenue'] / $users['user_count']);
 
         } else {
             $refundsPercent = 0;
@@ -84,6 +86,8 @@ class StatsController extends Controller
 
     /**
      * @Route("/stats_report", name="stats_report")
+     * @param  Request $request
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function statsReportAction(Request $request)
     {
@@ -94,29 +98,34 @@ class StatsController extends Controller
         $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to']  : date('Y-m-d', time());
 
         $em = $this->getDoctrine()->getManager('default');
-        $funnel = new FunnelReport($em);
-        $report = $funnel->getDataForReport($query);
 
-        $dataToSave = [ $report['gaReport']['traffic'], $report['gaReport']['downloads'],
-            $report['gaReport']['installs'],
-            $report['subscriptionMonths'],$report['subscriptionYear'], $report['trafficToDownloads'],
-            $report['trafficToInstalls'], $report['trafficToMonthSubscription'], $report['trafficToYearSubscription'],
-            $report['installsToMonthSubscription'], $report['installsToYearSubscription'] ];
+        $userDevicesRepository = $em->getRepository('UserBundle:UserDevices');
 
-//        var_dump($dataToSave);die;
+        $GA = new GoogleReportingAPI($query['date-from'], $query['date-to']);
+        $metrics = [
+            'traffic' => 'ga:newUsers',
+            'downloads' => 'ga:goal18Starts',
+            'installs' => 'ga:goal7Starts'
+        ];
+        $gaReport = $GA->getMetricsData($metrics);
+
+
+        $subscriptionMonths = $userDevicesRepository->getSubscriptionsCountByName('month', $query);
+        $subscriptionYear = $userDevicesRepository->getSubscriptionsCountByName('year', $query);
+
+        $revenue = $em->getRepository('MarketingBundle:BillingData')->getUserRevenueByDate($query);
+
+        $dataToSave = [$gaReport['installs'], $subscriptionMonths['sub_count'],
+            $subscriptionYear['sub_count'], $revenue['revenue']];
+
+
         $response = new StreamedResponse();
 
         $response->setCallback(function () use (&$dataToSave) {
 
             $handle = fopen('php://output', 'w+');
 
-            fputcsv($handle, ['Traffic', 'Downloads', 'Installs', 'Subscriptions (1 month)',
-                'Subscriptions (12 month)', 'Traffic --> Downloads, %',
-                'Traffic --> Installs, % ', 'Traffic --> Subscriptions (1 month), %',
-                'Traffic --> Subscriptions (12 month), %',
-                'Install --> Subscription (1 month), %',
-                'Install --> Subscription (12 month), %',
-                '1month --> 12 month', 'Revenue' ], ';');
+            fputcsv($handle, ['Installs', '1 Month', '1 Year', 'Revenue'], ';');
 
             fputcsv($handle, $dataToSave, ';');
 
@@ -132,6 +141,8 @@ class StatsController extends Controller
 
     /**
      * @Route("/stats_revenue_report", name="stats_revenue_report")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function statsRevenueReportAction(Request $request)
     {
@@ -142,29 +153,41 @@ class StatsController extends Controller
         $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to']  : date('Y-m-d', time());
 
         $em = $this->getDoctrine()->getManager('default');
-        $funnel = new FunnelReport($em);
-        $report = $funnel->getDataForReport($query);
 
-        $dataToSave = [ $report['gaReport']['traffic'], $report['gaReport']['downloads'],
-            $report['gaReport']['installs'],
-            $report['subscriptionMonths'],$report['subscriptionYear'], $report['trafficToDownloads'],
-            $report['trafficToInstalls'], $report['trafficToMonthSubscription'], $report['trafficToYearSubscription'],
-            $report['installsToMonthSubscription'], $report['installsToYearSubscription'] ];
+        $revenue = $em->getRepository('MarketingBundle:BillingData')->getUserRevenueByDate($query);
 
-//        var_dump($dataToSave);die;
+        $refunds = $em->getRepository('MarketingBundle:BillingData')->getUserRefundsByDate($query);
+        $usersWithRefunds = $em->getRepository('MarketingBundle:BillingData')->getUserRefundsCountByDate($query);
+        $users = $em->getRepository('MarketingBundle:BillingData')->getUserCountByDate($query);
+        $monthlyRebills = $em->getRepository('MarketingBundle:BillingData')->getUserRebillsCountByDate('month', $query);
+        $yearlyRebills = $em->getRepository('MarketingBundle:BillingData')->getUserRebillsCountByDate('year', $query);
+
+
+
+        if ($users['user_count']) {
+            $refundsPercent = ($usersWithRefunds['user_count'] / $users['user_count']) * 100;
+            $avgMonthlyRebills= ($monthlyRebills['user_count'] / $users['user_count']);
+            $avgYearlyRebills = ($yearlyRebills['user_count'] / $users['user_count']);
+            $averageCheck = ($revenue['revenue'] / $users['user_count']);
+        } else {
+            $refundsPercent = 0;
+            $avgMonthlyRebills = 0;
+            $avgYearlyRebills = 0;
+            $averageCheck = 0;
+        }
+
+        $dataToSave = [ $revenue['revenue'], $refunds['refund'] .', '. $refundsPercent,
+            '-', $avgMonthlyRebills, $avgYearlyRebills, $averageCheck];
+
         $response = new StreamedResponse();
 
         $response->setCallback(function () use (&$dataToSave) {
 
             $handle = fopen('php://output', 'w+');
 
-            fputcsv($handle, ['Traffic', 'Downloads', 'Installs', 'Subscriptions (1 month)',
-                'Subscriptions (12 month)', 'Traffic --> Downloads, %',
-                'Traffic --> Installs, % ', 'Traffic --> Subscriptions (1 month), %',
-                'Traffic --> Subscriptions (12 month), %',
-                'Install --> Subscription (1 month), %',
-                'Install --> Subscription (12 month), %',
-                '1month --> 12 month', 'Revenue' ], ';');
+            fputcsv($handle, ['Revenue', 'Refunds $, %', 'Discounts $, %',
+                'Avg. Rebills Monthly',
+                'Avg. Rebills Yearly', 'Average check'], ';');
 
             fputcsv($handle, $dataToSave, ';');
 
