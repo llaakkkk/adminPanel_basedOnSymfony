@@ -28,7 +28,6 @@ class FunnelReport
     {
         $repository =  $this->em->getRepository('UserBundle:UserDevices');
 
-//        $GA = new GoogleReportingAPI('7daysAgo', 'today');
         $GA = new GoogleReportingAPI($filter['date-from'], $filter['date-to']);
 
         $metrics = [
@@ -39,7 +38,6 @@ class FunnelReport
 
         $gaReport = $GA->getMetricsData($metrics);
 
-//        var_dump($repository);die;
         $subscriptionMonths = $repository->getSubscriptionsCountByName('month', $filter);
         $subscriptionYear = $repository->getSubscriptionsCountByName('year', $filter);
         $trafficToDownloads = round(($gaReport['downloads'] / $gaReport['traffic']) * 100, 2);
@@ -61,4 +59,5 @@ class FunnelReport
             'installsToYearSubscription' => $installsToYearSubscription
             ];
     }
+
 }

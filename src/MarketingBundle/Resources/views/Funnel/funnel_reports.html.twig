@@ -163,10 +163,10 @@
         function setDateAndSubmit(dateFrom, dateTo) {
             var inputFrom = $("<input>")
                 .attr("type", "hidden")
-                .attr("name", "date_from").val(dateFrom);
+                .attr("name", "date-from").val(dateFrom);
             var inputTo = $("<input>")
                 .attr("type", "hidden")
-                .attr("name", "date_to").val(dateTo);
+                .attr("name", "date-to").val(dateTo);
             $('#dataFilter').append($(inputFrom));
             $('#dataFilter').append($(inputTo));
             $('#dataFilter').submit();
