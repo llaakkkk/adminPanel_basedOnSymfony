@@ -57,8 +57,9 @@ class FunnelController extends Controller
     public function funnelReportAction(Request $request)
     {
         $query = $request->query->all();
-        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : date('Y-m-d',strtotime("-7 day"));
-        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to'] : date('Y-m-d', time());
+
+        $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
+        $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to']  : date('Y-m-d', time());
 
         $em = $this->getDoctrine()->getManager('default');
         $funnel = new FunnelReport($em);

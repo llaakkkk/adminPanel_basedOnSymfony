@@ -23,6 +23,10 @@ class StatsController extends Controller
      */
     public function statsAction(Request $request)
     {
+        $query = $request->query->all();
+        $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
+        $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to']  : date('Y-m-d', time());
+
         $em = $this->getDoctrine()->getManager('default');
 
 
