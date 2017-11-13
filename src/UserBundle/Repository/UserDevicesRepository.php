@@ -54,20 +54,24 @@ class UserDevicesRepository extends EntityRepository
             ->getResult();
     }
 
-    public function getSubscriptionsCountByName($licenseType, $typeOfInstall = null)
+    public function getSubscriptionsCountByName($licenseType, $filter)
     {
         $rsm = new ResultSetMapping();
 
         $rsm->addScalarResult('sub_count', 'sub_count');
 
-        $qb = $this->getEntityManager()->createNativeQuery("SELECT count(ud.user_id) as sub_count
+        $sql = "SELECT count(ud.user_id) as sub_count
             FROM user_devices ud
             LEFT JOIN subscription_status ss ON ud.subscription_status_id = ss.id
             INNER JOIN payment_system_products psp ON ss.product_id = psp.id
             INNER JOIN license_types lt ON psp.license_type_id = lt.id
-            WHERE lt.slug = ?", $rsm);
+            WHERE lt.slug = :license_type AND ud.created > :date_from AND ud.created < :date_to";
 
-        $qb->setParameter(1, $licenseType);
+        $qb = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+
+        $qb->setParameter('license_type', $licenseType);
+        $qb->setParameter('date_from', $filter['date-from']);
+        $qb->setParameter('date_to', $filter['date-to']);
         $users = $qb->getOneOrNullResult();
 
         return $users;

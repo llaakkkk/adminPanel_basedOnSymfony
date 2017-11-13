@@ -24,12 +24,12 @@ class FunnelReport
         $this->em = $em;
     }
 
-    public function getDataForReport($dateFrom, $dateTo, $filter)
+    public function getDataForReport($filter)
     {
         $repository =  $this->em->getRepository('UserBundle:UserDevices');
 
 //        $GA = new GoogleReportingAPI('7daysAgo', 'today');
-        $GA = new GoogleReportingAPI($dateFrom, $dateTo);
+        $GA = new GoogleReportingAPI($filter['date-from'], $filter['date-to']);
 
         $metrics = [
             'traffic' => 'ga:newUsers',

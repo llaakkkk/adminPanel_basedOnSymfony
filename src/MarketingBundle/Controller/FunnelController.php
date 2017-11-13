@@ -28,12 +28,12 @@ class FunnelController extends Controller
     {
         $query = $request->query->all();
 
-        $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : date('Y-m-d',strtotime("-7 day"));
-        $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to']  : date('Y-m-d', time());
+        $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
+        $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to']  : date('Y-m-d', time());
         $em = $this->getDoctrine()->getManager('default');
 
         $funnel = new FunnelReport($em);
-        $report = $funnel->getDataForReport($dateFrom, $dateTo, $query);
+        $report = $funnel->getDataForReport($query);
 
         $typesOfInstall = [
             ['name' => 'all', 'title' => 'All'],
@@ -45,24 +45,23 @@ class FunnelController extends Controller
         return $this->render('MarketingBundle:Funnel:funnel_reports.html.twig', array_merge(
             $report,
             ['typesOfInstall' => $typesOfInstall,
-                'quered' => $query,
-                'dateFrom' => $dateFrom,
-                'dateTo' => $dateTo])
-        );
+            'query' => $query]
+        ));
     }
 
     /**
      * @Route("/funnel_report", name="funnel_report")
+     * @param Request $request
      */
-    public function funnelReportAction()
+    public function funnelReportAction(Request $request)
     {
-        $query = [];
+        $query = $request->query->all();
         $dateFrom = isset($query['date_from']) && !empty($query['date_from']) ? $query['date_from'] : date('Y-m-d',strtotime("-7 day"));
         $dateTo = isset($query['date_to']) && !empty($query['date_to']) ? $query['date_to'] : date('Y-m-d', time());
 
         $em = $this->getDoctrine()->getManager('default');
         $funnel = new FunnelReport($em);
-        $report = $funnel->getDataForReport($dateFrom, $dateTo, $query);
+        $report = $funnel->getDataForReport($query);
 
         $dataToSave = [ $report['gaReport']['traffic'], $report['gaReport']['downloads'],
             $report['gaReport']['installs'],
@@ -70,7 +69,6 @@ class FunnelController extends Controller
             $report['trafficToInstalls'], $report['trafficToMonthSubscription'], $report['trafficToYearSubscription'],
             $report['installsToMonthSubscription'], $report['installsToYearSubscription'] ];
 
-//        var_dump($dataToSave);die;
         $response = new StreamedResponse();
 
         $response->setCallback(function () use (&$dataToSave) {

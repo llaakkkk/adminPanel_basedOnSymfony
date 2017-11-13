@@ -37,7 +37,7 @@
                                     <div class="panel-body">
                                         <select name="type-of-install" class="select2-container--default" id="type-of-install" style="width: 100%">
                                             {% for typeOfInstall in typesOfInstall %}
-                                                <option value="{{ typeOfInstall.name }}" {%  if (quered['type-of-install'] is defined) and (typeOfInstall.name in quered['type-of-install']) %} selected {% endif %}> {{ typeOfInstall.title }}</option>
+                                                <option value="{{ typeOfInstall.name }}" {%  if (query['type-of-install'] is defined) and (typeOfInstall.name in query['type-of-install']) %} selected {% endif %}> {{ typeOfInstall.title }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -117,15 +117,15 @@
         $(document).ready(function(){
 
             $('.dataTables').DataTable();
-            $('#funnel-report').attr('href',{{ path('funnel_report') }}+ window.location.search)
+            $('#funnel-report').attr('href',"{{ path('funnel_report') }}" + window.location.search)
 
         });
 
         $(function() {
             $('.select2-container--default').select2();
 
-            var start = moment('{{ dateFrom | date('Ymd') }}');
-            var end = moment('{{ dateTo| date('Ymd') }}');
+            var start = moment('{{ query['date-from'] | date('Ymd') }}');
+            var end = moment('{{ query['date-to']| date('Ymd') }}');
 
             function cb(start, end) {
                 $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));

@@ -68,7 +68,7 @@ class SecurityController extends Controller
 
         $form->handleRequest($request);
 
-        if ( $form->isValid()) {
+        if ($form->isValid()) {
             // Create the user
             /** @var AdminUser $user */
             $user = $form->getData();
