@@ -114,7 +114,7 @@
                 "bPaginate": false,
                 "bInfo" : false,
                 "bFilter": false,
-                "scrollX": true
+                "bSort": false
             } );
 
             $('.select2-container--default').select2();
@@ -130,6 +130,7 @@
                 startDate: start,
                 endDate: end,
                 "opens": "right",
+                maxDate: end,
                 ranges: {
                     'Today': [moment(), moment()],
                     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],

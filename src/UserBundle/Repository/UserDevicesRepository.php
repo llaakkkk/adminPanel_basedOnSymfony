@@ -158,7 +158,9 @@ class UserDevicesRepository extends EntityRepository
             LEFT JOIN subscription_status ss ON ss.id = ud.subscription_status_id
             INNER JOIN license_status ls ON ls.id = ss.license_status_id
             LEFT JOIN payment_system_products psp ON psp.id = ss.product_id
-            INNER JOIN license_types lt ON lt.id = psp.license_type_id           
+            INNER JOIN license_types lt ON lt.id = psp.license_type_id   
+            LEFT JOIN languages_to_user_devices lud ON lud.user_device_id = ud.id
+            LEFT JOIN languages l ON l.id = lud.language_id        
             LEFT JOIN (
             SELECT max(created) as last_billed,
                                order_id,
