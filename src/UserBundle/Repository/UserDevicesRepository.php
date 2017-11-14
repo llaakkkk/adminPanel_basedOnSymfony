@@ -167,7 +167,7 @@ class UserDevicesRepository extends EntityRepository
                              FROM billing_data
                              GROUP BY (user_device_id,order_id, promo_code)
             ) bd ON bd.user_device_id = ud.id
-            WHERE ud.updated > :date_from AND ud.updated < :date_to';
+            WHERE ud.updated >= :date_from AND ud.updated <= :date_to';
 
         if (isset($query['license-type']) && !empty($query['license-type'])) {
             $sql .= ' AND lt.slug IN (:license_type)';
@@ -242,7 +242,7 @@ class UserDevicesRepository extends EntityRepository
                     INNER JOIN license_types lt ON pp.license_type_id = lt.id
                     LEFT JOIN languages_to_user_devices lud ON lud.user_device_id = ud.id
                     LEFT JOIN languages l ON l.id = lud.language_id
-                    WHERE ud.updated > :date_from AND ud.updated < :date_to";
+                    WHERE ud.updated >= :date_from AND ud.updated <= :date_to";
 
         if (isset($query['os-version']) && !empty($query['os-version'])) {
             $sql .= ' AND ud.os_version IN (:os_version)';
