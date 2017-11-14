@@ -50,7 +50,7 @@
                         </div>
 
 
-                        <table class="table table-bordered table-hover dataTables" style="font-size: 12px;">
+                        <table class="table table-bordered table-hover" style="font-size: 12px;">
                             <thead>
                             <tr>
                                 <!-- // 16 cols -->
@@ -105,7 +105,6 @@
     <script>
         $(document).ready(function(){
 
-            $('.dataTables').DataTable();
             $('#funnel-report').attr('href',"{{ path('funnel_report') }}" + window.location.search)
 
         });
