@@ -40,12 +40,12 @@ class FunnelReport
 
         $subscriptionMonths = $repository->getSubscriptionsCountByName('month', $filter);
         $subscriptionYear = $repository->getSubscriptionsCountByName('year', $filter);
-        $trafficToDownloads = round(($gaReport['downloads'] / $gaReport['traffic']) * 100, 2);
-        $trafficToInstalls = round(($gaReport['installs'] / $gaReport['traffic']) * 100, 2);
-        $trafficToMonthSubscription = round(($subscriptionMonths['sub_count'] / $gaReport['traffic']) * 100, 2);
-        $trafficToYearSubscription = round(($subscriptionYear['sub_count'] / $gaReport['traffic']) * 100, 2);
-        $installsToMonthSubscription = round(($subscriptionMonths['sub_count'] / $gaReport['installs']) * 100, 2);
-        $installsToYearSubscription = round(($subscriptionYear['sub_count'] / $gaReport['installs']) * 100, 2);
+        $trafficToDownloads = $gaReport['traffic'] ? round(($gaReport['downloads'] / $gaReport['traffic']) * 100, 2) : 0;
+        $trafficToInstalls = $gaReport['traffic'] ? round(($gaReport['installs'] / $gaReport['traffic']) * 100, 2) : 0;
+        $trafficToMonthSubscription = $gaReport['traffic'] ? round(($subscriptionMonths['sub_count'] / $gaReport['traffic']) * 100, 2) : 0;
+        $trafficToYearSubscription = $gaReport['traffic'] ?round(($subscriptionYear['sub_count'] / $gaReport['traffic']) * 100, 2) : 0;
+        $installsToMonthSubscription = $gaReport['installs'] ? round(($subscriptionMonths['sub_count'] / $gaReport['installs']) * 100, 2) : 0 ;
+        $installsToYearSubscription = $gaReport['installs'] ? round(($subscriptionYear['sub_count'] / $gaReport['installs']) * 100, 2) : 0;
 
         return [
             'gaReport' => $gaReport,
