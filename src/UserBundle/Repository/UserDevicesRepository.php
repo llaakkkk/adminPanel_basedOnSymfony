@@ -169,7 +169,7 @@ class UserDevicesRepository extends EntityRepository
                              FROM billing_data
                              GROUP BY (user_device_id,order_id, promo_code)
             ) bd ON bd.user_device_id = ud.id
-            WHERE ud.updated >= :date_from AND ud.updated <= :date_to';
+            WHERE ud.created >= :date_from AND ud.created <= :date_to';
 
         if (isset($query['license-type']) && !empty($query['license-type'])) {
             $sql .= ' AND lt.slug IN (:license_type)';
