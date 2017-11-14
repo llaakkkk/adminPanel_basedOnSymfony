@@ -110,6 +110,12 @@
         });
 
         $(function() {
+            $('.table').dataTable( {
+                "bPaginate": false,
+                "bInfo" : false,
+                "bFilter": false
+            } );
+
             $('.select2-container--default').select2();
 
             var start = moment('{{ query['date-from'] | date('Ymd') }}');
