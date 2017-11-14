@@ -164,9 +164,9 @@
                 "lengthMenu": [[25, 50, -1], [25, 50, "All"]]
             });
 
-            $('#users-report').attr('href',"{{ path('users_report') }}" + window.location.search)
+            $('#user-report').attr('href','{{ path('users_report') }}' + window.location.search)
 
-
+        console.log(window.location.search);
         });
         $(function() {
             $('.select2-container--default').select2();

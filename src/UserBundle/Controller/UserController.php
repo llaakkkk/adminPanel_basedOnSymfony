@@ -27,10 +27,8 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager('default');
 
-//        $usersDevices = $em->getRepository('UserBundle:UserDevices')->getUserListTest($query);
         $usersDevices = $em->getRepository('UserBundle:UserDevices')->getUserList($query);
 
-//var_dump($usersDevices);die;
         $licensesTypes = $em->getRepository('UserBundle:LicenseTypes')->findAll();
         $billingStatus = $em->getRepository('UserBundle:LicenseStatus')->findAll();
         $appVersions = $em->getRepository('UserBundle:UserDevices')->getUsersDevicesByAppVersion();
@@ -98,7 +96,7 @@ class UserController extends Controller
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename="uninstalls_report-'. date('c').'".csv"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="users_report-'. date('c').'".csv"');
 
         return $response;
     }
@@ -117,7 +115,7 @@ class UserController extends Controller
 
         $billingData = $em->getRepository('MarketingBundle:BillingData')->findBy(['userId' => $id]);
 
-//        var_dump($userDevices->getDeviceLanguage());
+
         return $this->render('UserBundle:User:user.html.twig', [
             'user' => $user,
             'userDevices' => $userDevices,
