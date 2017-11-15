@@ -158,9 +158,9 @@ class UserDevicesRepository extends EntityRepository
             LEFT JOIN subscription_status ss ON ss.id = ud.subscription_status_id
             INNER JOIN license_status ls ON ls.id = ss.license_status_id
             LEFT JOIN payment_system_products psp ON psp.id = ss.product_id
-            INNER JOIN license_types lt ON lt.id = psp.license_type_id   
+            FULL OUTER JOIN license_types lt ON lt.id = psp.license_type_id
             LEFT JOIN languages_to_user_devices lud ON lud.user_device_id = ud.id
-            LEFT JOIN languages l ON l.id = lud.language_id        
+            LEFT JOIN languages l ON l.id = lud.language_id
             LEFT JOIN (
             SELECT max(created) as last_billed,
                                order_id,
@@ -169,7 +169,7 @@ class UserDevicesRepository extends EntityRepository
                              FROM billing_data
                              GROUP BY (user_device_id,order_id, promo_code)
             ) bd ON bd.user_device_id = ud.id
-            WHERE ud.created >= :date_from AND ud.created <= :date_to';
+            WHERE ud.created::date >= :date_from AND ud.created::date <= :date_to';
 
         $params = array(
             'date_from' => $query['date-from'],
@@ -300,7 +300,7 @@ class UserDevicesRepository extends EntityRepository
                     FROM user_devices ud
                     LEFT JOIN subscription_status ss ON ss.id = ud.subscription_status_id
                     INNER JOIN payment_system_products pp ON pp.id = ss.product_id
-                    INNER JOIN license_types lt ON pp.license_type_id = lt.id
+                    FULL OUTER JOIN license_types lt ON pp.license_type_id = lt.id
                     LEFT JOIN languages_to_user_devices lud ON lud.user_device_id = ud.id
                     LEFT JOIN languages l ON l.id = lud.language_id
                     WHERE ud.updated >= :date_from AND ud.updated <= :date_to";
