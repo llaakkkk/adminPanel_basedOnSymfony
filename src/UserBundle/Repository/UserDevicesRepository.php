@@ -171,55 +171,114 @@ class UserDevicesRepository extends EntityRepository
             ) bd ON bd.user_device_id = ud.id
             WHERE ud.created >= :date_from AND ud.created <= :date_to';
 
+        $params = array(
+            'date_from' => $query['date-from'],
+            'date_to'   => $query['date-to']
+        );
+
         if (isset($query['license-type']) && !empty($query['license-type'])) {
-            $sql .= ' AND lt.slug IN (:license_type)';
+            $id_params = array();
+            foreach ($query['license-type'] as $i => $id) {
+                $name = ":license-type_$i";
+
+                $params[$name] = $id;
+
+                $id_params[] = $name;
+            }
+            $id_params = implode(', ', $id_params);
+            $sql .= ' AND lt.slug IN ($id_param)';
         }
 
         if (isset($query['billing-status']) && !empty($query['billing-status'])) {
-            $sql .= ' AND ls.slug IN (:billing_status)';
+            $id_params = array();
+            foreach ($query['billing-status'] as $i => $id) {
+                $name = ":billing-status_$i";
+
+                $params[$name] = $id;
+
+                $id_params[] = $name;
+            }
+            $id_params = implode(', ', $id_params);
+            $sql .= ' AND ls.slug IN ($id_params)';
         }
 
         if (isset($query['app-version']) && !empty($query['app-version'])) {
-            $sql .= ' AND ud.application_build_version IN (:application_build_version)';
+            $id_params = array();
+            foreach ($query['app-version'] as $i => $id) {
+                $name = ":app-version_$i";
+
+                $params[$name] = $id;
+
+                $id_params[] = $name;
+            }
+            $id_params = implode(', ', $id_params);
+            $sql .= ' AND ud.application_build_version IN ($id_params)';
         }
 
         if (isset($query['os-version']) && !empty($query['os-version'])) {
-            $sql .= ' AND ud.os_version IN (:os_version)';
+            $id_params = array();
+            foreach ($query['os-version'] as $i => $id) {
+                $name = ":os-version_$i";
+
+                $params[$name] = $id;
+
+                $id_params[] = $name;
+            }
+            $id_params = implode(', ', $id_params);
+            $sql .= ' AND ud.os_version IN ($id_params)';
         }
         if (isset($query['model-name']) && !empty($query['model-name'])) {
-            $sql .= ' AND ud.model_name IN (:model_name)';
+            $id_params = array();
+            foreach ($query['model-name'] as $i => $id) {
+                $name = ":model_name_$i";
+
+                $params[$name] = $id;
+
+                $id_params[] = $name;
+            }
+            $id_params = implode(', ', $id_params);
+            $sql .= ' AND ud.model_name IN ('.$id_params.')';
         }
 
         if (isset($query['languages']) && !empty($query['languages'])) {
-            $sql .= ' AND l.slug IN (:languages)';
+            $id_params = array();
+            foreach ($query['languages'] as $i => $id) {
+                $name = ":languages_$i";
+
+                $params[$name] = $id;
+
+                $id_params[] = $name;
+            }
+            $id_params = implode(', ', $id_params);
+            $sql .= ' AND l.slug IN ($id_params)';
         }
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
 
-        $statement->bindValue('date_from', $query['date-from'], \PDO::PARAM_STR);
-        $statement->bindValue('date_to', $query['date-to'], \PDO::PARAM_STR);
+//        $statement->bindValue('date_from', $query['date-from'], \PDO::PARAM_STR);
+//        $statement->bindValue('date_to', $query['date-to'], \PDO::PARAM_STR);
 
-        if (!empty($query['license-type'])) {
-            $statement->bindValue('license_type', implode(",", $query['license-type']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-        }
-
-        if (!empty($query['billing-status'])) {
-            $statement->bindValue('billing_status', implode(",", $query['billing-status']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-        }
-
-        if (isset($query['app-version'])) {
-            $statement->bindValue('application_build_version', implode(",", $query['app-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-        }
-
-        if (!empty($query['os-version'])) {
-            $statement->bindValue('os_version', implode(",", $query['os-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-        }
-        if (!empty($query['model-name'])) {
-            $statement->bindValue('model_name', implode(",", $query['model-name']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-        }
-        if (!empty($query['languages'])) {
-            $statement->bindValue('languages', implode(",", $query['languages']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-        }
-        $statement->execute();
+//        if (!empty($query['license-type'])) {
+//            $statement->bindValue('license_type', implode(", ", $query['license-type']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+//        }
+//
+//        if (!empty($query['billing-status'])) {
+//            $statement->bindValue('billing_status', implode(", ", $query['billing-status']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+//        }
+//
+//        if (isset($query['app-version'])) {
+//            $statement->bindValue('application_build_version', implode(", ", $query['app-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+//        }
+//
+//        if (!empty($query['os-version'])) {
+//            $statement->bindValue('os_version', implode(", ", $query['os-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+//        }
+//        if (!empty($query['model-name'])) {
+//            $statement->bindValue('model_name', implode(", ", $query['model-name']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+//        }
+//        if (!empty($query['languages'])) {
+//            $statement->bindValue('languages', implode(", ", $query['languages']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+//        }
+        $statement->execute($params);
 
         $result = $statement->fetchAll();
 
@@ -246,33 +305,65 @@ class UserDevicesRepository extends EntityRepository
                     LEFT JOIN languages l ON l.id = lud.language_id
                     WHERE ud.updated >= :date_from AND ud.updated <= :date_to";
 
+        $params = array(
+            'date_from' => $query['date-from'],
+            'date_to'   => $query['date-to']
+        );
+
         if (isset($query['os-version']) && !empty($query['os-version'])) {
-            $sql .= ' AND ud.os_version IN (:os_version)';
+            $id_params = array();
+            foreach ($query['os-version'] as $i => $id) {
+                $name = ":os-version_$i";
+
+                $params[$name] = $id;
+
+                $id_params[] = $name;
+            }
+            $id_params = implode(', ', $id_params);
+            $sql .= ' AND ud.os_version IN ($id_params)';
         }
         if (isset($query['model-name']) && !empty($query['model-name'])) {
-            $sql .= ' AND ud.model_name IN (:model_name)';
+            $id_params = array();
+            foreach ($query['model-name'] as $i => $id) {
+                $name = ":model_name_$i";
+
+                $params[$name] = $id;
+
+                $id_params[] = $name;
+            }
+            $id_params = implode(', ', $id_params);
+            $sql .= ' AND ud.model_name IN ('.$id_params.')';
         }
 
         if (isset($query['languages']) && !empty($query['languages'])) {
-            $sql .= ' AND l.slug IN (:languages)';
+            $id_params = array();
+            foreach ($query['languages'] as $i => $id) {
+                $name = ":languages_$i";
+
+                $params[$name] = $id;
+
+                $id_params[] = $name;
+            }
+            $id_params = implode(', ', $id_params);
+            $sql .= ' AND l.slug IN ($id_params)';
         }
 
         $statement = $em->getConnection()->prepare($sql);
 
-        $statement->bindValue('date_from', $query['date-from'], \PDO::PARAM_STR);
-        $statement->bindValue('date_to', $query['date-to'], \PDO::PARAM_STR);
+//        $statement->bindValue('date_from', $query['date-from'], \PDO::PARAM_STR);
+//        $statement->bindValue('date_to', $query['date-to'], \PDO::PARAM_STR);
+//
+//        if (!empty($query['os-version'])) {
+//            $statement->bindValue('os_version', implode(",", $query['os-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+//        }
+//        if (!empty($query['model-name'])) {
+//            $statement->bindValue('model_name', implode(",", $query['model-name']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+//        }
+//        if (!empty($query['languages'])) {
+//            $statement->bindValue('languages', implode(",", $query['languages']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+//        }
 
-        if (!empty($query['os-version'])) {
-            $statement->bindValue('os_version', implode(",", $query['os-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-        }
-        if (!empty($query['model-name'])) {
-            $statement->bindValue('model_name', implode(",", $query['model-name']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-        }
-        if (!empty($query['languages'])) {
-            $statement->bindValue('languages', implode(",", $query['languages']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-        }
-
-        $statement->execute();
+        $statement->execute($params);
 
         $result = $statement->fetchAll();
 
