@@ -303,7 +303,7 @@ class UserDevicesRepository extends EntityRepository
                     FULL OUTER JOIN license_types lt ON pp.license_type_id = lt.id
                     LEFT JOIN languages_to_user_devices lud ON lud.user_device_id = ud.id
                     LEFT JOIN languages l ON l.id = lud.language_id
-                    WHERE ud.updated >= :date_from AND ud.updated <= :date_to";
+                    WHERE ud.updated::date >= :date_from AND ud.updated::date <= :date_to";
 
         $params = array(
             'date_from' => $query['date-from'],
