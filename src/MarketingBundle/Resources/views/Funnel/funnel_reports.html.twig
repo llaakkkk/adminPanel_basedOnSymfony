@@ -71,9 +71,9 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td>{{ gaReport['traffic'] }}</td>
-                                <td>{{ gaReport['downloads'] }}</td>
-                                <td>{{ gaReport['installs'] }}</td>
+                                <td>{{ gaReport['traffic'] | default("-") }}</td>
+                                <td>{{ gaReport['downloads'] | default("-") }}</td>
+                                <td>{{ gaReport['installs'] | default("-")}}</td>
                                 <td>{{ subscriptionMonths }} </td>
                                 <td>{{ subscriptionYear }} </td>
                                 <td>{{ trafficToDownloads}}</td>
