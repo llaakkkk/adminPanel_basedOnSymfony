@@ -179,53 +179,53 @@ class UserDevicesRepository extends EntityRepository
         if (isset($query['license-type']) && !empty($query['license-type'])) {
             $id_params = array();
             foreach ($query['license-type'] as $i => $id) {
-                $name = ":license-type_$i";
+                $name = ":license_type_$i";
 
                 $params[$name] = $id;
 
                 $id_params[] = $name;
             }
             $id_params = implode(', ', $id_params);
-            $sql .= ' AND lt.slug IN ($id_param)';
+            $sql .= ' AND lt.slug IN ('.$id_params.')';
         }
 
         if (isset($query['billing-status']) && !empty($query['billing-status'])) {
             $id_params = array();
             foreach ($query['billing-status'] as $i => $id) {
-                $name = ":billing-status_$i";
+                $name = ":billing_status_$i";
 
                 $params[$name] = $id;
 
                 $id_params[] = $name;
             }
             $id_params = implode(', ', $id_params);
-            $sql .= ' AND ls.slug IN ($id_params)';
+            $sql .= ' AND ls.slug IN ('.$id_params.')';
         }
 
         if (isset($query['app-version']) && !empty($query['app-version'])) {
             $id_params = array();
             foreach ($query['app-version'] as $i => $id) {
-                $name = ":app-version_$i";
+                $name = ":app_version_$i";
 
                 $params[$name] = $id;
 
                 $id_params[] = $name;
             }
             $id_params = implode(', ', $id_params);
-            $sql .= ' AND ud.application_build_version IN ($id_params)';
+            $sql .= ' AND ud.application_build_version IN ('.$id_params.')';
         }
 
         if (isset($query['os-version']) && !empty($query['os-version'])) {
             $id_params = array();
             foreach ($query['os-version'] as $i => $id) {
-                $name = ":os-version_$i";
+                $name = ":os_version_$i";
 
                 $params[$name] = $id;
 
                 $id_params[] = $name;
             }
             $id_params = implode(', ', $id_params);
-            $sql .= ' AND ud.os_version IN ($id_params)';
+            $sql .= ' AND ud.os_version IN ('.$id_params.')';
         }
         if (isset($query['model-name']) && !empty($query['model-name'])) {
             $id_params = array();
@@ -250,7 +250,7 @@ class UserDevicesRepository extends EntityRepository
                 $id_params[] = $name;
             }
             $id_params = implode(', ', $id_params);
-            $sql .= ' AND l.slug IN ($id_params)';
+            $sql .= ' AND l.slug IN ('.$id_params.')';
         }
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
 
@@ -288,7 +288,7 @@ class UserDevicesRepository extends EntityRepository
 
     public function getUninstallsReportData($query)
     {
-        $em = $this->getEntityManager();
+//        $em = $this->getEntityManager();
         $sql = "SELECT ud.activation_key,
                       ud.user_id,
                       ud.id as device_id,
@@ -313,14 +313,14 @@ class UserDevicesRepository extends EntityRepository
         if (isset($query['os-version']) && !empty($query['os-version'])) {
             $id_params = array();
             foreach ($query['os-version'] as $i => $id) {
-                $name = ":os-version_$i";
+                $name = ":os_version_$i";
 
                 $params[$name] = $id;
 
                 $id_params[] = $name;
             }
             $id_params = implode(', ', $id_params);
-            $sql .= ' AND ud.os_version IN ($id_params)';
+            $sql .= ' AND ud.os_version IN ('.$id_params.')';
         }
         if (isset($query['model-name']) && !empty($query['model-name'])) {
             $id_params = array();
@@ -345,10 +345,22 @@ class UserDevicesRepository extends EntityRepository
                 $id_params[] = $name;
             }
             $id_params = implode(', ', $id_params);
-            $sql .= ' AND l.slug IN ($id_params)';
+            $sql .= ' AND l.slug IN ('.$id_params.')';
         }
 
-        $statement = $em->getConnection()->prepare($sql);
+//
+//        if (isset($query['os-version']) && !empty($query['os-version'])) {
+//            $sql .= ' AND ud.os_version IN (:os_version)';
+//        }
+//        if (isset($query['model-name']) && !empty($query['model-name'])) {
+//            $sql .= ' AND ud.model_name IN (:model_name)';
+//        }
+//
+//        if (isset($query['languages']) && !empty($query['languages'])) {
+//            $sql .= ' AND l.slug IN (:languages)';
+//        }
+
+        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
 
 //        $statement->bindValue('date_from', $query['date-from'], \PDO::PARAM_STR);
 //        $statement->bindValue('date_to', $query['date-to'], \PDO::PARAM_STR);
