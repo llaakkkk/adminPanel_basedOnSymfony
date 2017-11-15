@@ -122,7 +122,7 @@
                             {#{{ dump(usersDevices) }}#}
                             {% for userDevice in usersDevices %}
                                 <tr>
-                                    <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{% if userDevice.user_id is defined %}{{ userDevice.first_name }} {{ userDevice.last_name }}{% else %}-{% endif %}</a></td>
+                                    <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{% if userDevice.user_id %}{{ userDevice.first_name }} {{ userDevice.last_name }}{% else %}-{% endif %}</a></td>
                                     <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{{ userDevice.email | default("-") }}</a></td>
                                     <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{{ userDevice.activation_key | default("-") }}</a></td>
                                     <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{{ userDevice.license_type | default("-") }}</a></td>
