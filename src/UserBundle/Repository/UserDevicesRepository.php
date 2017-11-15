@@ -140,7 +140,7 @@ class UserDevicesRepository extends EntityRepository
 
     public function getUserList($query)
     {
-        $sql = 'SELECT 
+        $sql = 'SELECT DISTINCT ON (ud.id)
               ud.activation_key,
               ud.created,
               ud.id as user_device_id,
