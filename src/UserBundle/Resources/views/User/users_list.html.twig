@@ -122,15 +122,15 @@
                             {#{{ dump(usersDevices) }}#}
                             {% for userDevice in usersDevices %}
                                 <tr>
-                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{% if userDevice.user_id is defined %}{{ userDevice.first_name }} {{ userDevice.last_name }}{% else %}-{% endif %}</a></td>
-                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{{ userDevice.email | default("-") }}</a></td>
-                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{{ userDevice.activation_key | default("-") }}</a></td>
-                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{{ userDevice.license_type | default("-") }}</a></td>
-                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{{ userDevice.license_status | default("-") }}</a></td>
-                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{{ userDevice.created|date("F jS \\a\\t g:ia") | default("-") }}</a></td>
-                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{{ userDevice.last_billed | date("F jS \\a\\t g:ia") | default("-") }}</a></td>
-                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{{ userDevice.order_id | default("-") }}</a></td>
-                                    <td><a href="{% if userDevice.user_id is defined %}{{ path('user', {'id': userDevice.user_id}) }}{% endif %}">{{ userDevice.promo_code | default("-") }}</a></td>
+                                    <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{% if userDevice.user_id is defined %}{{ userDevice.first_name }} {{ userDevice.last_name }}{% else %}-{% endif %}</a></td>
+                                    <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{{ userDevice.email | default("-") }}</a></td>
+                                    <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{{ userDevice.activation_key | default("-") }}</a></td>
+                                    <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{{ userDevice.license_type | default("-") }}</a></td>
+                                    <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{{ userDevice.license_status | default("-") }}</a></td>
+                                    <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{{ userDevice.created|date("F jS \\a\\t g:ia") | default("-") }}</a></td>
+                                    <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{{ userDevice.last_billed | date("F jS \\a\\t g:ia") | default("-") }}</a></td>
+                                    <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{{ userDevice.order_id | default("-") }}</a></td>
+                                    <td>{% if userDevice.user_id %}<a href="{{ path('user', {'id': userDevice.user_id}) }}">{% endif %}{{ userDevice.promo_code | default("-") }}</a></td>
                                 </tr>
                             {% endfor %}
                             </tbody>
