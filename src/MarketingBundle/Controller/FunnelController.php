@@ -39,7 +39,6 @@ class FunnelController extends Controller
             ['name' => 'all', 'title' => 'All'],
             ['name' => 'free-install', 'title' => 'Free install'],
             ['name' => 'paid-install', 'title' => 'Paid install'],
-            ['name' => 'paid-users', 'title'=> 'Paid users']
         ];
 
         return $this->render('MarketingBundle:Funnel:funnel_reports.html.twig', array_merge(
