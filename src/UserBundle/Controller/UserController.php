@@ -133,15 +133,9 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager('default');
 
+         $this->addFlash('warning', 'User deleted!');
 
-
-        $request->getSession()
-            ->getFlashBag()
-            ->add('notice', 'success');
-
-        $referer = $request->headers->get('referer');
-
-        return $this->redirect($referer);
+        return $this->redirectToRoute('users_list');
     }
 
 
