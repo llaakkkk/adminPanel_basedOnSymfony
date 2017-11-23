@@ -73,6 +73,15 @@
                     </ul>
                 </li>
                 {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                <li class="{% if app.request.attributes.get('_route') in ['administrator','administrator_edit', 'role_permission'] %} active {% endif %}">
+                    <a href="#"><i class="fa fa-angle-double-right"></i> <span class="nav-label">Payments</span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class="{% if app.request.attributes.get('_route') in ['administrator','administrator_edit'] %} active {% endif %}"><a href="{{ path('administrator') }}"><i class="fa fa-square-o"></i> Payment Systems</a></li>
+                        <li class="{% if app.request.attributes.get('_route') == 'role_permission' %} active {% endif %}"><a href="{{ path('role_permission') }}"><i class="fa fa-square-o"></i> Payment Systems Products</a></li>
+                    </ul>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </nav>

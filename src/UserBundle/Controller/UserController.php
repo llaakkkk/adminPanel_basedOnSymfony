@@ -103,6 +103,7 @@ class UserController extends Controller
 
     /**
      * @Route("/user/{id}", name="user")
+     * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function userAction($id)
@@ -122,6 +123,27 @@ class UserController extends Controller
             'billingData' => $billingData
         ]);
     }
+    /**
+     * @Route("/user/delete/{id}", name="user_delete")
+     * @param $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function userDeleteAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager('default');
+
+
+
+        $request->getSession()
+            ->getFlashBag()
+            ->add('notice', 'success');
+
+        $referer = $request->headers->get('referer');
+
+        return $this->redirect($referer);
+    }
+
 
 
 }

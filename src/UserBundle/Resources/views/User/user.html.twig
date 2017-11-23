@@ -46,7 +46,22 @@
 
                                         <hr/>
                                         <div class="col-lg-offset-8 col-lg-4">
-                                            <button type="button" class="btn btn-danger btn-sm btn-block"> Delete User</button>
+                                            <button type="button" class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#myModal4"> Delete User</button>
+                                        </div>
+                                        <div class="modal inmodal" id="myModal4" tabindex="-1" role="dialog"  aria-hidden="true">
+
+                                            <div class="modal-dialog">
+                                                <div class="modal-content animated fadeIn">
+                                                    <div class="modal-body">
+
+                                                        <p><strong class="text-danger">Are you sure?</strong></p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-white btn-sm" data-dismiss="modal">Cancel</button>
+                                                        <a href="{{ path('user_delete', {'id':  user.id}) }}" type="button" class="btn btn-danger btn-sm">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -96,10 +111,10 @@
                                                 <tbody>
                                                 {% for userDevice in userDevices %}
                                                     <tr>
-                                                        <td>{% if userDevice.activationKey is defined %}{{ userDevice.activationKey }}{% else %}-{% endif %}</td>
-                                                        <td>{% if userDevice.serialNumber is defined %}{{ userDevice.serialNumber }}{% else %}-{% endif %}</td>
-                                                        <td>{% if userDevice.modelName is defined %}{{ userDevice.modelName }} {% else %}-{% endif %}{% if userDevice.modelNumber is defined %}{{ userDevice.modelNumber }}{% else %}-{% endif %}</td>
-                                                        <td>{% if userDevice.osVersion is defined %}{{ userDevice.osVersion }}{% else %}-{% endif %} {% if userDevice.osBuild is defined %}{{ userDevice.osBuild }}{% else %}-{% endif %}</td>
+                                                        <td>{{ userDevice.activationKey | default("-") }}</td>
+                                                        <td>{{ userDevice.serialNumber  | default("-") }}</td>
+                                                        <td>{{ userDevice.modelName  | default("-")}} {{ userDevice.modelNumber | default("-")}}</td>
+                                                        <td>{{ userDevice.osVersion  | default("-")}} {{ userDevice.osBuild  | default("-")}}</td>
                                                         {#{{ dump(userDevice.deviceLanguage) }}#}
                                                         {#<td>#}
                                                             {#{% for language in userDevice.deviceLanguage %}#}
@@ -111,9 +126,9 @@
                                                         {#<td>{{ userDevice.deviceLanguage.language.name }}</td>#}
                                                         <td> </td>
                                                         <td> </td>
-                                                        <td>{% if userDevice.created is defined %}{{ userDevice.created.date|date("F jS \\a\\t g:ia") }}{% else %}-{% endif %}</td>
+                                                        <td>{{ userDevice.created.date|date("F jS \\a\\t g:ia")  | default("-") }}</td>
                                                         <td>{% if userDevice.isTest %} test {% else %}real{% endif%}</td>
-                                                        <td>{% if userDevice.applicationBuildVersion is defined %}{{ userDevice.applicationBuildVersion }}{% else %}-{% endif %}</td>
+                                                        <td>{{ userDevice.applicationBuildVersion  | default("-") }}</td>
                                                     </tr>
                                                 {% endfor %}
 
@@ -163,4 +178,11 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+
+
 {% endblock %}

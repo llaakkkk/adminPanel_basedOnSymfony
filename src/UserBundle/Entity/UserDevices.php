@@ -442,7 +442,7 @@ class UserDevices
     /**
      * @return string
      */
-    public function getActivationKey(): string
+    public function getActivationKey()
     {
         return $this->activationKey;
     }
