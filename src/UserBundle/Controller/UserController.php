@@ -133,7 +133,7 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager('default');
 
-         $this->addFlash('warning', 'User deleted!');
+         $this->addFlash('danger', 'User deleted!');
 
         return $this->redirectToRoute('users_list');
     }
