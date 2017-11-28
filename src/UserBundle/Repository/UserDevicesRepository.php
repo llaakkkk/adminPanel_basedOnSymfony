@@ -254,30 +254,6 @@ class UserDevicesRepository extends EntityRepository
         }
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
 
-//        $statement->bindValue('date_from', $query['date-from'], \PDO::PARAM_STR);
-//        $statement->bindValue('date_to', $query['date-to'], \PDO::PARAM_STR);
-
-//        if (!empty($query['license-type'])) {
-//            $statement->bindValue('license_type', implode(", ", $query['license-type']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-//        }
-//
-//        if (!empty($query['billing-status'])) {
-//            $statement->bindValue('billing_status', implode(", ", $query['billing-status']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-//        }
-//
-//        if (isset($query['app-version'])) {
-//            $statement->bindValue('application_build_version', implode(", ", $query['app-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-//        }
-//
-//        if (!empty($query['os-version'])) {
-//            $statement->bindValue('os_version', implode(", ", $query['os-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-//        }
-//        if (!empty($query['model-name'])) {
-//            $statement->bindValue('model_name', implode(", ", $query['model-name']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-//        }
-//        if (!empty($query['languages'])) {
-//            $statement->bindValue('languages', implode(", ", $query['languages']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-//        }
         $statement->execute($params);
 
         $result = $statement->fetchAll();
@@ -288,7 +264,7 @@ class UserDevicesRepository extends EntityRepository
 
     public function getUninstallsReportData($query)
     {
-//        $em = $this->getEntityManager();
+
         $sql = "SELECT ud.activation_key,
                       ud.user_id,
                       ud.id as device_id,
@@ -348,32 +324,8 @@ class UserDevicesRepository extends EntityRepository
             $sql .= ' AND l.slug IN ('.$id_params.')';
         }
 
-//
-//        if (isset($query['os-version']) && !empty($query['os-version'])) {
-//            $sql .= ' AND ud.os_version IN (:os_version)';
-//        }
-//        if (isset($query['model-name']) && !empty($query['model-name'])) {
-//            $sql .= ' AND ud.model_name IN (:model_name)';
-//        }
-//
-//        if (isset($query['languages']) && !empty($query['languages'])) {
-//            $sql .= ' AND l.slug IN (:languages)';
-//        }
-
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
 
-//        $statement->bindValue('date_from', $query['date-from'], \PDO::PARAM_STR);
-//        $statement->bindValue('date_to', $query['date-to'], \PDO::PARAM_STR);
-//
-//        if (!empty($query['os-version'])) {
-//            $statement->bindValue('os_version', implode(",", $query['os-version']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-//        }
-//        if (!empty($query['model-name'])) {
-//            $statement->bindValue('model_name', implode(",", $query['model-name']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-//        }
-//        if (!empty($query['languages'])) {
-//            $statement->bindValue('languages', implode(",", $query['languages']), \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
-//        }
 
         $statement->execute($params);
 
@@ -381,6 +333,31 @@ class UserDevicesRepository extends EntityRepository
 
         return $result;
     }
+
+    public function getFirstSubscriptionDate($date)
+    {
+        $sql = "SELECT max(ss.created) as date_range
+                FROM user_devices ud
+                INNER JOIN subscription_status ss ON ss.id = ud.subscription_status_id
+                WHERE ss.created::date >= :date_from 
+                AND ss.created::date <= :date_to";
+
+//        var_dump($date);
+        $params = array(
+            'date_from' => $date['from'],
+            'date_to'   => $date['to']
+        );
+
+        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+
+
+        $statement->execute($params);
+
+        $result = $statement->fetch(\PDO::FETCH_COLUMN);
+//        var_dump($result);
+        return $result;
+    }
+
 
 
 

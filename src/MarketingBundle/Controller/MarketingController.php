@@ -25,12 +25,29 @@ class MarketingController extends Controller
         $query = $request->query->all();
 
         $query['date-from'] = isset($query['date-from']) && !empty($query['date-from']) ? $query['date-from'] : date('Y-m-d',strtotime("-7 day"));
-        $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to']  : date('Y-m-d', time());
+        $query['date-to'] = isset($query['date-to']) && !empty($query['date-to']) ? $query['date-to'] : date('Y-m-d', time());
+
+
 
         $em = $this->getDoctrine()->getManager('default');
 
+        $result = [];
+        if (isset($query['cdate'])){
+            foreach ($query['cdate'] as $key => $item) {
+
+                $result[$key] = [
+                    'date_range' => $em->getRepository('UserBundle:UserDevices')->getFirstSubscriptionDate($item)
+                ];
+
+            }
+        }
+
+        var_dump($result);
+
+
         return $this->render('MarketingBundle:Marketing:marketing_reports.html.twig', [
-            'query' => $query
+            'query' => $query,
+            'result' => $result
 
         ]);
     }

@@ -77,15 +77,15 @@ class UserController extends Controller
 
             foreach ($usersDevices as $usersDevice) {
                 $dataToSave = [
-                    $usersDevice['user_id'] ? $usersDevice['user_id'] : '-',
-                    $usersDevice['email'] ? $usersDevice['email'] : '-',
-                    $usersDevice['activation_key'] ? $usersDevice['activation_key'] : '-',
-                    $usersDevice['license_type'] ? $usersDevice['license_type'] : '-',
-                    $usersDevice['license_status'] ? $usersDevice['license_status'] : '-',
-                    $usersDevice['created'] ? $usersDevice['created'] : '-',
-                    $usersDevice['last_billed'] ? $usersDevice['last_billed'] : '-',
-                    $usersDevice['order_id'] ? $usersDevice['order_id'] : '-',
-                    $usersDevice['promo_code'] ? $usersDevice['promo_code'] : '-',
+                    $usersDevice['user_id'] ?? '-',
+                    $usersDevice['email'] ?? '-',
+                    $usersDevice['activation_key'] ?? '-',
+                    $usersDevice['license_type'] ?? '-',
+                    $usersDevice['license_status'] ?? '-',
+                    $usersDevice['created'] ?? '-',
+                    $usersDevice['last_billed'] ?? '-',
+                    $usersDevice['order_id'] ?? '-',
+                    $usersDevice['promo_code'] ?? '-',
                 ];
                 fputcsv($handle, $dataToSave, ';');
 
@@ -112,7 +112,7 @@ class UserController extends Controller
 
         $user = $em->getRepository('UserBundle:Users')->getUserId($id);
 
-        $userDevices =$em->getRepository('UserBundle:UserDevices')->findBy(['userId' => $id]);
+        $userDevices = $em->getRepository('UserBundle:UserDevices')->findBy(['userId' => $id]);
 
         $billingData = $em->getRepository('MarketingBundle:BillingData')->findBy(['userId' => $id]);
 
