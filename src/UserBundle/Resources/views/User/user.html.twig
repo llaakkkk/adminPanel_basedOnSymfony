@@ -73,12 +73,9 @@
             <div class="col-sm-8">
                 <div class="ibox">
                     <div class="ibox-content">
-                        <span class="text-muted small pull-right">Last modification: <i class="fa fa-clock-o"></i> 2:10 pm - 12.06.2014</span>
-
-
                         <div class="clients-list">
                             <ul class="nav nav-tabs">
-                                <span class="pull-right small text-muted">20 Elements</span>
+
                                 <li class="active">
                                     <a data-toggle="tab" href="#tab-1">
                                         <i class="fa fa-user"></i> User info
@@ -155,13 +152,13 @@
                                                 <tbody>
                                                 {% for data in billingData %}
                                                     <tr>
-                                                        <td>{% if data.product.licenseType.name is defined %}{{ data.product.licenseType.name }}{% else %}-{% endif %}</td>
-                                                        <td>{% if data.userDevice.subscriptionStatus.licenseStatus.name is defined %}{{ data.userDevice.subscriptionStatus.licenseStatus.name }}{% else %}-{% endif %}</td>
-                                                        <td>{% if data.orderId is defined %}{{ data.orderId }}{% else %}-{% endif %}</td>
-                                                        <td>{% if data.userDevice.subscriptionStatus.nextChargeDate is defined %}{{ data.userDevice.subscriptionStatus.nextChargeDate | date("F jS \\a\\t g:ia")  }}{% else %}-{% endif %}</td>
-                                                        <td>{% if data.paymentData['ORDER_TOTAL_AMOUNT'] is defined %}{{ data.paymentData['ORDER_TOTAL_AMOUNT'] }}{% else %}-{% endif %}</td>
-                                                        <td>{% if data.eventType is defined %}{{ data.eventType }}, *{{ data.paymentData['CREDITCARD_LAST4'] }}{% else %}-{% endif %} </td>
-                                                        <td>{% if data.promoCode is defined %}{{ data.promoCode }}{% else %}-{% endif %} </td>
+                                                        <td>{{ data.product.licenseType.name | default("-") }}</td>
+                                                        <td>{{ data.userDevice.subscriptionStatus.licenseStatus.name | default("-") }}</td>
+                                                        <td>{{ data.orderId | default("-") }}</td>
+                                                        <td>{{ data.userDevice.subscriptionStatus.nextChargeDate is empty ? '-' : data.userDevice.subscriptionStatus.nextChargeDate | date("F jS \\a\\t g:ia") }}</td>
+                                                        <td>{{ data.paymentData['ORDER_TOTAL_AMOUNT'] | default("-") }}</td>
+                                                        <td>{{ data.eventType | default("-") }}, *{{ data.paymentData['CREDITCARD_LAST4'] | default("-") }} </td>
+                                                        <td>{{ data.promoCode | default("-") }}</td>
                                                     </tr>
                                                 {% endfor %}
 
