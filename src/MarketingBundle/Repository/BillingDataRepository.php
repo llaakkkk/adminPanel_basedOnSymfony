@@ -28,7 +28,7 @@ class BillingDataRepository extends EntityRepository
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
               LEFT JOIN users u ON u.id = bd.user_id
             WHERE bd.event_type IN ('SubscriptionChargeSucceed', 'OrderCharged') AND lt.slug IN ('month', 'year')
-            AND u.created >= :date_from AND u.created <= :date_to", $rsm);
+            AND u.created::date >= :date_from AND u.created::date <= :date_to", $rsm);
 
         $qb->setParameter('date_from', $query['date-from']);
         $qb->setParameter('date_to', $query['date-to']);
@@ -52,7 +52,7 @@ class BillingDataRepository extends EntityRepository
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
               LEFT JOIN users u ON u.id = bd.user_id
             WHERE bd.event_type = 'OrderRefunded' AND lt.slug IN ('month', 'year')
-            AND u.created >= :date_from AND u.created <= :date_to", $rsm);
+            AND u.created::date  >= :date_from AND u.created::date  <= :date_to", $rsm);
 
         $qb->setParameter('date_from', $query['date-from']);
         $qb->setParameter('date_to', $query['date-to']);
@@ -74,7 +74,7 @@ class BillingDataRepository extends EntityRepository
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
               LEFT JOIN users u ON u.id = bd.user_id
             WHERE bd.event_type = 'OrderRefunded' AND lt.slug IN ('month', 'year')
-            AND u.created >= :date_from AND u.created <= :date_to
+            AND u.created::date  >= :date_from AND u.created::date  <= :date_to
             GROUP BY bd.user_device_id", $rsm);
 
         $qb->setParameter('date_from', $query['date-from']);
@@ -98,7 +98,7 @@ class BillingDataRepository extends EntityRepository
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
               LEFT JOIN users u ON u.id = bd.user_id
             WHERE bd.event_type = 'SubscriptionChargeSucceed' AND lt.slug = :licence_type
-            AND u.created >= :date_from AND u.created <= :date_to
+            AND u.created::date  >= :date_from AND u.created::date  <= :date_to
             GROUP BY bd.user_device_id", $rsm);
 
         $qb->setParameter('licence_type', $licenseType);
@@ -123,7 +123,7 @@ class BillingDataRepository extends EntityRepository
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
               LEFT JOIN users u ON u.id = bd.user_id
             WHERE bd.event_type = 'SubscriptionChargeSucceed' AND lt.slug IN ('month', 'year')
-            AND u.created >= :date_from AND u.created <= :date_to", $rsm);
+            AND u.created::date  >= :date_from AND u.created::date  <= :date_to", $rsm);
 
         $qb->setParameter('date_from', $query['date-from']);
         $qb->setParameter('date_to', $query['date-to']);
@@ -145,7 +145,7 @@ class BillingDataRepository extends EntityRepository
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
               LEFT JOIN users u ON u.id = bd.user_id
             WHERE bd.event_type IN ('SubscriptionChargeSucceed', 'OrderCharged') AND lt.slug IN ('month', 'year')
-             AND u.created >= :date_from AND u.created <= :date_to
+             AND u.created::date  >= :date_from AND u.created::date  <= :date_to
             GROUP BY bd.user_device_id", $rsm);
 
         $qb->setParameter('date_from', $query['date-from']);
@@ -169,7 +169,7 @@ class BillingDataRepository extends EntityRepository
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
               LEFT JOIN users u ON u.id = bd.user_id
             WHERE bd.event_type IN ('SubscriptionChargeSucceed', 'OrderCharged') AND lt.slug IN ('month', 'year')
-            AND u.created >= :date_from AND u.created <= :date_to
+            AND u.created::date  >= :date_from AND u.created::date  <= :date_to
             GROUP BY bd.user_id", $rsm);
 
         $qb->setParameter('date_from', $query['date-from']);

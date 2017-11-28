@@ -10,8 +10,8 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
-                {{ dump(query) }}
-                {{ dump(result) }}
+                {#{{ dump(query) }}#}
+                {#{{ dump(result) }}#}
                 <div class="ibox float-e-margins">
 
                     <div class="ibox-content">
@@ -48,15 +48,17 @@
                                                 Clear Cohorts
                                             </div>
                                             <div class="panel-body">
-                                                <button class="btn btn-info">Clear Cohorts</button>
+                                                <button class="btn btn-info" id="clear-cohorts"> Clear Cohorts</button>
                                             </div>
                                         </div>
                                     </div>
                                     {% if query.cdate is defined %}
                                         {% for key, value in query.cdate  %}
+                                            <div class="panel">
                                             {{ key }}
-                                            <input type="text" name="cdate[{{ key }}][from]" value="{{ value.from }}" >
-                                            <input type="text" name="cdate[{{ key }}][to]" value="{{ value.to }}" >
+                                            <input type="text" name="cdate[{{ key }}][date-from]" value="{{ value['date-from'] }}" >
+                                            <input type="text" name="cdate[{{ key }}][date-to]" value="{{ value['date-to'] }}" >
+                                            </div>
                                         {% endfor %}
                                     {% endif %}
                                 </form>
@@ -90,8 +92,8 @@
                                     <tr>
                                         <td>{{ item.date_range is empty ? '-' : item.date_range | date("F jS \\a\\t g:ia") }}</td>
                                         <td>{{ key }}</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ item.clients_count | default("-") }}</td>
+                                        <td>{{ item.revenue | default("-") }}</td>
                                     </tr>
                                 {% endfor %}
                             {% endif %}
@@ -122,8 +124,8 @@
                                 {% for key, item in result  %}
                                     <tr>
                                         <td>{{ key }}</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ item.revenue | default("-") }}</td>
+                                        <td>{{ item.total_revenue | default("-") }}</td>
                                     </tr>
                                 {% endfor %}
                             {% endif %}
@@ -166,23 +168,6 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <h5>Index of active clients </h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">Config option 1</a>
-                                </li>
-                                <li><a href="#">Config option 2</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
                     </div>
                     <div class="ibox-content">
 
@@ -385,23 +370,6 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <h5>LTV (yearly plan) </h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">Config option 1</a>
-                                </li>
-                                <li><a href="#">Config option 2</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
                     </div>
                     <div class="ibox-content">
 
@@ -442,7 +410,11 @@
         $(document).ready(function(){
 
             $('.dataTables').DataTable();
-            $('#funnel-report').attr('href',"{{ path('funnel_report') }}" + window.location.search)
+            $('#funnel-report').attr('href',"{{ path('funnel_report') }}" + window.location.search);
+            $('#clear-cohorts').on('click', function () {
+                $("input[name^='cdate']").remove();
+                $('#dataFilter').submit();
+            });
 
         });
 
@@ -529,10 +501,10 @@
                 .attr("name", "date-to").val(moment('{{ query['date-to'] | date('Ymd') }}').format('YYYY-MM-DD'));
             var inputFrom = $("<input>")
                 .attr("type", "text")
-                .attr("name", "cdate["+count+"][from]").val(dateFrom);
+                .attr("name", "cdate["+count+"][date-from]").val(dateFrom);
             var inputTo = $("<input>")
                 .attr ("type", "text")
-                .attr("name", "cdate["+count+"][to]").val(dateTo);
+                .attr("name", "cdate["+count+"][date-to]").val(dateTo);
             $('#dataFilter').append($(inputFromM));
             $('#dataFilter').append($(inputToM));
             $('#dataFilter').append($(inputFrom));

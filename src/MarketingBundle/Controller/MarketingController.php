@@ -36,13 +36,14 @@ class MarketingController extends Controller
             foreach ($query['cdate'] as $key => $item) {
 
                 $result[$key] = [
-                    'date_range' => $em->getRepository('UserBundle:UserDevices')->getFirstSubscriptionDate($item)
+                    'date_range' => $em->getRepository('UserBundle:UserDevices')->getFirstSubscriptionDate($item),
+                    'clients_count' => $em->getRepository('UserBundle:UserDevices')->getUsersCountInDate($item),
+                    'revenue' => $em->getRepository('MarketingBundle:BillingData')->getUserRevenueByDate($item)['revenue'],
+                    'total_revenue' => $em->getRepository('MarketingBundle:BillingData')->getUserRevenueByDate($query)['revenue']
                 ];
 
             }
         }
-
-        var_dump($result);
 
 
         return $this->render('MarketingBundle:Marketing:marketing_reports.html.twig', [

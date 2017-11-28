@@ -342,10 +342,9 @@ class UserDevicesRepository extends EntityRepository
                 WHERE ss.created::date >= :date_from 
                 AND ss.created::date <= :date_to";
 
-//        var_dump($date);
         $params = array(
-            'date_from' => $date['from'],
-            'date_to'   => $date['to']
+            'date_from' => $date['date-from'],
+            'date_to'   => $date['date-to']
         );
 
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
@@ -354,7 +353,28 @@ class UserDevicesRepository extends EntityRepository
         $statement->execute($params);
 
         $result = $statement->fetch(\PDO::FETCH_COLUMN);
-//        var_dump($result);
+        return $result;
+    }
+
+    public function getUsersCountInDate($date)
+    {
+        $sql = "SELECT count(ud.user_id) as count
+                FROM user_devices ud
+                INNER JOIN subscription_status ss ON ss.id = ud.subscription_status_id
+                WHERE ss.created::date >= :date_from 
+                AND ss.created::date <= :date_to";
+
+        $params = array(
+            'date_from' => $date['date-from'],
+            'date_to'   => $date['date-to']
+        );
+
+        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+
+
+        $statement->execute($params);
+
+        $result = $statement->fetch(\PDO::FETCH_COLUMN);
         return $result;
     }
 
