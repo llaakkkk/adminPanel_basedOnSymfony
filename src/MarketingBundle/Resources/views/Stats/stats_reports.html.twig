@@ -185,7 +185,7 @@
 
             });
 
-            $('.select2-container--default').on('change', function () {
+            $('.select2-container--default').on('select2:select', function () {
                 var dateFrom = start.format('YYYY-MM-DD');
                 var dateTo = end.format('YYYY-MM-DD');
                 setDateAndSubmit(dateFrom, dateTo);

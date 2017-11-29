@@ -132,28 +132,29 @@ class BillingDataRepository extends EntityRepository
         return $users;
     }
 
-    public function getUserCountByDate($query)
+    public function getUserCountByDate($date)
     {
-        $rsm = new ResultSetMapping();
-
-        $rsm->addScalarResult('user_count', 'user_count');
-
-        $qb = $this->getEntityManager()->createNativeQuery("
-           SELECT count(bd.user_device_id) AS user_count
+        $sql = "SELECT count(bd.user_device_id) AS user_count
             FROM billing_data bd
               INNER JOIN payment_system_products psp ON psp.id = bd.product_id
               INNER JOIN license_types lt ON lt.id = psp.license_type_id
               LEFT JOIN users u ON u.id = bd.user_id
             WHERE bd.event_type IN ('SubscriptionChargeSucceed', 'OrderCharged') AND lt.slug IN ('month', 'year')
-             AND u.created::date  >= :date_from AND u.created::date  <= :date_to
-            GROUP BY bd.user_device_id", $rsm);
+             AND u.created::date  >= :date_from AND u.created::date <= :date_to
+            GROUP BY bd.user_device_id";
 
-        $qb->setParameter('date_from', $query['date-from']);
-        $qb->setParameter('date_to', $query['date-to']);
+        $params = array(
+            'date_from' => $date['date-from'],
+            'date_to'   => $date['date-to']
+        );
 
-        $users = $qb->getOneOrNullResult();
+        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
 
-        return $users;
+
+        $statement->execute($params);
+
+        $result = $statement->fetch(\PDO::FETCH_COLUMN);
+        return $result;
     }
 
     public function getUserDiscountSumByDate($query)
