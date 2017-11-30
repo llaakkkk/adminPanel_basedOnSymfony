@@ -151,7 +151,9 @@
         });
 
         $(function() {
-            $('.select2-container--default').select2();
+            $('.select2-container--default').select2({
+                allowClear: true
+            });
 
             var start = moment('{{ query['date-from'] | date('Ymd') }}');
             var end = moment('{{ query['date-to']| date('Ymd') }}');
@@ -185,7 +187,7 @@
 
             });
 
-            $('.select2-container--default').on('select2:select', function () {
+            $('.select2-container--default').on('select2:select  select2:unselect', function () {
                 var dateFrom = start.format('YYYY-MM-DD');
                 var dateTo = end.format('YYYY-MM-DD');
                 setDateAndSubmit(dateFrom, dateTo);
