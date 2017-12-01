@@ -98,7 +98,7 @@
                                                     <th>Serial number</th>
                                                     <th>Mac type</th>
                                                     <th>MacOS</th>
-                                                    <th>Language</th>
+                                                    <th>Languages</th>
                                                     <th>Country</th>
                                                     <th>Created on</th>
                                                     <th>Test/real user</th>
@@ -155,13 +155,12 @@
                                                         <td>{{ data.product.licenseType.name | default("-") }}</td>
                                                         <td>{{ data.userDevice.subscriptionStatus.licenseStatus.name | default("-") }}</td>
                                                         <td>{{ data.orderId | default("-") }}</td>
-                                                        <td>{{ data.userDevice.subscriptionStatus.nextChargeDate is empty ? '-' : data.userDevice.subscriptionStatus.nextChargeDate | date("F jS \\a\\t g:ia") }}</td>
+                                                        <td>{{ data.userDevice.subscriptionStatus.nextChargeDate.date | default("-") }}</td>
                                                         <td>{{ data.paymentData['ORDER_TOTAL_AMOUNT'] | default("-") }}</td>
                                                         <td>{{ data.eventType | default("-") }}, *{{ data.paymentData['CREDITCARD_LAST4'] | default("-") }} </td>
                                                         <td>{{ data.promoCode | default("-") }}</td>
                                                     </tr>
                                                 {% endfor %}
-
                                                 </tbody>
                                             </table>
                                         </div>

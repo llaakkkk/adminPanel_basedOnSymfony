@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-lg-12">
                 {#{{ dump(query) }}#}
-                {#{{ dump(result) }}#}
+                {{ dump(result) }}
                 <div class="ibox float-e-margins">
 
                     <div class="ibox-content">
@@ -90,7 +90,7 @@
                             {% if result %}
                                 {% for key, item in result  %}
                                     <tr>
-                                        <td>{{ item.date_range is empty ? '-' : item.date_range | date("F jS \\a\\t g:ia") }}</td>
+                                        <td>{{ item.date_range is empty ? '-' : item.date_range | date("Y-m-d H:i:s") }}</td>
                                         <td>{{ key }}</td>
                                         <td>{{ item.clients_count | default("-") }}</td>
                                         <td>{{ item.revenue | default("-") }}</td>
@@ -124,7 +124,15 @@
                                 {% for key, item in result  %}
                                     <tr>
                                         <td>{{ key }}</td>
-                                        <td>{{ item.revenue | default("-") }}</td>
+                                        <td>
+                                            <p>
+                                                <span class="label label-default">
+                                                    <small>{{ item.cdate['date-from'] is empty ? '-' : item.cdate['date-from'] }}</small> -
+                                                    <small>{{ item.cdate['date-to'] is empty ? '-' : item.cdate['date-to'] }}</small>
+                                                </span>
+                                            </p>
+                                            {{ item.revenue | default("-") }}
+                                        </td>
                                         <td>{{ item.total_revenue | default("-") }}</td>
                                     </tr>
                                 {% endfor %}
@@ -153,7 +161,14 @@
                                 {% for key, item in result  %}
                                     <tr>
                                         <td>{{ key }}</td>
-                                        <td></td>
+                                        <td>
+                                            <p>
+                                                <span class="label label-default">
+                                                    <small>{{ item.cdate['date-from'] is empty ? '-' : item.cdate['date-from'] }}</small> -
+                                                    <small>{{ item.cdate['date-to'] is empty ? '-' : item.cdate['date-to'] }}</small>
+                                                </span>
+                                            </p>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             {% endif %}
@@ -183,7 +198,16 @@
                                 {% for key, item in result  %}
                                     <tr>
                                         <td>{{ key }}</td>
-                                        <td></td>
+                                        <td>
+                                            <p>
+                                                <span class="label label-default">
+                                                    <small>{{ item.cdate['date-from'] is empty ? '-' : item.cdate['date-from'] }}</small> -
+                                                    <small>{{ item.cdate['date-to'] is empty ? '-' : item.cdate['date-to'] }}</small>
+                                                </span>
+
+                                            </p>
+                                            {{ item.active_clients | default('-') }}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             {% endif %}
@@ -211,7 +235,15 @@
                                 {% for key, item in result  %}
                                     <tr>
                                         <td>{{ key }}</td>
-                                        <td></td>
+                                        <td>
+                                            <p>
+                                                <span class="label label-default">
+                                                    <small>{{ item.cdate['date-from'] is empty ? '-' : item.cdate['date-from'] }}</small> -
+                                                    <small>{{ item.cdate['date-to'] is empty ? '-' : item.cdate['date-to'] }}</small>
+                                                </span>
+
+                                            </p>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             {% endif %}

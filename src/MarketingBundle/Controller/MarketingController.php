@@ -39,8 +39,11 @@ class MarketingController extends Controller
                     'date_range' => $em->getRepository('UserBundle:UserDevices')->getFirstSubscriptionDate($item),
                     'clients_count' => $em->getRepository('UserBundle:UserDevices')->getUsersCountInDate($item),
                     'revenue' => $em->getRepository('MarketingBundle:BillingData')->getUserRevenueByDate($item)['revenue'],
-                    'total_revenue' => $em->getRepository('MarketingBundle:BillingData')->getUserRevenueByDate($query)['revenue']
+                    'total_revenue' => $em->getRepository('MarketingBundle:BillingData')->getUserRevenueByDate($query)['revenue'],
+                    'active_clients' => $em->getRepository('MarketingBundle:BillingData')->getUserCountByDate($item),
                 ];
+
+                $result[$key] = array_merge($result[$key], ['cdate' => $query['cdate'][$key]]);
 
             }
         }

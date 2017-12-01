@@ -169,7 +169,8 @@ class UserDevicesRepository extends EntityRepository
                              FROM billing_data
                              GROUP BY (user_device_id,order_id, promo_code)
             ) bd ON bd.user_device_id = ud.id
-            WHERE ud.created::date >= :date_from AND ud.created::date <= :date_to';
+            WHERE ud.created::date >= :date_from AND ud.created::date <= :date_to
+            AND ud.is_hidden = FALSE ';
 
         $params = array(
             'date_from' => $query['date-from'],
@@ -379,6 +380,17 @@ class UserDevicesRepository extends EntityRepository
     }
 
 
+    public function setUserInactive($userId)
+    {
+        $sql = "UPDATE user_devices
+                SET is_hidden = true
+                WHERE user_id = :user_id";
+
+        $statement = $this->getEntityManager()->getConnection()->prepare($sql);
+        $params = ['user_id' => $userId];
+
+        return $statement->execute($params);
+    }
 
 
 }

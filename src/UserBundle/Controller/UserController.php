@@ -133,6 +133,8 @@ class UserController extends Controller
     {
         $em = $this->getDoctrine()->getManager('default');
 
+        $em->getRepository('UserBundle:UserDevices')->setUserInactive($id);
+
          $this->addFlash('danger', 'User deleted!');
 
         return $this->redirectToRoute('users_list');
