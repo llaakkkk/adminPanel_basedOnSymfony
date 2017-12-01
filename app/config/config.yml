@@ -37,9 +37,7 @@ framework:
     assets: ~
     php_errors:
         log: true
-web_profiler:
-    toolbar: true
-    intercept_redirects: false
+
 # Twig Configuration
 twig:
     debug: '%kernel.debug%'
