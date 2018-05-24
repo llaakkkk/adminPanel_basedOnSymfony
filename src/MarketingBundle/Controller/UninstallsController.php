@@ -36,7 +36,7 @@ class UninstallsController extends Controller
         $modelName = $em->getRepository('UserBundle:UserDevices')->getUsersDevicesByModelName();
 
         $uninstalls = $em->getRepository('UserBundle:UserDevices')->getUninstallsReportData($query);
-//var_dump($uninstalls);
+
 
         return $this->render('MarketingBundle:Uninstalls:uninstalls_reports.html.twig', [
             'query' => $query,
